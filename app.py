@@ -1027,42 +1027,64 @@ def load_latest_pipeline_run_from_log():
 def load_latest_model_training_run():
     """
     Return the run_id currently used by production predictions/reality check.
-    Source of truth: models/latest symlink (fallback: LATEST.txt, then 'deployed').
+    Choose the newest run_id among:
+    - models/latest symlink target
+    - models/LATEST.txt
+    - models/latest/LATEST.txt
+    - latest fully-completed pipeline run from cron_job.log
     """
+    def _extract_run_id(raw: str):
+        if not raw:
+            return None
+        m = re.search(r"(run_\d{8}_\d{6})", str(raw))
+        return m.group(1) if m else None
+
+    def _run_id_to_ts(rid: str):
+        try:
+            return datetime.strptime(rid.replace("run_", ""), "%Y%m%d_%H%M%S")
+        except Exception:
+            return None
+
     latest_link = os.path.join(MODELS_DIR, "latest")
-    run_id = None
+    candidates = []
 
     try:
         if os.path.exists(latest_link):
-            real_path = os.path.realpath(latest_link)
-            m = re.search(r"(run_\d{8}_\d{6})$", real_path)
-            if m:
-                run_id = m.group(1)
+            rid = _extract_run_id(os.path.realpath(latest_link))
+            if rid:
+                candidates.append(("symlink", rid))
     except Exception:
-        run_id = None
+        pass
 
-    if run_id is None:
-        latest_txt = os.path.join(MODELS_DIR, "LATEST.txt")
-        if os.path.exists(latest_txt):
+    for p, source in [
+        (os.path.join(MODELS_DIR, "LATEST.txt"), "models_latest_txt"),
+        (os.path.join(MODELS_DIR, "latest", "LATEST.txt"), "latest_inner_txt"),
+    ]:
+        if os.path.exists(p):
             try:
-                raw = open(latest_txt, "r", encoding="utf-8").read().strip()
-                m = re.search(r"(run_\d{8}_\d{6})", raw)
-                if m:
-                    run_id = m.group(1)
+                with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                    rid = _extract_run_id(f.read().strip())
+                if rid:
+                    candidates.append((source, rid))
             except Exception:
-                run_id = None
+                pass
 
-    # Fallback: check LATEST.txt inside models/latest (for cloud deployments)
-    if run_id is None:
-        latest_inner_txt = os.path.join(MODELS_DIR, "latest", "LATEST.txt")
-        if os.path.exists(latest_inner_txt):
-            try:
-                raw = open(latest_inner_txt, "r", encoding="utf-8").read().strip()
-                m = re.search(r"(run_\d{8}_\d{6})", raw)
-                if m:
-                    run_id = m.group(1)
-            except Exception:
-                run_id = None
+    try:
+        pinfo = load_latest_pipeline_run_from_log() or {}
+        rid = _extract_run_id(pinfo.get("full_run_id"))
+        if rid:
+            candidates.append(("cron_full_run", rid))
+    except Exception:
+        pass
+
+    run_id = None
+    if candidates:
+        candidates = sorted(
+            candidates,
+            key=lambda x: _run_id_to_ts(x[1]) or datetime.min,
+            reverse=True,
+        )
+        run_id = candidates[0][1]
 
     run_compact = run_id.replace("run_", "") if run_id else "deployed"
     run_display = "배포된 모델"

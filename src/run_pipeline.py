@@ -36,6 +36,60 @@ def get_run_id():
     return dt.datetime.now().strftime("run_%Y%m%d_%H%M%S")
 
 
+def _update_latest_training_pointer(run_id: str):
+    """
+    Update lightweight production pointer for Transformer-only runs.
+    - Always writes MODELS_DIR/LATEST.txt
+    - If configured, updates MODELS_DIR/latest symlink to a run marker directory
+    """
+    if not run_id:
+        return
+
+    os.makedirs(cfg.models_dir, exist_ok=True)
+    latest_txt = os.path.join(cfg.models_dir, "LATEST.txt")
+    try:
+        with open(latest_txt, "w", encoding="utf-8") as f:
+            f.write(run_id)
+    except Exception as e:
+        logger.warning(f"Failed to write LATEST.txt: {e}")
+
+    pointer_mode = str(cfg.promotion_config.get("latest_pointer_mode", "symlink")).lower()
+    if pointer_mode != "symlink":
+        logger.info(f"Latest pointer mode '{pointer_mode}' active. Skipping symlink update.")
+        return
+
+    marker_dir = os.path.join(cfg.models_dir, run_id)
+    try:
+        os.makedirs(marker_dir, exist_ok=True)
+        marker_meta = {
+            "run_id": run_id,
+            "updated_at": dt.datetime.utcnow().isoformat(),
+            "policy": "transformer-only pointer marker",
+        }
+        with open(os.path.join(marker_dir, "LATEST.txt"), "w", encoding="utf-8") as f:
+            f.write(run_id)
+        with open(os.path.join(marker_dir, "run_marker.json"), "w", encoding="utf-8") as f:
+            json.dump(marker_meta, f, indent=2)
+    except Exception as e:
+        logger.warning(f"Failed to prepare run marker directory: {e}")
+        return
+
+    latest_link = os.path.join(cfg.models_dir, "latest")
+    try:
+        if os.path.islink(latest_link) or os.path.isfile(latest_link):
+            os.remove(latest_link)
+        elif os.path.isdir(latest_link):
+            logger.warning(
+                "models/latest is a real directory (not symlink). "
+                "Symlink update skipped to avoid deleting existing files."
+            )
+            return
+        os.symlink(marker_dir, latest_link)
+        logger.info(f"Updated latest model pointer -> {marker_dir}")
+    except Exception as e:
+        logger.warning(f"Failed to update latest symlink pointer: {e}")
+
+
 def _phase_num_from_name(phase_name: str) -> int:
     """Parse 'phaseN' -> N. Unknown names are sorted last."""
     if isinstance(phase_name, str) and phase_name.lower().startswith("phase"):
@@ -329,6 +383,7 @@ def main():
         epochs = int(cfg.model_config.get("transformer", {}).get("epochs", 15))
 
         train_all_horizons(horizons=horizons, epochs=epochs)
+        _update_latest_training_pointer(run_id)
         logger.info("Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.")
 
     logger.info(f"Pipeline finished successfully. Run ID: {run_id}")
