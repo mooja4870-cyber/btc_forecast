@@ -1,0 +1,190 @@
+# ==============================================================================
+# BTC Price Prediction — Main Configuration
+# ==============================================================================
+
+project:
+  name: "BTC_Price_Prediction_MLOps"
+  timezone: "UTC"
+
+# ------------------------------------------------------------------------------
+# Data Collection
+# ------------------------------------------------------------------------------
+data:
+  # Historical data range for training/validation
+  start_date: "2014-01-01"
+  end_date: null  # Set to null to auto-update to latest available
+  
+  # yfinance Tickers: label -> symbol
+  tickers:
+    btc:    "BTC-USD"
+    gold:   "GC=F"
+    oil:    "CL=F"
+    sp500:  "^GSPC"
+    nasdaq: "^IXIC"
+    dxy:    "DX-Y.NYB"
+    krw:    "KRW=X"
+
+  # FRED Series: label -> series_id
+  fred_series:
+    fed_rate:       "FEDFUNDS"
+    cpi:            "CPIAUCSL"
+    m2:             "M2SL"
+    unemployment:   "UNRATE"
+    gdp:            "GDP"
+    treasury_10y:   "DGS10"
+
+  # Paths (relative to project root)
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+
+# ------------------------------------------------------------------------------
+# Feature Engineering
+# ------------------------------------------------------------------------------
+features:
+  # Prediction horizons in days
+  horizons: [0, 1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+  
+  # Rolling window sizes for Moving Averages, Volatility, etc.
+  rolling_windows: [7, 14, 30, 50, 90, 200]
+  
+  # Lags to generate
+  lags: [1, 7, 14, 30, 60, 90]
+  
+  # Technical Indicators
+  rsi_period: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  bollinger_window: 20
+  
+  # Missing value handling
+  missing_value_policy: "ffill"  # Options: ffill, drop, impute_mean
+
+  # Optional feature groups (TKT-02 schema only; implementation in later tickets)
+  enable:
+    futures_term_structure: true
+    rates_expectation: true
+    geopolitical_risk: true
+
+  # As-of (no-leakage) policy for externally released data
+  as_of:
+    timezone: "UTC"
+    enforce_no_future_data: true
+    allow_revised_data: false
+    default_release_lag_days: 1
+
+  # Futures expiry / curve related features
+  futures:
+    enabled: true
+    assets: ["oil", "gold", "corn", "wheat"]
+    include_days_to_expiry: true
+    include_expiry_week_dummy: true
+    include_front_next_spread: true
+    include_roll_return: true
+    include_open_interest_change: true
+    release_lag_days: 0
+
+  # Policy-rate expectation features (market-implied or proxy)
+  rates_expectation:
+    enabled: true
+    source: "market_implied_proxy"
+    include_days_to_fomc: true
+    include_expected_policy_rate_3m: true
+    include_expected_policy_rate_6m: true
+    include_curve_2y10y_spread: true
+    release_lag_days: 1
+
+  # Geopolitical/event intensity features (continuous risk signals)
+  geopolitical:
+    enabled: true
+    source: "event_volatility_proxy"
+    include_geo_risk_index: true
+    include_war_intensity_score: true
+    include_commodity_shock_score: true
+    release_lag_days: 1
+
+# ------------------------------------------------------------------------------
+# Model Training
+# ------------------------------------------------------------------------------
+modeling:
+  # Directory to save model artifacts
+  artifact_dir: "models"
+  
+  # Phases for walk-forward validation
+  phases:
+    phase1:
+      train: ["2014-01-01", "2017-12-31"]
+      val:   ["2018-01-01", "2018-12-31"]
+    phase2:
+      train: ["2014-01-01", "2018-12-31"]
+      val:   ["2019-01-01", "2019-12-31"]
+    phase3:
+      train: ["2014-01-01", "2019-12-31"]
+      val:   ["2020-01-01", "2020-12-31"]
+    phase4:
+      train: ["2014-01-01", "2020-12-31"]
+      val:   ["2021-01-01", "2022-12-31"]
+    phase5:
+      train: ["2014-01-01", "2022-12-31"]
+      val:   ["2023-01-01", "2024-12-31"]
+    phase6:
+      train: ["2014-01-01", "2024-12-31"]
+      val:   ["2025-01-01", "2026-12-31"]
+
+  # Model Hyperparameters
+  random_seed: 42
+  
+  models:
+    ridge:
+      alpha_base: 10.0
+    random_forest:
+      n_estimators: 300
+      max_depth: 8
+    xgboost:
+      n_estimators: 500
+      max_depth: 4
+      learning_rate: 0.03
+    lightgbm:
+      n_estimators: 500
+      max_depth: 4
+      learning_rate: 0.03
+
+# ------------------------------------------------------------------------------
+# Model Promotion
+# ------------------------------------------------------------------------------
+promotion:
+  metric_key: "r2"          # Primary metric to decide promotion
+  improve_by_min: 0.001     # Minimum improvement required to promote
+  allow_equal: true         # Allow promotion if metric is equal (prefer newer)
+  latest_pointer_mode: "symlink" # or "file" (txt file with run_id)
+
+# ------------------------------------------------------------------------------
+# Monitoring & Reporting
+# ------------------------------------------------------------------------------
+monitoring:
+  enabled: true
+  report_dir: "data/reports"
+  logs_dir: "data/logs"
+  
+  # Drift detection thresholds
+  drift:
+    feature_mean_shift_sigma: 2.0  # Alert if feature mean shifts > 2 std devs
+    target_volatility_change: 0.5  # Alert if target vol changes > 50%
+    
+  # Performance alert thresholds
+  alerts:
+    mape_threshold: 15.0      # Alert if MAPE > 15%
+    rmse_threshold: 2000.0    # Alert if RMSE > $2000
+    dir_acc_threshold: 0.55   # Alert if Directional Accuracy < 55%
+
+# ------------------------------------------------------------------------------
+# Logging & Notifications
+# ------------------------------------------------------------------------------
+logging:
+  level: "INFO"
+  save_json_logs: true
+
+notifications:
+  enable_telegram: false
+  telegram_token: ""  # Add token here
+  telegram_chat_id: "" # Add chat ID here

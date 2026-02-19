@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-02-19T12:00:24.927367",
+  "rows": 4359,
+  "columns": 202,
+  "flags": {
+    "futures_term_structure": true,
+    "rates_expectation": true,
+    "geopolitical_risk": true
+  },
+  "futures_feature_count": 44,
+  "rates_feature_count": 17,
+  "geo_feature_count": 11
+}

@@ -1,0 +1,32 @@
+{
+  "^GSPC": {
+    "current": 6881.31,
+    "change": 0.0,
+    "source": "실시간 (Investing.com HTML)",
+    "updated_at": "2026-02-19 21:43:54"
+  },
+  "KRW=X": {
+    "current": 1449.0,
+    "change": -0.27529249827942187,
+    "source": "실시간 (네이버 금융 매매기준율)",
+    "updated_at": "2026-02-19 21:43:48"
+  },
+  "BTC-USD": {
+    "current": 98378000.0,
+    "change": -0.2474093,
+    "source": "실시간 (Upbit KRW)",
+    "updated_at": "2026-02-19 21:43:48"
+  },
+  "WOORI_GOLDBANK_KRW": {
+    "current": 233516.6,
+    "change": 0.33024564425828434,
+    "source": "실시간 (우리은행 골드뱅크가격조회 기준가격 2026.02.19 21:42:15)",
+    "updated_at": "2026-02-19 21:43:49"
+  },
+  "SHINHAN_SILVER_KRW": {
+    "current": 3633.67,
+    "change": -0.1214923215203602,
+    "source": "실시간 (신한은행 신한실버리슈실버테크 2026.02.19 21:38:24)",
+    "updated_at": "2026-02-19 21:43:51"
+  }
+}
