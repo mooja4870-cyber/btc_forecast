@@ -125,6 +125,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Auto-refresh whole dashboard every 60 seconds for real-time metric cards.
+st.components.v1.html(
+    """
+    <script>
+    setTimeout(function () {
+        window.parent.location.reload();
+    }, 60000);
+    </script>
+    """,
+    height=0,
+)
+
 # ================================================================
 #  Custom CSS — Premium Dark Theme
 # ================================================================
@@ -1246,10 +1258,10 @@ with st.sidebar:
             st.markdown("""
             **시스템 자동화 및 데이터 갱신 워크플로우**
             
-            본 대시보드는 최신 데이터 유지를 위해 아래와 같은 **MLOps 파이프라인**을 **3시간마다(일 8회)** 자동으로 수행합니다.
+            본 대시보드는 최신 데이터 유지를 위해 아래와 같은 **MLOps 파이프라인**을 **매일 00:00(일 1회)** 자동으로 수행합니다.
             
             1. **데이터 수집 (Data Collection)**  
-               3시간마다(00, 03, 06, 09, 12, 15, 18, 21시), 실시간 API를 통해 BTC 가격 및 거시 지표 최신본 갱신
+               매일 00:00, 실시간 API를 통해 BTC 가격 및 거시 지표 최신본 갱신
                
             2. **피처 엔지니어링 (Feature Engineering)**  
                신규 데이터를 포함한 모든 보조지표(RSI, 이동평균 등) 재계산 및 병합
