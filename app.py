@@ -12,6 +12,7 @@ import sys
 import json
 import warnings
 import re
+import subprocess
 import html as html_lib
 from collections import deque
 
@@ -54,6 +55,30 @@ def _range_year_text(date_range):
     start_y = str(start)[:4] if start else "시작"
     end_y = str(end)[:4] if end else "현재"
     return f"{start_y}–{end_y}"
+
+
+@st.cache_data(ttl=60)
+def get_deploy_commit_meta():
+    """Return deploy commit SHA for runtime verification."""
+    for key in ["RENDER_GIT_COMMIT", "GIT_COMMIT", "COMMIT_SHA", "SOURCE_COMMIT"]:
+        sha = os.getenv(key, "").strip()
+        if sha:
+            return {"sha": sha, "short": sha[:12], "source": key}
+
+    try:
+        sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=os.path.dirname(os.path.abspath(__file__)),
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=1.5,
+        ).strip()
+        if sha:
+            return {"sha": sha, "short": sha[:12], "source": "git"}
+    except Exception:
+        pass
+
+    return {"sha": "unknown", "short": "unknown", "source": "none"}
 
 
 def _build_phase_context():
@@ -1179,6 +1204,7 @@ with st.sidebar:
         df = load_merged_data()
         fdf = load_featured_data()
         model_run = load_latest_model_training_run()
+        deploy_meta = get_deploy_commit_meta()
         rc_recomputed_at = rc_meta.get("recomputed_at")
         rc_data_ts = rc_meta.get("data_last_timestamp")
 
@@ -1201,6 +1227,7 @@ with st.sidebar:
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
             st.markdown(f"**{model_run['run_display']}**")
+        st.caption(f"배포 커밋 SHA: {deploy_meta['short']} ({deploy_meta['source']})")
         with st.popover("🔶 총 데이터 포인트", use_container_width=True):
             st.markdown(f"**{len(df):,}일**")
         with st.popover(f"🔶 변수 수 (원시) : {df.shape[1]}개", use_container_width=True):
@@ -2352,3 +2379,13 @@ st.markdown("""
     <p>🔄 Direct Multi-Horizon Prediction (재귀 오차 누적 제거)</p>
 </div>
 """, unsafe_allow_html=True)
+try:
+    footer_deploy = get_deploy_commit_meta()
+    st.markdown(
+        "<div style='text-align:center; color:#64748b; font-size:0.72em; margin-top:-10px;'>"
+        f"Deploy SHA: {footer_deploy['short']} ({footer_deploy['source']})"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+except Exception:
+    pass
