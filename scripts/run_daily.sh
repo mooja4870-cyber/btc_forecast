@@ -2,7 +2,7 @@
 # ==============================================================================
 # BTC MLOps Pipeline Runner
 # ==============================================================================
-# This script is designed to be run by cron periodically (every 3 hours).
+# This script is designed to be run by cron once daily at 00:00.
 # It ensures the correct directory is used and logs all output.
 
 # 1. Set Environment
@@ -26,7 +26,7 @@ echo "Working Directory: $(pwd)" >> "$LOG_FILE"
 echo "============================================================" >> "$LOG_FILE"
 
 # 4. Run Pipeline
-# Policy: every 3 hours, always run full pipeline (data refresh + retrain).
+# Policy: once daily at 00:00, always run full pipeline (data refresh + retrain).
 # Ignore any external args to prevent accidental monitor-only/skip-train runs.
 if [ "$#" -gt 0 ]; then
     echo "⚠️ Args ignored by policy. Forcing full pipeline run (data + retrain)." >> "$LOG_FILE"

@@ -95,7 +95,7 @@ crontab -e
 ```
 파일의 맨 아래에 다음 줄을 추가합니다 (매일 00:00 실행):
 ```cron
-0 0 * * * /Users/mooja/AI_Study/Project/BTC_04_MLOPs/scripts/run_daily.sh
+0 0 * * * /Users/mooja/AI_Study/Project/BTC_07_Phase6/scripts/run_daily.sh
 ```
 *(참고: `vi` 에디터가 열리면 `i`를 눌러 입력 모드로 전환하고, 붙여넣기 후 `Esc` -> `:wq` -> `Enter`를 눌러 저장하세요.)*
 
