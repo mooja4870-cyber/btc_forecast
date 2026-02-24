@@ -135,7 +135,8 @@ def fetch_shinhan_goldrush_krw(max_lookback_days=14):
         prev_rows = _fetch_shinhan_goldrush_rows_for_date(d)
         if not prev_rows:
             continue
-        prev_row = prev_rows[-1]
+        # 한국 사용자 체감(주간 변동)에 맞추기 위해 전일 자정(23:59)이 아닌 전일 오전 첫 고시가[0]를 기준(Open)으로 사용
+        prev_row = prev_rows[0]
         prev = _to_float(prev_row.get("XAU_RATE1"))
         if prev is None:
             prev = _to_float(prev_row.get("XAU_RATE"))
@@ -145,7 +146,7 @@ def fetch_shinhan_goldrush_krw(max_lookback_days=14):
 
     date_display = latest_row.get("D_DATE", latest_date)
     time_display = latest_row.get("D_TIME", "")
-    source = f"실시간 (신한은행 골드리슈 고시가격 {date_display} {time_display})".strip()
+    source = "실시간 (신한은행 골드리슈 고시가격)"
     return current, change, source
 
 
@@ -180,7 +181,8 @@ def fetch_shinhan_silverrush_krw(max_lookback_days=14):
         prev_rows = _fetch_shinhan_goldrush_rows_for_date(d)
         if not prev_rows:
             continue
-        prev_row = prev_rows[-1]
+        # 한국 사용자 체감(주간 변동)에 맞추기 위해 전일 자정(23:59)이 아닌 전일 오전 첫 고시가[0]를 기준(Open)으로 사용
+        prev_row = prev_rows[0]
         prev = _to_float(prev_row.get("XAG_RATE1"))
         if prev is None:
             prev = _to_float(prev_row.get("XAG_RATE"))
@@ -190,7 +192,7 @@ def fetch_shinhan_silverrush_krw(max_lookback_days=14):
 
     date_display = latest_row.get("D_DATE", latest_date)
     time_display = latest_row.get("D_TIME", "")
-    source = f"실시간 (신한은행 신한실버리슈실버테크 {date_display} {time_display})".strip()
+    source = "실시간 (신한은행 실버리슈)"
     return current, change, source
 
 
@@ -290,7 +292,7 @@ def fetch_woori_goldbank_krw(max_lookback_days=14):
 
     date_display = latest_date_display or f"{latest_date[:4]}.{latest_date[4:6]}.{latest_date[6:]}"
     time_display = latest_row.get("apply_time", "")
-    source = f"실시간 (우리은행 골드뱅크가격조회 기준가격 {date_display} {time_display})".strip()
+    source = "실시간 (우리은행 골드뱅크가격)"
     return current, change, source
 
 
@@ -425,6 +427,47 @@ def fetch_financedatareader_usd_krw():
     return None, None, None
 
 
+def fetch_naver_kospi():
+    """Primary KOSPI source: Naver Finance."""
+    try:
+        url = "https://finance.naver.com/sise/"
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            ),
+            "Referer": "https://finance.naver.com/",
+        }
+        resp = requests.get(url, headers=headers, timeout=6)
+        if resp.status_code != 200:
+            return None, None, None
+
+        html = resp.text
+        m_val = re.search(r'id="KOSPI_now"[^>]*>([0-9,\.]+)', html)
+        if not m_val:
+            return None, None, None
+            
+        current = _to_float(m_val.group(1))
+        if current is None:
+            return None, None, None
+
+        change = 0.0
+        # parse <span id="KOSPI_change" ... > ...  -0.25% ... </span>
+        idx = html.find('id="KOSPI_change"')
+        if idx != -1:
+            snippet = html[idx:idx+200]
+            m_chg = re.search(r'([+\-0-9\.]+)%', snippet)
+            if m_chg:
+                parsed = _to_float(m_chg.group(1))
+                if parsed is not None:
+                    change = parsed
+
+        return current, change, "실시간 (네이버 금융)"
+    except Exception:
+        return None, None, None
+
+
 def fetch_btc_binance():
     """Fetch BTC price from Binance using CCXT."""
     if ccxt is None:
@@ -461,6 +504,33 @@ def fetch_btc_upbit_krw():
         return current, change, "실시간 (Upbit KRW)"
     except Exception as e:
         print(f"Upbit fetch failed: {e}")
+        return None, None, None
+
+
+def fetch_upbit_usdt_krw():
+    """
+    Fetch KRW per USDT from Upbit (market: KRW-USDT).
+    This is used as an exchange-rate proxy for KRW/USD in dashboard display.
+    """
+    try:
+        url = "https://api.upbit.com/v1/ticker"
+        resp = requests.get(url, params={"markets": "KRW-USDT"}, timeout=5)
+        if resp.status_code != 200:
+            return None, None, None
+
+        data = resp.json()
+        if not isinstance(data, list) or not data:
+            return None, None, None
+
+        row = data[0]
+        current = _to_float(row.get("trade_price"))
+        change_rate = _to_float(row.get("signed_change_rate"))
+        if current is None:
+            return None, None, None
+        change = (change_rate * 100.0) if change_rate is not None else 0.0
+        return current, change, "실시간 (Upbit KRW-USDT, USD≈USDT)"
+    except Exception as e:
+        print(f"Upbit KRW-USDT fetch failed: {e}")
         return None, None, None
 
 
@@ -731,11 +801,11 @@ def fetch_yahoo_requests(symbol):
 def fetch_data_robust(symbol, asset_type="crypto"):
     """
     Source priority:
-    - BTC: Upbit KRW -> CoinMarketCap -> Binance(CCXT) -> Yahoo Finance chain
+    - BTC: Upbit KRW (strict)
     - WOORI_GOLDBANK_KRW: Woori Gold Banking KRW
     - SHINHAN_SILVER_KRW: Shinhan SilverRush KRW
     - GC=F, ^GSPC: Yahoo Finance -> Alpha Vantage -> Investing.com
-    - KRW=X: Naver Finance(매매기준율) -> ExchangeRate-API -> Google Finance -> FinanceDataReader
+    - KRW=X: Upbit KRW-USDT(USD proxy) -> Naver Finance -> ExchangeRate-API -> Google Finance -> FinanceDataReader
     - Others: Yahoo Finance chain
     """
     # Woori Gold Banking KRW dedicated chain
@@ -757,18 +827,25 @@ def fetch_data_robust(symbol, asset_type="crypto"):
         p, c, s = fetch_btc_upbit_krw()
         if p is not None:
             return p, c, s
+        return None, None, None
 
-        p, c, s = fetch_btc_coinmarketcap()
+    # KOSPI special path
+    if symbol == "^KS11":
+        p, c, s = fetch_naver_kospi()
         if p is not None:
             return p, c, s
-
-        p, c, s = fetch_btc_binance()
-        if p is not None:
-            return p, c, s
+            
+        # Fallback to yahoo
+        for fn in [fetch_yahoo_quote_api, fetch_yfinance_quote, fetch_yahoo_requests]:
+            p, c, s = fn(symbol)
+            if p is not None:
+                return p, c, s
+        return None, None, None
 
     # KRW/USD dedicated trusted chain
     if symbol == "KRW=X":
         for fn in [
+            fetch_upbit_usdt_krw,
             fetch_naver_marketindex_usd_krw,
             fetch_exchangerate_api_usd_krw,
             fetch_google_finance_usd_krw,

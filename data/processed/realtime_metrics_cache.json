@@ -1,32 +1,38 @@
 {
-  "^GSPC": {
-    "current": 6851.919921875,
-    "change": -0.4271008931220301,
-    "source": "실시간 (Yahoo Finance/yfinance 23:41)",
-    "updated_at": "2026-02-19 23:41:21"
-  },
   "KRW=X": {
-    "current": 1451.6,
-    "change": -0.09635237439779766,
-    "source": "실시간 (네이버 금융 매매기준율)",
-    "updated_at": "2026-02-19 23:41:18"
+    "current": 1468.0,
+    "change": -0.40705563,
+    "source": "실시간 (Upbit KRW-USDT, USD≈USDT)",
+    "updated_at": "2026-02-24 22:54:56"
   },
   "BTC-USD": {
-    "current": 97724000.0,
-    "change": -0.9105473399999999,
+    "current": 92420000.0,
+    "change": -3.0749223900000002,
     "source": "실시간 (Upbit KRW)",
-    "updated_at": "2026-02-19 23:41:18"
+    "updated_at": "2026-02-24 22:54:56"
   },
   "WOORI_GOLDBANK_KRW": {
-    "current": 233935.62,
-    "change": 0.5102772973821139,
-    "source": "실시간 (우리은행 골드뱅크가격조회 기준가격 2026.02.19 23:30:31)",
-    "updated_at": "2026-02-19 23:41:18"
+    "current": 240442.73,
+    "change": 0.7637279172201276,
+    "source": "실시간 (우리은행 골드뱅크가격)",
+    "updated_at": "2026-02-24 22:54:56"
   },
   "SHINHAN_SILVER_KRW": {
-    "current": 3609.33,
-    "change": -0.7905246983994408,
-    "source": "실시간 (신한은행 신한실버리슈실버테크 2026.02.19 23:36:43)",
-    "updated_at": "2026-02-19 23:41:20"
+    "current": 4088.76,
+    "change": 6.104548568581459,
+    "source": "실시간 (신한은행 실버리슈)",
+    "updated_at": "2026-02-24 22:54:56"
+  },
+  "^KS11": {
+    "current": 5969.64,
+    "change": 2.11,
+    "source": "실시간 (네이버 금융)",
+    "updated_at": "2026-02-24 22:54:56"
+  },
+  "^GSPC": {
+    "current": 6837.75,
+    "change": 0.0,
+    "source": "실시간 (Investing.com HTML)",
+    "updated_at": "2026-02-24 22:54:56"
   }
 }

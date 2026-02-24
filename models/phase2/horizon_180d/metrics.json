@@ -1,0 +1,66 @@
+{
+  "ridge": {
+    "train": {
+      "rmse": 0.30463,
+      "mae": 0.235194,
+      "r2": 0.7486,
+      "direction_accuracy": 0.8921,
+      "price_mape_pct": 23.93
+    },
+    "val": {
+      "rmse": 0.931813,
+      "mae": 0.826452,
+      "r2": -14.4266,
+      "direction_accuracy": 0.7821,
+      "price_mape_pct": 150.28
+    }
+  },
+  "random_forest": {
+    "train": {
+      "rmse": 0.106148,
+      "mae": 0.075955,
+      "r2": 0.9695,
+      "direction_accuracy": 0.9555,
+      "price_mape_pct": 7.68
+    },
+    "val": {
+      "rmse": 0.299829,
+      "mae": 0.254198,
+      "r2": -0.5972,
+      "direction_accuracy": 0.6047,
+      "price_mape_pct": 24.14
+    }
+  },
+  "xgboost": {
+    "train": {
+      "rmse": 0.132255,
+      "mae": 0.10163,
+      "r2": 0.9526,
+      "direction_accuracy": 0.9416,
+      "price_mape_pct": 10.25
+    },
+    "val": {
+      "rmse": 0.258903,
+      "mae": 0.206611,
+      "r2": -0.1909,
+      "direction_accuracy": 0.7551,
+      "price_mape_pct": 24.11
+    }
+  },
+  "lightgbm": {
+    "train": {
+      "rmse": 0.120301,
+      "mae": 0.092087,
+      "r2": 0.9608,
+      "direction_accuracy": 0.9487,
+      "price_mape_pct": 9.3
+    },
+    "val": {
+      "rmse": 0.246361,
+      "mae": 0.197514,
+      "r2": -0.0783,
+      "direction_accuracy": 0.7551,
+      "price_mape_pct": 22.76
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "ridge": {
+    "train": {
+      "rmse": 0.086115,
+      "mae": 0.06282,
+      "r2": 0.1673,
+      "direction_accuracy": 0.6015,
+      "price_mape_pct": 6.32
+    },
+    "val": null
+  },
+  "random_forest": {
+    "train": {
+      "rmse": 0.069225,
+      "mae": 0.049747,
+      "r2": 0.4619,
+      "direction_accuracy": 0.7624,
+      "price_mape_pct": 5.0
+    },
+    "val": null
+  },
+  "xgboost": {
+    "train": {
+      "rmse": 0.072747,
+      "mae": 0.053056,
+      "r2": 0.4058,
+      "direction_accuracy": 0.6967,
+      "price_mape_pct": 5.33
+    },
+    "val": null
+  },
+  "lightgbm": {
+    "train": {
+      "rmse": 0.071547,
+      "mae": 0.05235,
+      "r2": 0.4252,
+      "direction_accuracy": 0.7049,
+      "price_mape_pct": 5.25
+    },
+    "val": null
+  }
+}

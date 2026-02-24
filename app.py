@@ -12,7 +12,6 @@ import sys
 import json
 import warnings
 import re
-import subprocess
 import html as html_lib
 from collections import deque
 
@@ -55,30 +54,6 @@ def _range_year_text(date_range):
     start_y = str(start)[:4] if start else "시작"
     end_y = str(end)[:4] if end else "현재"
     return f"{start_y}–{end_y}"
-
-
-@st.cache_data(ttl=60)
-def get_deploy_commit_meta():
-    """Return deploy commit SHA for runtime verification."""
-    for key in ["RENDER_GIT_COMMIT", "GIT_COMMIT", "COMMIT_SHA", "SOURCE_COMMIT"]:
-        sha = os.getenv(key, "").strip()
-        if sha:
-            return {"sha": sha, "short": sha[:12], "source": key}
-
-    try:
-        sha = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            cwd=os.path.dirname(os.path.abspath(__file__)),
-            stderr=subprocess.DEVNULL,
-            text=True,
-            timeout=1.5,
-        ).strip()
-        if sha:
-            return {"sha": sha, "short": sha[:12], "source": "git"}
-    except Exception:
-        pass
-
-    return {"sha": "unknown", "short": "unknown", "source": "none"}
 
 
 def _build_phase_context():
@@ -182,9 +157,22 @@ st.markdown("""
     }
 
     /* Global Typography */
-    .stApp, .stApp p, .stApp span, .stApp label {
+    .stApp {
+        font-family: var(--font-main);
+        color: var(--text-main);
+    }
+    .stApp p:not([class*="material"]):not(.material-symbols-rounded), 
+    .stApp label:not([class*="material"]):not(.material-symbols-rounded) {
         font-family: var(--font-main) !important;
-        color: var(--text-main) !important;
+    }
+    
+    /* Force Material Symbols Font for all Streamlit Icons */
+    .material-symbols-rounded, 
+    .material-symbols-outlined,
+    [class*="material-symbol"],
+    [data-testid*="Icon"] {
+        font-family: "Material Symbols Rounded" !important;
+        font-feature-settings: 'liga' !important;
     }
 
     h1, h2, h3, h4, .stTabs [data-baseweb="tab"] {
@@ -270,6 +258,14 @@ st.markdown("""
     .premium-metric-card.metric-neutral .metric-delta,
     .premium-metric-card.metric-neutral .metric-delta span {
         color: #94a3b8 !important;
+    }
+
+    /* Shrink buttons by approx 77% */
+    .stButton button {
+        font-size: 0.77rem !important;
+        padding: 0.2rem 0.5rem !important;
+        min-height: 2rem !important;
+        line-height: 1.2 !important;
     }
 
     /* Monumental Title Override */
@@ -584,6 +580,24 @@ st.markdown("""
     /* Caption & small text */
     .stCaption, small, .stTooltipIcon {
         color: #94a3b8 !important;
+    }
+
+    /* Dialog (Modal) Width Settings: current 1550px -> 155% (=2402.5px) */
+    :root {
+        --trend-dialog-width: min(95vw, 2402px);
+    }
+    div[data-testid="stModal"] > div {
+        max-width: var(--trend-dialog-width) !important;
+        width: var(--trend-dialog-width) !important;
+    }
+    div[data-testid="stDialog"] > div[role="dialog"] {
+        max-width: var(--trend-dialog-width) !important;
+        width: var(--trend-dialog-width) !important;
+    }
+    /* Cover older Streamlit versions or alternative inner tags */
+    div[data-modal-container="true"] > div {
+        max-width: var(--trend-dialog-width) !important;
+        width: var(--trend-dialog-width) !important;
     }
 
     /* Sidebar Expander: keep default Streamlit layout (prevents header overlap) */
@@ -1204,7 +1218,6 @@ with st.sidebar:
         df = load_merged_data()
         fdf = load_featured_data()
         model_run = load_latest_model_training_run()
-        deploy_meta = get_deploy_commit_meta()
         rc_recomputed_at = rc_meta.get("recomputed_at")
         rc_data_ts = rc_meta.get("data_last_timestamp")
 
@@ -1227,7 +1240,6 @@ with st.sidebar:
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
             st.markdown(f"**{model_run['run_display']}**")
-        st.caption(f"배포 커밋 SHA: {deploy_meta['short']} ({deploy_meta['source']})")
         with st.popover("🔶 총 데이터 포인트", use_container_width=True):
             st.markdown(f"**{len(df):,}일**")
         with st.popover(f"🔶 변수 수 (원시) : {df.shape[1]}개", use_container_width=True):
@@ -1444,7 +1456,10 @@ try:
     # 4. Silver (Shinhan SilverRush KRW)
     silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=True)
 
-    # 5. S&P 500 (^GSPC, USD original)
+    # 5. KOSPI (^KS11)
+    kospi_p, kospi_c, kospi_s = get_realtime_metric("^KS11", mdf, "kospi_close", "KOSPI", realtime_only=True)
+
+    # 6. S&P 500 (^GSPC, USD original)
     sp_usd_p, sp_c, sp_s = get_realtime_metric("^GSPC", mdf, "sp500_close", "S&P500", realtime_only=True)
     sp_p = sp_usd_p
     sp_source = sp_s
@@ -1473,55 +1488,382 @@ try:
             delta_icon = "↓"
             metric_state = "metric-down"
         
+        # '실시간'을 현재 시간(시분초)으로 변환 후 노란색 굵은 텍스트로 하이라이트
+        from datetime import datetime
+        current_time = datetime.now().strftime("%H:%M:%S")
+        source_html = source.replace("-실시간", f"-<span style='color: #fbbf24; font-weight: 800;'>{current_time}</span>")
+
         st.markdown(f"""
-        <div class="premium-metric-card {metric_state}" style="margin-bottom: 2px; padding: 12px 15px;">
-            <div class="metric-label" style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; margin-bottom: 2px;">{label}</div>
-            <div class="metric-value" style="font-size: 1.7rem; font-weight: 800; color: {value_color} !important; margin-bottom: 1px;">{value}</div>
-            <div class="metric-delta" style="font-size: 0.85rem; font-weight: 700; color: {delta_color} !important; display: flex; align-items: center; gap: 3px;">
-                <span style="font-size: 1rem; color: {delta_color} !important;">{delta_icon}</span> {abs(delta_val):.2f}%
+        <div class="premium-metric-card {metric_state}" style="margin-bottom: 2px; padding: 9px 11px;">
+            <div class="metric-label" style="font-size: 0.58rem; color: #94a3b8; font-weight: 600; margin-bottom: 2px;">{label}</div>
+            <div class="metric-value" style="font-size: 1.3rem; font-weight: 800; color: {value_color} !important; margin-bottom: 1px;">{value}</div>
+            <div class="metric-delta" style="font-size: 0.65rem; font-weight: 700; color: {delta_color} !important; display: flex; align-items: center; gap: 3px;">
+                <span style="font-size: 0.77rem; color: {delta_color} !important;">{delta_icon}</span> {abs(delta_val):.2f}%
             </div>
-            <div class="metric-source" style="font-size: 0.6rem; color: #64748b; margin-top: 4px;">출처: {source}</div>
+            <div class="metric-source" style="font-size: 0.46rem; color: #64748b; margin-top: 4px;">출처: {source_html}</div>
         </div>
         """, unsafe_allow_html=True)
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    TREND_LOCAL_COLUMN_MAP = {
+        "BTC-USD": "btc_close",
+        "GC=F": "gold_close",
+        "^GSPC": "sp500_close",
+        "KRW=X": "krw_close",
+    }
+    TREND_TICKER_COLOR_MAP = {
+        "BTC-USD": "#F7931A",  # Bitcoin orange
+        "GC=F": "#F59E0B",     # Gold amber
+        "SI=F": "#D1D5DB",     # Silver gray
+        "^KS11": "#EF4444",    # KOSPI red
+        "^GSPC": "#10B981",    # S&P500 green
+        "KRW=X": "#3B82F6",    # KRW/USD blue
+    }
+
+    def _extract_close_series(df, ticker):
+        """Extract a single close-price series from yfinance response."""
+        if df is None or df.empty:
+            return pd.Series(dtype=float)
+
+        if isinstance(df.columns, pd.MultiIndex):
+            if "Close" in df.columns.get_level_values(0):
+                close_df = df.xs("Close", axis=1, level=0, drop_level=True)
+                if isinstance(close_df, pd.Series):
+                    series = close_df
+                elif ticker in close_df.columns:
+                    series = close_df[ticker]
+                else:
+                    series = close_df.iloc[:, 0]
+            else:
+                series = df.iloc[:, 0]
+        else:
+            series = df["Close"] if "Close" in df.columns else df.iloc[:, 0]
+
+        if isinstance(series, pd.DataFrame):
+            series = series.iloc[:, 0]
+        series = pd.to_numeric(series, errors="coerce").dropna()
+        series.index = pd.to_datetime(series.index, errors="coerce")
+        series = series[series.index.notna()].sort_index()
+        return series
+
+    @st.cache_data(ttl=300, show_spinner=False)
+    def _load_local_trend_series(local_col, start_date_str, end_date_str):
+        """Read trend series from internal processed data as offline fallback."""
+        try:
+            mdf_local = load_merged_data().sort_index()
+            if local_col not in mdf_local.columns:
+                return pd.Series(dtype=float)
+            series = pd.to_numeric(mdf_local[local_col], errors="coerce").dropna()
+            start_dt = pd.to_datetime(start_date_str)
+            end_dt = pd.to_datetime(end_date_str)
+            series = series.loc[(series.index >= start_dt) & (series.index <= end_dt)]
+            return series.sort_index()
+        except Exception:
+            return pd.Series(dtype=float)
+
+    @st.cache_data(ttl=300, show_spinner=False)
+    def _fetch_silver_stooq_series(start_date_str, end_date_str):
+        """Silver fallback: Stooq XAGUSD daily close."""
+        try:
+            import requests
+            from io import StringIO
+
+            resp = requests.get("https://stooq.com/q/d/l/?s=xagusd&i=d", timeout=10)
+            if resp.status_code != 200 or "No data" in resp.text[:80]:
+                return pd.Series(dtype=float)
+
+            df = pd.read_csv(StringIO(resp.text))
+            if "Date" not in df.columns or "Close" not in df.columns:
+                return pd.Series(dtype=float)
+
+            dt_index = pd.to_datetime(df["Date"], errors="coerce")
+            close = pd.to_numeric(df["Close"], errors="coerce")
+            series = pd.Series(close.values, index=dt_index).dropna()
+            series = series[series.index.notna()].sort_index()
+
+            start_dt = pd.to_datetime(start_date_str)
+            end_dt = pd.to_datetime(end_date_str)
+            return series.loc[(series.index >= start_dt) & (series.index <= end_dt)]
+        except Exception:
+            return pd.Series(dtype=float)
+
+    @st.cache_data(ttl=300, show_spinner=False)
+    def _fetch_kospi_naver_series(start_date_str, end_date_str):
+        """KOSPI fallback: Naver Finance chart endpoint daily close."""
+        try:
+            import requests
+
+            url = "https://fchart.stock.naver.com/sise.nhn?symbol=KOSPI&timeframe=day&count=6000&requestType=0"
+            resp = requests.get(url, timeout=10)
+            if resp.status_code != 200:
+                return pd.Series(dtype=float)
+
+            items = re.findall(r'<item data="([^"]+)"', resp.text)
+            if not items:
+                return pd.Series(dtype=float)
+
+            idx = []
+            vals = []
+            for row in items:
+                parts = row.split("|")
+                if len(parts) < 5:
+                    continue
+                d = pd.to_datetime(parts[0], format="%Y%m%d", errors="coerce")
+                c = pd.to_numeric(parts[4], errors="coerce")
+                if pd.isna(d) or pd.isna(c):
+                    continue
+                idx.append(d)
+                vals.append(float(c))
+
+            if not idx:
+                return pd.Series(dtype=float)
+
+            series = pd.Series(vals, index=idx).sort_index()
+            start_dt = pd.to_datetime(start_date_str)
+            end_dt = pd.to_datetime(end_date_str)
+            return series.loc[(series.index >= start_dt) & (series.index <= end_dt)]
+        except Exception:
+            return pd.Series(dtype=float)
+
+    @st.cache_data(ttl=300, show_spinner=False)
+    def _fetch_trend_series(ticker, start_date_str, end_date_str):
+        """
+        Fetch trend data with retry.
+        Priority: yfinance -> special source fallback -> local processed fallback.
+        """
+        import yfinance as yf
+
+        attempts = []
+        for n in range(3):
+            try:
+                df = yf.download(
+                    ticker,
+                    start=start_date_str,
+                    end=end_date_str,
+                    interval="1d",
+                    auto_adjust=False,
+                    progress=False,
+                    threads=False,
+                    timeout=10,
+                )
+                series = _extract_close_series(df, ticker)
+                if not series.empty:
+                    return series, "yfinance"
+                attempts.append(f"yfinance_empty#{n+1}")
+            except Exception as e:
+                attempts.append(f"yfinance_error#{n+1}({str(e)[:80]})")
+
+        if ticker == "SI=F":
+            silver_series = _fetch_silver_stooq_series(start_date_str, end_date_str)
+            if not silver_series.empty:
+                return silver_series, "stooq_xagusd"
+
+        if ticker == "^KS11":
+            kospi_series = _fetch_kospi_naver_series(start_date_str, end_date_str)
+            if not kospi_series.empty:
+                return kospi_series, "naver_kospi_chart"
+
+        local_col = TREND_LOCAL_COLUMN_MAP.get(ticker)
+        if local_col:
+            local_series = _load_local_trend_series(local_col, start_date_str, end_date_str)
+            if not local_series.empty:
+                return local_series, "local_processed"
+
+        reason = " | ".join(attempts[-3:]) if attempts else "unknown"
+        return pd.Series(dtype=float), reason
+
+    @st.dialog("📈 장기 추세 그래프", width="large")
+    def show_trend_modal(asset_name, ticker, start_year=None):
+        from datetime import datetime, timedelta
+        import plotly.graph_objects as go
+        
+        end_date = datetime.now()
+        if start_year:
+            start_date = datetime(start_year, 1, 1)
+        else:
+            start_date = end_date - timedelta(days=365*30)
+            
+        with st.spinner(f"{asset_name} 데이터를 가져오는 중..."):
+            try:
+                start_date_str = start_date.strftime("%Y-%m-%d")
+                end_date_str = end_date.strftime("%Y-%m-%d")
+                close_series, source_hint = _fetch_trend_series(ticker, start_date_str, end_date_str)
+
+                if close_series.empty:
+                    st.error(f"{asset_name} 데이터를 가져오지 못했습니다.")
+                    st.caption(f"원인: {source_hint}")
+                    return
+
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(
+                    x=close_series.index,
+                    y=close_series.values,
+                    mode='lines',
+                    name=asset_name,
+                    line=dict(color=TREND_TICKER_COLOR_MAP.get(ticker, "#6366f1"), width=2)
+                ))
+                
+                fig.update_layout(**PLOTLY_LAYOUT)
+                fig.update_layout(
+                    title=f"<b>{asset_name} 장기 추세</b>",
+                    height=500,
+                    xaxis_title="",
+                    yaxis_title="",
+                    showlegend=False,
+                    margin=dict(l=40, r=40, t=60, b=40)
+                )
+                
+                if ticker in ["GC=F", "SI=F", "^GSPC"]:
+                    fig.update_layout(yaxis_tickformat="$,.0f")
+                elif "BTC" in ticker:
+                    fig.update_layout(yaxis_tickformat="$,.0f")
+                elif ticker == "KRW=X":
+                    fig.update_layout(yaxis_tickformat="₩,.0f")
+                
+                st.plotly_chart(fig, use_container_width=True)
+                if source_hint != "yfinance":
+                    source_label = {
+                        "local_processed": "내부 누적 데이터(data/processed)",
+                        "stooq_xagusd": "Stooq(XAGUSD)",
+                        "naver_kospi_chart": "Naver KOSPI 차트",
+                    }.get(source_hint, source_hint)
+                    st.caption(f"외부 시세망 이슈로 대체 소스({source_label})로 표시 중입니다.")
+            except Exception as e:
+                st.error(f"그래프 렌더링 중 오류 발생: {e}")
+
+    @st.dialog("📈 6개 지표 통합 추세비교", width="large")
+    def show_combined_trend_modal():
+        from datetime import datetime, timedelta
+        import plotly.graph_objects as go
+        
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=365*12)
+        
+        assets = {
+            "금 (Gold)": "GC=F",
+            "은 (Silver)": "SI=F",
+            "코스피 (KOSPI)": "^KS11",
+            "S&P 500": "^GSPC",
+            "원/달러 환율": "KRW=X"
+        }
+        
+        with st.spinner("비교 데이터를 병합하는 중... 약 5초 소요됩니다."):
+            fig = go.Figure()
+            any_trace = False
+            fallback_count = 0
+            
+            for i, (name, ticker) in enumerate(assets.items()):
+                try:
+                    series, source_hint = _fetch_trend_series(
+                        ticker,
+                        start_date.strftime("%Y-%m-%d"),
+                        end_date.strftime("%Y-%m-%d"),
+                    )
+                    if series.empty:
+                        continue
+                    if source_hint != "yfinance":
+                        fallback_count += 1
+                        
+                    first_val = series.iloc[0]
+                    normalized = (series / first_val) * 100
+                    
+                    fig.add_trace(go.Scatter(
+                        x=normalized.index,
+                        y=normalized.values,
+                        mode='lines',
+                        name=name,
+                        line=dict(color=TREND_TICKER_COLOR_MAP.get(ticker, "#6366f1"), width=2)
+                    ))
+                    any_trace = True
+                except Exception:
+                    pass
+
+            if not any_trace:
+                st.error("비교 그래프 데이터를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.")
+                return
+            
+            fig.update_layout(**PLOTLY_LAYOUT)
+            fig.update_layout(
+                title="<b>주요 5개 지표 상대 가치 비교 (시작점 = 100)</b>",
+                height=550,
+                xaxis_title="",
+                yaxis_title="지수 (기준=100)",
+                hovermode="x unified",
+                margin=dict(l=50, r=40, t=60, b=40),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1
+                )
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            if fallback_count > 0:
+                st.caption(f"외부 시세망 이슈로 {fallback_count}개 지표는 대체 소스로 표시했습니다.")
+            st.caption("※ 2014년경을 기준 세팅점(100)으로 삼아, 각 자산의 가치가 시점별로 어떻게 변화했는지 비교할 수 있습니다.")
+
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     with col1:
         if btc_p is not None:
-            render_premium_metric("현재 BTC 가격 (KRW)", f"₩{btc_p:,.0f}", btc_c, btc_source)
+            render_premium_metric("현재 BTC 가격 (KRW)", f"₩{btc_p:,.0f}", btc_c, f"업비트{'-실시간' if isinstance(btc_source, str) and '실시간' in btc_source else ''}")
         else:
             st.metric("현재 BTC 가격", "N/A")
+        if st.button("📈 2014년~ 추세보기", key="btn_btc_trend", use_container_width=True):
+            show_trend_modal("비트코인 (BTC)", "BTC-USD", start_year=2014)
             
     with col2:
         render_premium_metric(
             "금 가격 (g당)",
             f"₩{(gold_p if gold_p is not None else 0.0):,.0f}",
             (gold_c if gold_c is not None else 0.0),
-            gold_s,
+            f"우리은행{'-실시간' if isinstance(gold_s, str) and '실시간' in gold_s else ''}",
         )
+        if st.button("📈 과거 30년 추세보기", key="btn_gold_trend", use_container_width=True):
+            show_trend_modal("금 (국제 선물기준)", "GC=F")
 
     with col3:
         render_premium_metric(
             "은 가격 (g당)",
             f"₩{(silver_p if silver_p is not None else 0.0):,.0f}",
             (silver_c if silver_c is not None else 0.0),
-            silver_s,
+            f"신한은행{'-실시간' if isinstance(silver_s, str) and '실시간' in silver_s else ''}",
         )
+        if st.button("📈 과거 30년 추세보기", key="btn_silver_trend", use_container_width=True):
+            show_trend_modal("은 (국제 선물기준)", "SI=F")
 
     with col4:
+        render_premium_metric(
+            "코스피 (KOSPI)",
+            f"{(kospi_p if kospi_p is not None else 0.0):,.2f}",
+            (kospi_c if kospi_c is not None else 0.0),
+            f"네이버{'-실시간' if isinstance(kospi_s, str) and '실시간' in kospi_s else ''}",
+        )
+        if st.button("📈 과거 30년 추세보기", key="btn_kospi_trend", use_container_width=True):
+            show_trend_modal("코스피 (KOSPI)", "^KS11")
+
+    with col5:
         render_premium_metric(
             "S&P 500 (USD)",
             f"${(sp_p if sp_p is not None else 0.0):,.2f}",
             (sp_c if sp_c is not None else 0.0),
-            sp_source,
+            f"네이버{'-실시간' if isinstance(sp_source, str) and '실시간' in sp_source else ''}",
         )
+        if st.button("📈 과거 30년 추세보기", key="btn_sp500_trend", use_container_width=True):
+            show_trend_modal("S&P 500", "^GSPC")
 
-    with col5:
+    with col6:
         render_premium_metric(
             "KRW/USD",
             f"₩{(krw_p if krw_p is not None else 0.0):,.0f}",
             (krw_c if krw_c is not None else 0.0),
-            krw_s,
+            f"네이버{'-실시간' if isinstance(krw_s, str) and '실시간' in krw_s else ''}",
         )
+        if st.button("📈 과거 30년 추세보기", key="btn_krw_trend", use_container_width=True):
+            show_trend_modal("원/달러 환율", "KRW=X")
+
+    # 5개 지표 통합 추세비교 버튼 추가 (최하단 긴 박스 형태)
+    if st.button("📈 추세비교-종합 (5개 지표 동시비교)", key="btn_combined_trend", use_container_width=True):
+        show_combined_trend_modal()
 
 except Exception as e:
     st.error(f"가격 정보 로드 실패: {e}")
@@ -1990,24 +2332,47 @@ with tab3:
             fillcolor="rgba(129,140,248,0.1)",
         ))
         
-        # Actual Path (if backtesting)
-        if is_backtest:
-            end_date = pred_df_plot["target_date"].max()
-            # Get actual data from start_date to end_date (or max available)
-            mask = (mdf.index >= start_date) & (mdf.index <= end_date + timedelta(days=30))
-            actual_usd_path = mdf.loc[mask, "btc_close"]
-            if "krw_close" in mdf.columns:
-                fx_path = pd.to_numeric(mdf.loc[mask, "krw_close"], errors="coerce").ffill().bfill()
-                actual_path = actual_usd_path * fx_path
-            else:
-                actual_path = actual_usd_path * krw_rate_pred
+        # Actual Path (From 2014 + Backtest Future)
+        past_date = pd.to_datetime("2014-01-01")
+        if mdf.index.tz is not None:
+            past_date = past_date.tz_localize(mdf.index.tz)
+        end_date = pred_df_plot["target_date"].max() if is_backtest else start_date
+        
+        # Get actual data from past_date to end_date (or max available)
+        mask_actual = (mdf.index >= past_date) & (mdf.index <= end_date + timedelta(days=30))
+        actual_usd_path_full = mdf.loc[mask_actual, "btc_close"]
+        
+        # Resample past data to monthly to keep graph clean
+        past_mask = actual_usd_path_full.index < start_date
+        try:
+            actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('ME').last()
+        except:
+            actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('M').last()
             
-            if not actual_path.empty:
-                fig_horizon.add_trace(go.Scatter(
-                    x=actual_path.index, y=actual_path.values,
-                    name="실제 가격",
-                    line=dict(color=COLORS["btc"], width=2.5),
-                ))
+        # Add future paths if backtesting
+        if is_backtest:
+            future_mask = actual_usd_path_full.index >= start_date
+            actual_usd_path = pd.concat([actual_usd_path_monthly, actual_usd_path_full[future_mask]])
+            actual_usd_path = actual_usd_path[~actual_usd_path.index.duplicated(keep='last')]
+        else:
+            actual_usd_path = actual_usd_path_monthly
+            if start_date not in actual_usd_path.index and current_price is not None:
+                actual_usd_path.loc[start_date] = current_price
+            actual_usd_path = actual_usd_path.sort_index()
+            
+        if "krw_close" in mdf.columns:
+            fx_series = pd.to_numeric(mdf["krw_close"], errors="coerce").ffill().bfill()
+            fx_path = fx_series.reindex(actual_usd_path.index, method='ffill').bfill()
+            actual_path = actual_usd_path * fx_path
+        else:
+            actual_path = actual_usd_path * krw_rate_pred
+            
+        if not actual_path.empty:
+            fig_horizon.add_trace(go.Scatter(
+                x=actual_path.index, y=actual_path.values,
+                name="실제 가격 (2014년~)",
+                line=dict(color=COLORS["btc"], width=2.5),
+            ))
 
         fig_horizon.add_hline(
             y=current_price_krw,
@@ -2024,9 +2389,12 @@ with tab3:
             hovermode="x unified",
         )
         y_vals_horizon = [current_price_krw] + predicted_path_krw
-        if is_backtest and 'actual_path' in locals() and not actual_path.empty:
+        if 'actual_path' in locals() and not actual_path.empty:
             y_vals_horizon += actual_path.values.tolist()
-        apply_yaxis_floor_40k(fig_horizon, y_vals_horizon, floor=90_000_000.0)
+            
+        valid_y_vals = [y for y in y_vals_horizon if pd.notnull(y)]
+        dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
+        apply_yaxis_floor_40k(fig_horizon, y_vals_horizon, floor=dynamic_floor)
         st.plotly_chart(fig_horizon, use_container_width=True)
         
         # Return bar chart
@@ -2143,24 +2511,45 @@ with tab4:
                         fillcolor="rgba(129,140,248,0.1)",
                     ))
                     
-                    # Actual Path (if backtesting)
-                    if is_backtest:
-                        end_date = pd.to_datetime(result.get("estimated_date", path_df["target_date"].max()))
-                        mdf = load_merged_data()
-                        mask = (mdf.index >= start_date) & (mdf.index <= end_date + timedelta(days=30))
-                        actual_usd_path = mdf.loc[mask, "btc_close"]
-                        if "krw_close" in mdf.columns:
-                            fx_path = pd.to_numeric(mdf.loc[mask, "krw_close"], errors="coerce").ffill().bfill()
-                            actual_path = actual_usd_path * fx_path
-                        else:
-                            actual_path = actual_usd_path * krw_rate_mode1
+                    # Actual Path (From 2014 + Backtest Future)
+                    mdf = load_merged_data()
+                    past_date = pd.to_datetime("2014-01-01")
+                    if mdf.index.tz is not None:
+                        past_date = past_date.tz_localize(mdf.index.tz)
+                    end_date = pd.to_datetime(result.get("estimated_date", path_df["target_date"].max())) if is_backtest else start_date
+                    
+                    mask = (mdf.index >= past_date) & (mdf.index <= end_date + timedelta(days=30))
+                    actual_usd_path_full = mdf.loc[mask, "btc_close"]
+                    
+                    past_mask = actual_usd_path_full.index < start_date
+                    try:
+                        actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('ME').last()
+                    except:
+                        actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('M').last()
                         
-                        if not actual_path.empty:
-                            fig_path.add_trace(go.Scatter(
-                                x=actual_path.index, y=actual_path.values,
-                                name="실제 가격",
-                                line=dict(color=COLORS["btc"], width=2),
-                            ))
+                    if is_backtest:
+                        future_mask = actual_usd_path_full.index >= start_date
+                        actual_usd_path = pd.concat([actual_usd_path_monthly, actual_usd_path_full[future_mask]])
+                        actual_usd_path = actual_usd_path[~actual_usd_path.index.duplicated(keep='last')]
+                    else:
+                        actual_usd_path = actual_usd_path_monthly
+                        if start_date not in actual_usd_path.index and current_price is not None:
+                            actual_usd_path.loc[start_date] = current_price
+                        actual_usd_path = actual_usd_path.sort_index()
+
+                    if "krw_close" in mdf.columns:
+                        fx_series = pd.to_numeric(mdf["krw_close"], errors="coerce").ffill().bfill()
+                        fx_path = fx_series.reindex(actual_usd_path.index, method='ffill').bfill()
+                        actual_path = actual_usd_path * fx_path
+                    else:
+                        actual_path = actual_usd_path * krw_rate_mode1
+                    
+                    if not actual_path.empty:
+                        fig_path.add_trace(go.Scatter(
+                            x=actual_path.index, y=actual_path.values,
+                            name="실제 가격 (2014년~)",
+                            line=dict(color=COLORS["btc"], width=2),
+                        ))
 
                     fig_path.add_hline(
                         y=target_price_krw,
@@ -2182,9 +2571,12 @@ with tab4:
                         height=450,
                     )
                     y_vals_mode1 = [current_price_krw, target_price_krw] + path_pred_krw.tolist()
-                    if is_backtest and 'actual_path' in locals() and not actual_path.empty:
+                    if 'actual_path' in locals() and not actual_path.empty:
                         y_vals_mode1 += actual_path.values.tolist()
-                    apply_yaxis_floor_40k(fig_path, y_vals_mode1, floor=90_000_000.0)
+                        
+                    valid_y_vals = [y for y in y_vals_mode1 if pd.notnull(y)]
+                    dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
+                    apply_yaxis_floor_40k(fig_path, y_vals_mode1, floor=dynamic_floor)
                     st.plotly_chart(fig_path, use_container_width=True)
                     
                 except Exception as e:
@@ -2295,23 +2687,45 @@ with tab4:
                         marker=dict(size=8),
                     ))
                     
-                    # Actual (if backtesting)
-                    if is_backtest:
-                        end_date = pd.to_datetime(result['target_date'])
-                        mask = (mdf.index >= start_date) & (mdf.index <= end_date + timedelta(days=30))
-                        actual_usd_path = mdf.loc[mask, "btc_close"]
-                        if "krw_close" in mdf.columns:
-                            fx_path = pd.to_numeric(mdf.loc[mask, "krw_close"], errors="coerce").ffill().bfill()
-                            actual_path = actual_usd_path * fx_path
-                        else:
-                            actual_path = actual_usd_path * krw_rate_mode2
+                    # Actual (From 2014 + Backtest Future)
+                    mdf = load_merged_data()
+                    past_date = pd.to_datetime("2014-01-01")
+                    if mdf.index.tz is not None:
+                        past_date = past_date.tz_localize(mdf.index.tz)
+                    end_date = pd.to_datetime(result['target_date']) if is_backtest else start_date
+                    
+                    mask = (mdf.index >= past_date) & (mdf.index <= end_date + timedelta(days=30))
+                    actual_usd_path_full = mdf.loc[mask, "btc_close"]
+                    
+                    past_mask = actual_usd_path_full.index < start_date
+                    try:
+                        actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('ME').last()
+                    except:
+                        actual_usd_path_monthly = actual_usd_path_full[past_mask].resample('M').last()
                         
-                        if not actual_path.empty:
-                            fig_path.add_trace(go.Scatter(
-                                x=actual_path.index, y=actual_path.values,
-                                name="실제 가격",
-                                line=dict(color=COLORS["btc"], width=2),
-                            ))
+                    if is_backtest:
+                        future_mask = actual_usd_path_full.index >= start_date
+                        actual_usd_path = pd.concat([actual_usd_path_monthly, actual_usd_path_full[future_mask]])
+                        actual_usd_path = actual_usd_path[~actual_usd_path.index.duplicated(keep='last')]
+                    else:
+                        actual_usd_path = actual_usd_path_monthly
+                        if start_date not in actual_usd_path.index and current_price is not None:
+                            actual_usd_path.loc[start_date] = current_price
+                        actual_usd_path = actual_usd_path.sort_index()
+
+                    if "krw_close" in mdf.columns:
+                        fx_series = pd.to_numeric(mdf["krw_close"], errors="coerce").ffill().bfill()
+                        fx_path = fx_series.reindex(actual_usd_path.index, method='ffill').bfill()
+                        actual_path = actual_usd_path * fx_path
+                    else:
+                        actual_path = actual_usd_path * krw_rate_mode2
+                    
+                    if not actual_path.empty:
+                        fig_path.add_trace(go.Scatter(
+                            x=actual_path.index, y=actual_path.values,
+                            name="실제 가격 (2014년~)",
+                            line=dict(color=COLORS["btc"], width=2),
+                        ))
 
                     fig_path.add_hline(
                         y=current_price_krw,
@@ -2326,9 +2740,12 @@ with tab4:
                         height=450,
                     )
                     y_vals_mode2 = [current_price_krw] + path_pred_krw.tolist()
-                    if is_backtest and 'actual_path' in locals() and not actual_path.empty:
+                    if 'actual_path' in locals() and not actual_path.empty:
                         y_vals_mode2 += actual_path.values.tolist()
-                    apply_yaxis_floor_40k(fig_path, y_vals_mode2, floor=90_000_000.0)
+                        
+                    valid_y_vals = [y for y in y_vals_mode2 if pd.notnull(y)]
+                    dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
+                    apply_yaxis_floor_40k(fig_path, y_vals_mode2, floor=dynamic_floor)
                     st.plotly_chart(fig_path, use_container_width=True)
                     
                 except Exception as e:
@@ -2379,13 +2796,3 @@ st.markdown("""
     <p>🔄 Direct Multi-Horizon Prediction (재귀 오차 누적 제거)</p>
 </div>
 """, unsafe_allow_html=True)
-try:
-    footer_deploy = get_deploy_commit_meta()
-    st.markdown(
-        "<div style='text-align:center; color:#64748b; font-size:0.72em; margin-top:-10px;'>"
-        f"Deploy SHA: {footer_deploy['short']} ({footer_deploy['source']})"
-        "</div>",
-        unsafe_allow_html=True,
-    )
-except Exception:
-    pass
