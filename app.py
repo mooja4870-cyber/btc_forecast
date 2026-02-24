@@ -125,13 +125,13 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Auto-refresh whole dashboard every 180 seconds (3 minutes) for real-time metric cards.
+# Auto-refresh whole dashboard every 300 seconds (5 minutes) for real-time metric cards.
 st.components.v1.html(
     """
     <script>
     setTimeout(function () {
         window.parent.location.reload();
-    }, 180000);
+    }, 300000);
     </script>
     """,
     height=0,
