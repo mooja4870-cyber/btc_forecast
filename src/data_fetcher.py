@@ -802,8 +802,8 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     """
     Source priority:
     - BTC: Upbit KRW (strict)
-    - WOORI_GOLDBANK_KRW: Woori Gold Banking KRW
-    - SHINHAN_SILVER_KRW: Shinhan SilverRush KRW
+    - WOORI_GOLDBANK_KRW: Woori Gold Banking KRW -> Shinhan GoldRush KRW fallback
+    - SHINHAN_SILVER_KRW: Shinhan SilverRush KRW -> Woori Gold Banking (if applicable) fallback
     - GC=F, ^GSPC: Yahoo Finance -> Alpha Vantage -> Investing.com
     - KRW=X: Upbit KRW-USDT(USD proxy) -> Naver Finance -> ExchangeRate-API -> Google Finance -> FinanceDataReader
     - Others: Yahoo Finance chain
@@ -813,6 +813,10 @@ def fetch_data_robust(symbol, asset_type="crypto"):
         p, c, s = fetch_woori_goldbank_krw()
         if p is not None:
             return p, c, s
+        # Fallback to Shinhan Gold
+        p, c, s = fetch_shinhan_goldrush_krw()
+        if p is not None:
+            return p, c, s
         return None, None, None
 
     # Shinhan SilverRush KRW dedicated chain
@@ -820,6 +824,7 @@ def fetch_data_robust(symbol, asset_type="crypto"):
         p, c, s = fetch_shinhan_silverrush_krw()
         if p is not None:
             return p, c, s
+        # Currently no dedicated Woori silver fetcher, but we could add one if needed.
         return None, None, None
 
     # BTC special path

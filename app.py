@@ -1448,19 +1448,19 @@ try:
         btc_source = btc_s
     else:
         btc_p = usd_to_krw(btc_raw_p, krw_rate)
-        btc_source = f"{btc_s} × KRW/USD 환산({krw_s})" if krw_rate else btc_s
+        btc_source = f"{btc_s} × KRW/USD 환산({krw_s})" if krw_p else btc_s
 
     # 3. Gold (Woori Gold Banking KRW)
-    gold_p, gold_c, gold_s = get_realtime_metric("WOORI_GOLDBANK_KRW", mdf, "gold_close", "Gold", realtime_only=True)
+    gold_p, gold_c, gold_s = get_realtime_metric("WOORI_GOLDBANK_KRW", mdf, "gold_close", "Gold", realtime_only=False)
 
     # 4. Silver (Shinhan SilverRush KRW)
-    silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=True)
+    silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=False)
 
     # 5. KOSPI (^KS11)
-    kospi_p, kospi_c, kospi_s = get_realtime_metric("^KS11", mdf, "kospi_close", "KOSPI", realtime_only=True)
+    kospi_p, kospi_c, kospi_s = get_realtime_metric("^KS11", mdf, "kospi_close", "KOSPI", realtime_only=False)
 
     # 6. S&P 500 (^GSPC, USD original)
-    sp_usd_p, sp_c, sp_s = get_realtime_metric("^GSPC", mdf, "sp500_close", "S&P500", realtime_only=True)
+    sp_usd_p, sp_c, sp_s = get_realtime_metric("^GSPC", mdf, "sp500_close", "S&P500", realtime_only=False)
     sp_p = sp_usd_p
     sp_source = sp_s
 
@@ -1812,52 +1812,62 @@ try:
             show_trend_modal("비트코인 (BTC)", "BTC-USD", start_year=2014)
             
     with col2:
-        render_premium_metric(
-            "금 가격 (g당)",
-            f"₩{(gold_p if gold_p is not None else 0.0):,.0f}",
-            (gold_c if gold_c is not None else 0.0),
-            f"우리은행{'-실시간' if isinstance(gold_s, str) and '실시간' in gold_s else ''}",
-        )
+        if gold_p is not None and gold_p > 0:
+            gs = str(gold_s)
+            is_real = ("실시간" in gs and "실패" not in gs)
+            src_text = f"우리은행{'-실시간' if is_real else ''}" if "우리은행" in gs else gs
+            render_premium_metric("금 가격 (g당)", f"₩{gold_p:,.0f}", gold_c, src_text)
+        else:
+            st.metric("금 가격 (g당)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_gold_trend", use_container_width=True):
             show_trend_modal("금 (국제 선물기준)", "GC=F")
 
     with col3:
-        render_premium_metric(
-            "은 가격 (g당)",
-            f"₩{(silver_p if silver_p is not None else 0.0):,.0f}",
-            (silver_c if silver_c is not None else 0.0),
-            f"신한은행{'-실시간' if isinstance(silver_s, str) and '실시간' in silver_s else ''}",
-        )
+        if silver_p is not None and silver_p > 0:
+            ss = str(silver_s)
+            is_real = ("실시간" in ss and "실패" not in ss)
+            src_text = f"신한은행{'-실시간' if is_real else ''}" if "신한" in ss else ss
+            render_premium_metric("은 가격 (g당)", f"₩{silver_p:,.0f}", silver_c, src_text)
+        else:
+            st.metric("은 가격 (g당)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_silver_trend", use_container_width=True):
             show_trend_modal("은 (국제 선물기준)", "SI=F")
 
     with col4:
-        render_premium_metric(
-            "코스피 (KOSPI)",
-            f"{(kospi_p if kospi_p is not None else 0.0):,.2f}",
-            (kospi_c if kospi_c is not None else 0.0),
-            f"네이버{'-실시간' if isinstance(kospi_s, str) and '실시간' in kospi_s else ''}",
-        )
+        if kospi_p is not None and kospi_p > 0:
+            ks = str(kospi_s)
+            is_real = ("실시간" in ks and "실패" not in ks)
+            src_text = f"네이버{'-실시간' if is_real else ''}" if "네이버" in ks else ks
+            render_premium_metric("KOSPI 지수", f"{kospi_p:,.2f}", kospi_c, src_text)
+        else:
+            st.metric("KOSPI 지수", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_kospi_trend", use_container_width=True):
             show_trend_modal("코스피 (KOSPI)", "^KS11")
 
     with col5:
-        render_premium_metric(
-            "S&P 500 (USD)",
-            f"${(sp_p if sp_p is not None else 0.0):,.2f}",
-            (sp_c if sp_c is not None else 0.0),
-            f"네이버{'-실시간' if isinstance(sp_source, str) and '실시간' in sp_source else ''}",
-        )
+        if sp_p is not None and sp_p > 0:
+            sps = str(sp_source)
+            is_real = ("실시간" in sps and "실패" not in sps)
+            src_text = f"야후{'-실시간' if is_real else ''}" if "야후" in sps else sps
+            render_premium_metric("S&P 500 (현지)", f"{sp_p:,.2f}", sp_c, src_text)
+        else:
+            st.metric("S&P 500 (현지)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_sp500_trend", use_container_width=True):
             show_trend_modal("S&P 500", "^GSPC")
 
     with col6:
-        render_premium_metric(
-            "KRW/USD",
-            f"₩{(krw_p if krw_p is not None else 0.0):,.0f}",
-            (krw_c if krw_c is not None else 0.0),
-            f"네이버{'-실시간' if isinstance(krw_s, str) and '실시간' in krw_s else ''}",
-        )
+        if krw_p is not None and krw_p > 0:
+            ks = str(krw_s)
+            is_real = ("실시간" in ks and "실패" not in ks)
+            src_text = f"환율망{'-실시간' if is_real else ''}" if "환율" in ks else ks
+            render_premium_metric("달러 환율 (KRW/USD)", f"₩{krw_p:,.1f}", krw_c, src_text)
+        else:
+            # Fallback for display rate if real-time failed
+            fallback_rate = resolve_display_krw_rate(mdf)
+            if fallback_rate > 0:
+                render_premium_metric("달러 환율 (KRW/USD)", f"₩{fallback_rate:,.1f}", 0.0, "파일 캐시")
+            else:
+                st.metric("달러 환율 (KRW/USD)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_krw_trend", use_container_width=True):
             show_trend_modal("원/달러 환율", "KRW=X")
 
