@@ -357,6 +357,52 @@ def fetch_naver_marketindex_usd_krw():
         return None, None, None
 
 
+def fetch_naver_domestic_gold_krw():
+    """Primary KRW gold source: Naver marketindex '국내 금' (원/g)."""
+    try:
+        url = "https://finance.naver.com/marketindex/?tabSel=gold#tab_section"
+        resp = requests.get(url, headers=NAVER_HEADERS, timeout=6)
+        if resp.status_code != 200:
+            return None, None, None
+
+        page = resp.text
+        # Isolate domestic-gold card block to avoid mixing with international gold card.
+        m_block = re.search(
+            r'<a href="/marketindex/goldDetail\.naver" class="head gold_domestic".*?</li>',
+            page,
+            re.S | re.I,
+        )
+        block = m_block.group(0) if m_block else ""
+        if not block:
+            return None, None, None
+
+        m_val = re.search(r'<span class="value">\s*([0-9,\.]+)\s*</span>', block, re.I)
+        current = _to_float(m_val.group(1)) if m_val else None
+        if current is None:
+            return None, None, None
+
+        change_pct = 0.0
+        m_abs = re.search(r'<span class="change">\s*([0-9,\.]+)\s*</span>', block, re.I)
+        if m_abs:
+            delta_abs = _to_float(m_abs.group(1))
+            if delta_abs is not None:
+                is_up = "point_up" in block
+                is_down = "point_dn" in block or "point_down" in block
+                signed_delta = delta_abs if is_up else (-delta_abs if is_down else 0.0)
+                prev = current - signed_delta
+                if prev not in (None, 0):
+                    change_pct = (signed_delta / prev) * 100.0
+
+        m_time = re.search(r'<span class="time">\s*([^<]+)\s*</span>', block, re.I)
+        m_src = re.search(r'<span class="source">\s*([^<]+)\s*</span>', block, re.I)
+        time_text = _clean_html_text(m_time.group(1)) if m_time else ""
+        src_text = _clean_html_text(m_src.group(1)) if m_src else "네이버 금융"
+        source = f"실시간 (네이버 국내금, {src_text}{', ' + time_text if time_text else ''})"
+        return current, change_pct, source
+    except Exception:
+        return None, None, None
+
+
 def fetch_google_finance_usd_krw():
     """Secondary KRW/USD source: Google Finance page parsing."""
     try:
@@ -802,7 +848,7 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     """
     Source priority:
     - BTC: Upbit KRW (strict)
-    - WOORI_GOLDBANK_KRW: Woori Gold Banking KRW -> Shinhan GoldRush KRW fallback
+    - WOORI_GOLDBANK_KRW: Naver domestic gold KRW -> Woori Gold Banking KRW -> Shinhan GoldRush KRW
     - SHINHAN_SILVER_KRW: Shinhan SilverRush KRW -> Woori Gold Banking (if applicable) fallback
     - GC=F, ^GSPC: Yahoo Finance -> Alpha Vantage -> Investing.com
     - KRW=X: Upbit KRW-USDT(USD proxy) -> Naver Finance -> ExchangeRate-API -> Google Finance -> FinanceDataReader
@@ -810,6 +856,9 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     """
     # Woori Gold Banking KRW dedicated chain
     if symbol == "WOORI_GOLDBANK_KRW":
+        p, c, s = fetch_naver_domestic_gold_krw()
+        if p is not None:
+            return p, c, s
         p, c, s = fetch_woori_goldbank_krw()
         if p is not None:
             return p, c, s

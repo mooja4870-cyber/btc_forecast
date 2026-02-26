@@ -1141,10 +1141,30 @@ def load_latest_model_training_run():
     run_display = "배포된 모델"
     if run_id:
         try:
-            run_display = datetime.strptime(run_compact, "%Y%m%d_%H%M%S").strftime("%Y-%m-%d %H:%M")
+            # New runs are in KST (run_pipeline modification). 
+            # We assume most runs follow this or it's 'local time' of the pipeline.
+            dt_obj = datetime.strptime(run_compact, "%Y%m%d_%H%M%S")
+            run_display = dt_obj.strftime("%Y-%m-%d %H:%M") + " (KST)"
         except Exception:
             run_display = run_compact
-    return {"run_id": run_id, "run_compact": run_compact, "run_display": run_display}
+
+    # Next scheduled run info (00:00 KST)
+    try:
+        kst = timezone(timedelta(hours=9))
+        now_kst = datetime.now(timezone.utc).astimezone(kst)
+        next_kst = (now_kst + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        if now_kst.hour == 0 and now_kst.minute < 30: # If it's early morning, maybe show today 00:00 was the last
+            pass
+        next_run_str = next_kst.strftime("%m월 %d일 00:00 (KST)")
+    except Exception:
+        next_run_str = "매일 00:00 (KST)"
+
+    return {
+        "run_id": run_id, 
+        "run_compact": run_compact, 
+        "run_display": run_display,
+        "next_run_str": next_run_str
+    }
 
 
 # ================================================================
@@ -1240,6 +1260,9 @@ with st.sidebar:
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
             st.markdown(f"**{model_run['run_display']}**")
+        with st.popover("🔶 차기 자동학습 예정시각", use_container_width=True):
+            st.markdown(f"**{model_run.get('next_run_str', '매일 00:00 (KST)')}**")
+            st.caption("※ GitHub Actions 스케줄러 상황에 따라 약간의 지연이 발생할 수 있습니다.")
         with st.popover("🔶 총 데이터 포인트", use_container_width=True):
             st.markdown(f"**{len(df):,}일**")
         with st.popover(f"🔶 변수 수 (원시) : {df.shape[1]}개", use_container_width=True):
@@ -1356,6 +1379,27 @@ st.markdown("""
 # Current BTC price display
 try:
     # ── Real-time Metrics Fetcher (Robust) ──
+    TROY_OUNCE_IN_GRAMS = 31.1034768
+    METRIC_RANGE_RULES = {
+        "WOORI_GOLDBANK_KRW": {"min": 50_000.0, "max": 500_000.0, "ref_ticker": "GC=F"},
+        "SHINHAN_SILVER_KRW": {"min": 500.0, "max": 20_000.0, "ref_ticker": "SI=F"},
+    }
+    REALTIME_CACHE_MAX_AGE_SECONDS = {
+        "WOORI_GOLDBANK_KRW": 6 * 60 * 60,
+        "SHINHAN_SILVER_KRW": 6 * 60 * 60,
+        "BTC-USD": 30 * 60,
+        "KRW=X": 30 * 60,
+    }
+
+    def _to_num(value):
+        try:
+            num = float(value)
+            if not np.isfinite(num):
+                return None
+            return num
+        except Exception:
+            return None
+
     @st.cache_data(ttl=60, show_spinner=False)
     def get_robust_price(ticker_symbol, asset_type="generic"):
         try:
@@ -1376,6 +1420,47 @@ try:
 
     def get_realtime_metric(ticker_symbol, file_data, file_col, name, realtime_only=False):
         cache_path = os.path.join(PROCESSED_DIR, "realtime_metrics_cache.json")
+
+        def _usd_oz_to_krw_per_g(usd_per_oz):
+            usd_val = _to_num(usd_per_oz)
+            if usd_val is None:
+                return None
+            krw_rate_now = _to_num(resolve_display_krw_rate(file_data))
+            if krw_rate_now is None or krw_rate_now <= 0:
+                return None
+            return usd_val * krw_rate_now / TROY_OUNCE_IN_GRAMS
+
+        def _validate_or_replace(symbol, current, change, source):
+            cur = _to_num(current)
+            if cur is None:
+                return None, None, source
+            chg = _to_num(change)
+            if chg is None:
+                chg = 0.0
+
+            rule = METRIC_RANGE_RULES.get(symbol)
+            if not rule:
+                return cur, chg, source
+
+            min_val = float(rule["min"])
+            max_val = float(rule["max"])
+            in_range = min_val <= cur <= max_val
+            if in_range and "파일(" not in str(source):
+                return cur, chg, source
+
+            ref_ticker = rule.get("ref_ticker")
+            ref_usd_oz, _, ref_src = get_robust_price(ref_ticker) if ref_ticker else (None, None, None)
+            ref_krw_per_g = _usd_oz_to_krw_per_g(ref_usd_oz)
+
+            if not in_range and ref_krw_per_g is not None:
+                return ref_krw_per_g, 0.0, f"검증대체({source}→{ref_src})"
+
+            if in_range and ref_krw_per_g is not None and ref_krw_per_g > 0:
+                gap_pct = abs(cur - ref_krw_per_g) / ref_krw_per_g * 100.0
+                if gap_pct > 45.0:
+                    return ref_krw_per_g, 0.0, f"검증대체({source}↔{ref_src}, Δ{gap_pct:.1f}%)"
+
+            return cur, chg, source
 
         def load_cache():
             try:
@@ -1405,32 +1490,74 @@ try:
         if current is not None:
             if change is None:
                 change = 0.0
+            current, change, source = _validate_or_replace(ticker_symbol, current, change, source)
+            if current is None:
+                return None, None, f"값 검증 실패({source})"
             save_cache(ticker_symbol, current, change, source)
             return float(current), float(change), source
 
         # 2. Last known real-time cache
         cached = load_cache().get(ticker_symbol)
         if cached and cached.get("current") is not None:
-            return (
-                float(cached.get("current")),
-                float(cached.get("change", 0.0)),
-                f"실시간 캐시({cached.get('updated_at', '-')})",
-            )
+            updated_at_raw = str(cached.get("updated_at", "")).strip()
+            max_age_sec = REALTIME_CACHE_MAX_AGE_SECONDS.get(ticker_symbol, 24 * 60 * 60)
+            is_fresh = False
+            try:
+                updated_dt = datetime.strptime(updated_at_raw, "%Y-%m-%d %H:%M:%S")
+                age_sec = (datetime.now() - updated_dt).total_seconds()
+                is_fresh = age_sec <= max_age_sec
+            except Exception:
+                is_fresh = False
+
+            if is_fresh:
+                cur, chg, src = _validate_or_replace(
+                    ticker_symbol,
+                    cached.get("current"),
+                    cached.get("change", 0.0),
+                    f"실시간 캐시({updated_at_raw or '-'})",
+                )
+                if cur is not None:
+                    return float(cur), float(chg if chg is not None else 0.0), src
 
         if realtime_only:
             return None, None, "실시간 소스 실패"
 
         # 3. Fallback to file (hard safety)
         if file_col in file_data.columns:
-            series = file_data[file_col].dropna()
+            series = pd.to_numeric(file_data[file_col], errors="coerce").dropna()
             if not series.empty:
                 current = float(series.iloc[-1])
                 prev = float(series.iloc[-2]) if len(series) > 1 else current
+                source = f"파일({file_data.index[-1].date()})"
+
+                rule = METRIC_RANGE_RULES.get(ticker_symbol)
+                if rule and current < float(rule["min"]):
+                    converted_current = _usd_oz_to_krw_per_g(current)
+                    converted_prev = _usd_oz_to_krw_per_g(prev)
+                    if converted_current is not None:
+                        current = float(converted_current)
+                        prev = float(converted_prev) if converted_prev is not None else current
+                        source = f"{source}-USD/oz→KRW/g 환산"
+
                 change = (current - prev) / prev * 100 if prev else 0.0
-                return current, change, f"파일({file_data.index[-1].date()})"
+                cur, chg, src = _validate_or_replace(ticker_symbol, current, change, source)
+                if cur is not None:
+                    return float(cur), float(chg if chg is not None else 0.0), src
 
         # 4. Final guard: never return N/A
         return 0.0, 0.0, "보호값(실시간/캐시/파일 실패)"
+
+    def _reference_commodity_krw_per_g(usd_ticker, krw_rate_for_display):
+        usd_oz, usd_change, usd_source = get_robust_price(usd_ticker)
+        usd_val = _to_num(usd_oz)
+        rate_val = _to_num(krw_rate_for_display)
+        if usd_val is None or rate_val is None or rate_val <= 0:
+            return None, None, None
+        krw_per_g = (usd_val * rate_val) / TROY_OUNCE_IN_GRAMS
+        change_val = _to_num(usd_change)
+        if change_val is None:
+            change_val = 0.0
+        return float(krw_per_g), float(change_val), f"참조환산({usd_source} × KRW/USD)"
 
     # Load file data once for fallback
     mdf = load_merged_data()
@@ -1451,10 +1578,18 @@ try:
         btc_source = f"{btc_s} × KRW/USD 환산({krw_s})" if krw_p else btc_s
 
     # 3. Gold (Woori Gold Banking KRW)
-    gold_p, gold_c, gold_s = get_realtime_metric("WOORI_GOLDBANK_KRW", mdf, "gold_close", "Gold", realtime_only=False)
+    gold_p, gold_c, gold_s = get_realtime_metric("WOORI_GOLDBANK_KRW", mdf, "gold_close", "Gold", realtime_only=True)
+    if gold_p is None or gold_p <= 0:
+        g_ref_p, g_ref_c, g_ref_s = _reference_commodity_krw_per_g("GC=F", krw_rate)
+        if g_ref_p is not None and g_ref_p > 0:
+            gold_p, gold_c, gold_s = g_ref_p, g_ref_c, g_ref_s
 
     # 4. Silver (Shinhan SilverRush KRW)
-    silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=False)
+    silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=True)
+    if silver_p is None or silver_p <= 0:
+        s_ref_p, s_ref_c, s_ref_s = _reference_commodity_krw_per_g("SI=F", krw_rate)
+        if s_ref_p is not None and s_ref_p > 0:
+            silver_p, silver_c, silver_s = s_ref_p, s_ref_c, s_ref_s
 
     # 5. KOSPI (^KS11)
     kospi_p, kospi_c, kospi_s = get_realtime_metric("^KS11", mdf, "kospi_close", "KOSPI", realtime_only=False)
@@ -1815,8 +1950,13 @@ try:
         if gold_p is not None and gold_p > 0:
             gs = str(gold_s)
             is_real = ("실시간" in gs and "실패" not in gs)
-            src_text = f"우리은행{'-실시간' if is_real else ''}" if "우리은행" in gs else gs
-            render_premium_metric("금 가격 (g당)", f"₩{gold_p:,.0f}", gold_c, src_text)
+            if "네이버" in gs:
+                src_text = f"네이버{'-실시간' if is_real else ''}"
+            elif "우리은행" in gs:
+                src_text = f"우리은행{'-실시간' if is_real else ''}"
+            else:
+                src_text = gs
+            render_premium_metric("금 가격 (g당)", f"₩{gold_p:,.2f}", gold_c, src_text)
         else:
             st.metric("금 가격 (g당)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_gold_trend", use_container_width=True):
@@ -1827,7 +1967,7 @@ try:
             ss = str(silver_s)
             is_real = ("실시간" in ss and "실패" not in ss)
             src_text = f"신한은행{'-실시간' if is_real else ''}" if "신한" in ss else ss
-            render_premium_metric("은 가격 (g당)", f"₩{silver_p:,.0f}", silver_c, src_text)
+            render_premium_metric("은 가격 (g당)", f"₩{silver_p:,.2f}", silver_c, src_text)
         else:
             st.metric("은 가격 (g당)", "N/A")
         if st.button("📈 과거 30년 추세보기", key="btn_silver_trend", use_container_width=True):
