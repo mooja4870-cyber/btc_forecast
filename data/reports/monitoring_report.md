@@ -1,17 +1,17 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-02-26 16:02:22
-**Run ID:** run_20260226_160222
+**Generated:** 2026-02-27 15:45:28
+**Run ID:** run_20260227_154527
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 7 features
+- ⚠️ Expansion feature drift detected: 8 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $1461.95 | $1468.89 |
-| **RMSE** | $1862.41 | $1870.65 |
+| **MAE** | $1463.48 | $1470.44 |
+| **RMSE** | $1863.38 | $1871.63 |
 | **MAPE** | 2.2% | 2.2% |
 | **Count** | 91 | 90 |
 
@@ -22,12 +22,12 @@
 | 2026-02-25 00:00:00 | 7d        |           67034   |        67960.1 |    -1.36278 |
 | 2026-02-25 00:00:00 | 7d        |           67155   |        67960.1 |    -1.18466 |
 | 2026-02-25 00:00:00 | 7d        |           66018.1 |        67960.1 |    -2.85754 |
-| 2026-02-26 00:00:00 | 7d        |           66165.8 |        67383.7 |    -1.80744 |
-| 2026-02-26 00:00:00 | 7d        |           66320   |        67383.7 |    -1.57857 |
+| 2026-02-26 00:00:00 | 7d        |           66165.8 |        67453.8 |    -1.90939 |
+| 2026-02-26 00:00:00 | 7d        |           66320   |        67453.8 |    -1.68076 |
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 7
+- Drifted features (30d vs prev 180d): 8
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,12 +49,13 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature              |   z_score |   current_mean |     ref_mean |
-|:---------------------|----------:|---------------:|-------------:|
-| geo_ovx_close        |   4.36658 |     51.0803    |   34.9074    |
-| geo_ovx_close_ret30d |   2.85998 |      0.409659  |    0.0173995 |
-| oil_fut_close_ret30d |   2.75276 |      0.0903248 |   -0.0203146 |
-| gold_fut_close       |   2.36553 |   4991.31      | 4000.41      |
-| wheat_fut_close      |   2.1557  |    544.367     |  517.625     |
-| log_gold_fut_close   |   2.14631 |      8.51493   |    8.28866   |
-| log_wheat_fut_close  |   2.10678 |      6.29922   |    6.24897   |
+| feature                     |   z_score |   current_mean |     ref_mean |
+|:----------------------------|----------:|---------------:|-------------:|
+| gold_fut_oi_change_7d_proxy |   4.66808 |     89.5745    |    4.80494   |
+| geo_ovx_close               |   4.31634 |     51.4533    |   34.9632    |
+| geo_ovx_close_ret30d        |   2.69482 |      0.401368  |    0.0202453 |
+| oil_fut_close_ret30d        |   2.67901 |      0.0891065 |   -0.0200848 |
+| gold_fut_close              |   2.32726 |   4995.2       | 4010.34      |
+| wheat_fut_close             |   2.28535 |    545.975     |  517.625     |
+| log_wheat_fut_close         |   2.23007 |      6.30216   |    6.24897   |
+| log_gold_fut_close          |   2.11847 |      8.51569   |    8.29107   |
