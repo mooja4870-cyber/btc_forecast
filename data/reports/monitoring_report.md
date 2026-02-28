@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-02-27 15:45:28
-**Run ID:** run_20260227_154527
+**Generated:** 2026-02-28 15:32:11
+**Run ID:** run_20260228_153211
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 7 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 7
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,13 +49,12 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |     ref_mean |
-|:----------------------------|----------:|---------------:|-------------:|
-| gold_fut_oi_change_7d_proxy |   4.66808 |     89.5745    |    4.80494   |
-| geo_ovx_close               |   4.31634 |     51.4533    |   34.9632    |
-| geo_ovx_close_ret30d        |   2.69482 |      0.401368  |    0.0202453 |
-| oil_fut_close_ret30d        |   2.67901 |      0.0891065 |   -0.0200848 |
-| gold_fut_close              |   2.32726 |   4995.2       | 4010.34      |
-| wheat_fut_close             |   2.28535 |    545.975     |  517.625     |
-| log_wheat_fut_close         |   2.23007 |      6.30216   |    6.24897   |
-| log_gold_fut_close          |   2.11847 |      8.51569   |    8.29107   |
+| feature              |   z_score |   current_mean |     ref_mean |
+|:---------------------|----------:|---------------:|-------------:|
+| geo_ovx_close        |   4.22002 |     51.793     |   35.0344    |
+| oil_fut_close_ret30d |   2.57631 |      0.0874102 |   -0.0195842 |
+| geo_ovx_close_ret30d |   2.5025  |      0.390224  |    0.0234222 |
+| wheat_fut_close      |   2.40391 |    547.733     |  517.732     |
+| log_wheat_fut_close  |   2.33876 |      6.30529   |    6.24917   |
+| gold_fut_close       |   2.25291 |   4992.37      | 4021.2       |
+| log_gold_fut_close   |   2.0642  |      8.51515   |    8.29362   |
