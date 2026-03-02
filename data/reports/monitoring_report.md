@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-01 15:33:00
-**Run ID:** run_20260301_153259
+**Generated:** 2026-03-02 15:52:03
+**Run ID:** run_20260302_155202
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 7 features
+- ⚠️ Expansion feature drift detected: 8 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 7
+- Drifted features (30d vs prev 180d): 8
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,12 +49,13 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature              |   z_score |   current_mean |     ref_mean |
-|:---------------------|----------:|---------------:|-------------:|
-| geo_ovx_close        |   4.16781 |     52.2693    |   35.0957    |
-| wheat_fut_close      |   2.51001 |    549.508     |  517.869     |
-| log_wheat_fut_close  |   2.43447 |      6.30842   |    6.24943   |
-| oil_fut_close_ret30d |   2.39935 |      0.0841396 |   -0.0188954 |
-| geo_ovx_close_ret30d |   2.32915 |      0.380782  |    0.0266915 |
-| gold_fut_close       |   2.18038 |   4988.96      | 4032.14      |
-| log_gold_fut_close   |   2.01062 |      8.5145    |    8.29619   |
+| feature                     |   z_score |   current_mean |     ref_mean |
+|:----------------------------|----------:|---------------:|-------------:|
+| gold_fut_oi_change_7d_proxy |   6.06314 |    114.387     |    4.70366   |
+| geo_ovx_close               |   3.97346 |     52.5797    |   35.1846    |
+| wheat_fut_close             |   2.62498 |    551.308     |  517.987     |
+| log_wheat_fut_close         |   2.53919 |      6.3116    |    6.24965   |
+| oil_fut_close_ret30d        |   2.22405 |      0.0805426 |   -0.0182111 |
+| gold_fut_close              |   2.20674 |   5007.92      | 4039.73      |
+| log_gold_fut_close          |   2.03138 |      8.5183    |    8.29809   |
+| geo_ovx_close_ret30d        |   2.02245 |      0.359718  |    0.0308979 |
