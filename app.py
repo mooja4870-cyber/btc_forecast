@@ -1629,9 +1629,9 @@ try:
             delta_icon = "↓"
             metric_state = "metric-down"
         
-        # '실시간'을 현재 시간(시분초)으로 변환 후 노란색 굵은 텍스트로 하이라이트
-        from datetime import datetime
-        current_time = datetime.now().strftime("%H:%M:%S")
+        # '실시간'을 현재 한국 시간(KST)으로 변환 후 노란색 굵은 텍스트로 하이라이트
+        from datetime import datetime, timedelta
+        current_time = (datetime.utcnow() + timedelta(hours=9)).strftime("%H:%M:%S")
         source_html = source.replace("-실시간", f"-<span style='color: #fbbf24; font-weight: 800;'>{current_time}</span>")
 
         st.markdown(f"""

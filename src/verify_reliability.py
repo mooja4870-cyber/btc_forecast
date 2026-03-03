@@ -169,9 +169,9 @@ def train_and_verify_horizons(horizons=[365, 30, 1]):
         except Exception as e:
             print(f"⚠️ Error syncing {h}d: {e}")
 
-    # Add metadata for the UI
+    # Add metadata for the UI (Using KST for Korean users)
     results["_meta"] = {
-        "recomputed_at": datetime.utcnow().isoformat(),
+        "recomputed_at": (datetime.utcnow() + timedelta(hours=9)).isoformat(),
         "data_last_timestamp": str(target_date.isoformat()),
         "production_phase": production_phase
     }
