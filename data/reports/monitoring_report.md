@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-02 15:52:03
-**Run ID:** run_20260302_155202
+**Generated:** 2026-03-03 14:36:41
+**Run ID:** run_20260303_233640
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 6 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 6
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,13 +49,11 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |     ref_mean |
-|:----------------------------|----------:|---------------:|-------------:|
-| gold_fut_oi_change_7d_proxy |   6.06314 |    114.387     |    4.70366   |
-| geo_ovx_close               |   3.97346 |     52.5797    |   35.1846    |
-| wheat_fut_close             |   2.62498 |    551.308     |  517.987     |
-| log_wheat_fut_close         |   2.53919 |      6.3116    |    6.24965   |
-| oil_fut_close_ret30d        |   2.22405 |      0.0805426 |   -0.0182111 |
-| gold_fut_close              |   2.20674 |   5007.92      | 4039.73      |
-| log_gold_fut_close          |   2.03138 |      8.5183    |    8.29809   |
-| geo_ovx_close_ret30d        |   2.02245 |      0.359718  |    0.0308979 |
+| feature              |   z_score |   current_mean |     ref_mean |
+|:---------------------|----------:|---------------:|-------------:|
+| geo_ovx_close        |   3.79841 |     52.872     |   35.2764    |
+| wheat_fut_close      |   2.70156 |    552.633     |  518.106     |
+| log_wheat_fut_close  |   2.60979 |      6.31398   |    6.24988   |
+| gold_fut_close       |   2.23446 |   5027.55      | 4047.18      |
+| oil_fut_close_ret30d |   2.10796 |      0.0792049 |   -0.0174398 |
+| log_gold_fut_close   |   2.05298 |      8.52222   |    8.29995   |
