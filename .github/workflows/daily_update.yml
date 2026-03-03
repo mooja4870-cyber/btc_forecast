@@ -2,7 +2,7 @@ name: Daily BTC Pipeline
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # 매일 한국 시간 오전 0시 (UTC 15:00) 실행
+    - cron: '0 14 * * *'  # 매일 한국 시간 오후 11시 (UTC 14:00) 실행 -> 12시 전에 완료 목표
   workflow_dispatch:      # 수동 실행 버튼 활성화
 
 permissions:
@@ -11,9 +11,15 @@ permissions:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    timeout-minutes: 480  # 모델 학습이 오래 걸릴 수 있으므로 8시간으로 넉넉하게 설정
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Show Current Time (KST)
+        run: |
+          export TZ='Asia/Seoul'
+          echo "Current time in KST: $(date)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,13 +35,20 @@ jobs:
       - name: Run Pipeline
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python src/run_pipeline.py
+        run: |
+          mkdir -p data/logs
+          echo "============================================================" >> data/logs/cron_job.log
+          echo "Starting Daily Run: $(date)" >> data/logs/cron_job.log
+          echo "============================================================" >> data/logs/cron_job.log
+          python src/run_pipeline.py 2>&1 | tee -a data/logs/cron_job.log
+          echo "✅ Daily run finished at $(date)" >> data/logs/cron_job.log
 
       - name: Commit and Push changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          # 데이터와 모델 폴더의 변경사항을 추적
+          # 데이터, 모델, 로그 폴더의 변경사항을 추적
           git add data/ models/
-          git commit -m "Auto-update data and models: $(date +'%Y-%m-%d')" || echo "No changes to commit"
-          git push
+          git commit -m "Auto-update data, models, and logs: $(date +'%Y-%m-%d %H:%M KST')" || echo "No changes to commit"
+          git pull --rebase origin main
+          git push origin main

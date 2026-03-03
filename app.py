@@ -1554,10 +1554,12 @@ try:
         if usd_val is None or rate_val is None or rate_val <= 0:
             return None, None, None
         krw_per_g = (usd_val * rate_val) / TROY_OUNCE_IN_GRAMS
-        change_val = _to_num(usd_change)
-        if change_val is None:
-            change_val = 0.0
-        return float(krw_per_g), float(change_val), f"참조환산({usd_source} × KRW/USD)"
+        # Strip '실시간 (' and ')' if present to simplify display
+        clean_source = usd_source
+        if isinstance(clean_source, str) and clean_source.startswith("실시간 (") and clean_source.endswith(")"):
+            clean_source = clean_source[len("실시간 ("):-1]
+            
+        return float(krw_per_g), float(change_val), clean_source
 
     # Load file data once for fallback
     mdf = load_merged_data()

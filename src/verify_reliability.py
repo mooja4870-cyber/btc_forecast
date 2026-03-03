@@ -169,6 +169,13 @@ def train_and_verify_horizons(horizons=[365, 30, 1]):
         except Exception as e:
             print(f"⚠️ Error syncing {h}d: {e}")
 
+    # Add metadata for the UI
+    results["_meta"] = {
+        "recomputed_at": datetime.utcnow().isoformat(),
+        "data_last_timestamp": str(target_date.isoformat()),
+        "production_phase": production_phase
+    }
+
     # Save
     output_path = os.path.join(PROCESSED_DIR, "reliability_result.json")
     with open(output_path, "w") as f:

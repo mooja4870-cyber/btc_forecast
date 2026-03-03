@@ -13,6 +13,7 @@ import os
 import sys
 import argparse
 import datetime as dt
+from datetime import timezone, timedelta
 import json
 import logging
 import pandas as pd
@@ -30,10 +31,14 @@ from src.feature_engineer import engineer_features
 from src.train_transformer import train_all_horizons
 from src.actuals_collector import update_actuals
 from src.monitoring import ReportGenerator
+from src.verify_reliability import train_and_verify_horizons
 
 def get_run_id():
-    """Generate a unique run ID based on timestamp."""
-    return dt.datetime.now().strftime("run_%Y%m%d_%H%M%S")
+    """Generate a unique run ID based on KST (UTC+9) timestamp."""
+    # GitHub Actions environment uses UTC, so we force +9h
+    kst = timezone(timedelta(hours=9))
+    now_kst = dt.datetime.now(timezone.utc).astimezone(kst)
+    return now_kst.strftime("run_%Y%m%d_%H%M%S")
 
 
 def _update_latest_training_pointer(run_id: str):
@@ -84,8 +89,9 @@ def _update_latest_training_pointer(run_id: str):
                 "Symlink update skipped to avoid deleting existing files."
             )
             return
-        os.symlink(marker_dir, latest_link)
-        logger.info(f"Updated latest model pointer -> {marker_dir}")
+        # Use relative path for symlink to be portable (important for Render/Streamlit)
+        os.symlink(run_id, latest_link)
+        logger.info(f"Updated latest model pointer (relative) -> {run_id}")
     except Exception as e:
         logger.warning(f"Failed to update latest symlink pointer: {e}")
 
@@ -384,6 +390,14 @@ def main():
 
         train_all_horizons(horizons=horizons, epochs=epochs)
         _update_latest_training_pointer(run_id)
+        
+        # ── 4. Reality Check (Sync with production) ──
+        logger.info("Step 4: Reality Check Sync")
+        try:
+            train_and_verify_horizons()
+        except Exception as e:
+            logger.error(f"Reality check sync failed: {e}")
+
         logger.info("Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.")
 
     logger.info(f"Pipeline finished successfully. Run ID: {run_id}")
