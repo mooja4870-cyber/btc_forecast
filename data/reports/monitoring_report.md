@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-03 14:36:41
-**Run ID:** run_20260303_233640
+**Generated:** 2026-03-04 14:31:50
+**Run ID:** run_20260304_233149
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 6 features
+- ⚠️ Expansion feature drift detected: 7 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 6
+- Drifted features (30d vs prev 180d): 7
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,11 +49,12 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature              |   z_score |   current_mean |     ref_mean |
-|:---------------------|----------:|---------------:|-------------:|
-| geo_ovx_close        |   3.79841 |     52.872     |   35.2764    |
-| wheat_fut_close      |   2.70156 |    552.633     |  518.106     |
-| log_wheat_fut_close  |   2.60979 |      6.31398   |    6.24988   |
-| gold_fut_close       |   2.23446 |   5027.55      | 4047.18      |
-| oil_fut_close_ret30d |   2.10796 |      0.0792049 |   -0.0174398 |
-| log_gold_fut_close   |   2.05298 |      8.52222   |    8.29995   |
+| feature                     |   z_score |   current_mean |     ref_mean |
+|:----------------------------|----------:|---------------:|-------------:|
+| geo_ovx_close               |   3.67917 |     53.305     |   35.3716    |
+| gold_fut_oi_change_7d_proxy |   2.9509  |     60.37      |    5.26614   |
+| wheat_fut_close             |   2.77643 |    553.933     |  518.271     |
+| log_wheat_fut_close         |   2.67866 |      6.31631   |    6.25019   |
+| gold_fut_close              |   2.24623 |   5040         | 4054.58      |
+| log_gold_fut_close          |   2.06238 |      8.52477   |    8.30179   |
+| oil_fut_close_ret30d        |   2.0572  |      0.0807047 |   -0.0165631 |
