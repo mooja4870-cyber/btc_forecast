@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-07 14:15:11
-**Run ID:** run_20260307_231510
+**Generated:** 2026-03-08 14:16:19
+**Run ID:** run_20260308_231618
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 9 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 9
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,13 +49,14 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature              |   z_score |   current_mean |     ref_mean |
-|:---------------------|----------:|---------------:|-------------:|
-| geo_ovx_close        |   3.77369 |     55.8407    |   35.6492    |
-| wheat_fut_close      |   3.16275 |    559.233     |  518.504     |
-| log_wheat_fut_close  |   3.03859 |      6.32585   |    6.25064   |
-| oil_fut_close        |   2.43383 |     66.911     |   60.6629    |
-| log_oil_fut_close    |   2.26578 |      4.20018   |    4.10444   |
-| oil_fut_close_ret30d |   2.24636 |      0.0968761 |   -0.0138552 |
-| gold_fut_close       |   2.23936 |   5066.61      | 4078.06      |
-| log_gold_fut_close   |   2.05642 |      8.53019   |    8.30756   |
+| feature                 |   z_score |   current_mean |      ref_mean |
+|:------------------------|----------:|---------------:|--------------:|
+| geo_ovx_close           |   3.9133  |     57.4563    |   35.7662     |
+| wheat_fut_close         |   3.36096 |    562.092     |  518.619      |
+| log_wheat_fut_close     |   3.21606 |      6.33081   |    6.25086    |
+| oil_fut_close           |   2.83762 |     67.9337    |   60.6596     |
+| log_oil_fut_close       |   2.58329 |      4.2134    |    4.10439    |
+| oil_fut_close_ret30d    |   2.44463 |      0.109395  |   -0.0130317  |
+| gold_fut_close          |   2.24021 |   5077.64      | 4085.96       |
+| log_gold_fut_close      |   2.05641 |      8.53239   |    8.30948    |
+| oil_fut_roll_return_20d |   2.03051 |      0.0852945 |   -0.00607724 |
