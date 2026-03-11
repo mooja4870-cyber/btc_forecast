@@ -135,8 +135,8 @@ def fetch_shinhan_goldrush_krw(max_lookback_days=14):
         prev_rows = _fetch_shinhan_goldrush_rows_for_date(d)
         if not prev_rows:
             continue
-        # 한국 사용자 체감(주간 변동)에 맞추기 위해 전일 자정(23:59)이 아닌 전일 오전 첫 고시가[0]를 기준(Open)으로 사용
-        prev_row = prev_rows[0]
+        # 한국 사용자 체감에 맞추기 위해 '전일 종가(마지막 고시가)'를 기준(Close)으로 사용
+        prev_row = prev_rows[-1]
         prev = _to_float(prev_row.get("XAU_RATE1"))
         if prev is None:
             prev = _to_float(prev_row.get("XAU_RATE"))
@@ -181,8 +181,8 @@ def fetch_shinhan_silverrush_krw(max_lookback_days=14):
         prev_rows = _fetch_shinhan_goldrush_rows_for_date(d)
         if not prev_rows:
             continue
-        # 한국 사용자 체감(주간 변동)에 맞추기 위해 전일 자정(23:59)이 아닌 전일 오전 첫 고시가[0]를 기준(Open)으로 사용
-        prev_row = prev_rows[0]
+        # 한국 사용자 체감에 맞추기 위해 '전일 종가(마지막 고시가)'를 기준(Close)으로 사용
+        prev_row = prev_rows[-1]
         prev = _to_float(prev_row.get("XAG_RATE1"))
         if prev is None:
             prev = _to_float(prev_row.get("XAG_RATE"))
@@ -353,6 +353,56 @@ def fetch_naver_marketindex_usd_krw():
                     change_pct = (signed_delta / prev) * 100.0
 
         return current, change_pct, "실시간 (네이버 금융 매매기준율)"
+    except Exception:
+        return None, None, None
+
+
+def fetch_naver_international_commodity_usd_oz(commodity_code="CMDT_SI"):
+    """
+    Fetch international commodity price in USD/oz from Naver marketindex.
+    Codes: CMDT_XAU (Gold), CMDT_SI (Silver), CMDT_PL (Platinum), CMDT_PA (Palladium)
+    """
+    try:
+        url = "https://finance.naver.com/marketindex/?tabSel=gold#tab_section"
+        resp = requests.get(url, headers=NAVER_HEADERS, timeout=6)
+        if resp.status_code != 200:
+            return None, None, None
+
+        page = resp.text
+        # Search for specific marketindexCd
+        m_block = re.search(
+            f'<a href="/marketindex/worldGoldDetail\\.naver\\?marketindexCd={commodity_code}".*?</a>',
+            page,
+            re.S | re.I,
+        )
+        block = m_block.group(0) if m_block else ""
+        if not block:
+            # Fallback for simpler category name search
+            cat_name = "은" if "SI" in commodity_code else "금"
+            m_block = re.search(fr'<li class=".*?">.*?<span class="category">{cat_name}</span>.*?</li>', page, re.S | re.I)
+            block = m_block.group(0) if m_block else ""
+
+        if not block:
+            return None, None, None
+
+        m_val = re.search(r'<span class="value">\s*([0-9,\.]+)\s*</span>', block, re.I)
+        current = _to_float(m_val.group(1)) if m_val else None
+        if current is None:
+            return None, None, None
+
+        change_pct = 0.0
+        m_abs = re.search(r'<span class="change">\s*([0-9,\.]+)\s*</span>', block, re.I)
+        if m_abs:
+            delta_abs = _to_float(m_abs.group(1))
+            if delta_abs is not None:
+                is_up = "point_up" in block
+                is_down = "point_dn" in block or "point_down" in block
+                signed_delta = delta_abs if is_up else (-delta_abs if is_down else 0.0)
+                prev = current - signed_delta
+                if prev not in (None, 0):
+                    change_pct = (signed_delta / prev) * 100.0
+
+        return current, change_pct, f"네이버 금융 국제{ '은' if 'SI' in commodity_code else '금'}"
     except Exception:
         return None, None, None
 
@@ -856,24 +906,30 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     """
     # Woori Gold Banking KRW dedicated chain
     if symbol == "WOORI_GOLDBANK_KRW":
+        # 1. Try Naver Domestic Gold first
         p, c, s = fetch_naver_domestic_gold_krw()
         if p is not None:
             return p, c, s
+        # 2. Try Woori Gold Banking
         p, c, s = fetch_woori_goldbank_krw()
         if p is not None:
             return p, c, s
-        # Fallback to Shinhan Gold
+        # 3. Fallback to Shinhan Gold
         p, c, s = fetch_shinhan_goldrush_krw()
         if p is not None:
             return p, c, s
         return None, None, None
 
-    # Shinhan SilverRush KRW dedicated chain
+    # Silver (Naver International Silver priority)
     if symbol == "SHINHAN_SILVER_KRW":
+        # 1. Try Naver International Silver first (for USD/oz source)
+        p, c, s = fetch_naver_international_commodity_usd_oz("CMDT_SI")
+        if p is not None:
+            return p, c, s
+        # 2. Try Shinhan SilverRush KRW
         p, c, s = fetch_shinhan_silverrush_krw()
         if p is not None:
             return p, c, s
-        # Currently no dedicated Woori silver fetcher, but we could add one if needed.
         return None, None, None
 
     # BTC special path

@@ -1548,22 +1548,47 @@ try:
         return 0.0, 0.0, "보호값(실시간/캐시/파일 실패)"
 
     def _reference_commodity_krw_per_g(usd_ticker, krw_rate_for_display):
-        usd_oz, usd_change, usd_source = get_robust_price(usd_ticker)
+        """
+        Calculate KRW price per gram and its ACTUAL KRW-denominated change rate.
+        KRW_Price = USD_Price * FX_Rate
+        Actual Change Rate = (Current_KRW - Prev_KRW) / Prev_KRW * 100
+        """
+        usd_oz, usd_change_pct, usd_source = get_robust_price(usd_ticker)
         usd_val = _to_num(usd_oz)
         rate_val = _to_num(krw_rate_for_display)
+        
         if usd_val is None or rate_val is None or rate_val <= 0:
             return None, None, None
-        krw_per_g = (usd_val * rate_val) / TROY_OUNCE_IN_GRAMS
-        change_val = _to_num(usd_change)
-        if change_val is None:
-            change_val = 0.0
+            
+        # 1. Current KRW Price per gram
+        krw_per_g_curr = (usd_val * rate_val) / TROY_OUNCE_IN_GRAMS
+        
+        # 2. Estimate Previous KRW Price per gram
+        # We need previous USD and previous FX
+        usd_change_pct = _to_num(usd_change_pct) or 0.0
+        # Prev_USD = Curr_USD / (1 + change/100)
+        usd_val_prev = usd_val / (1 + usd_change_pct / 100.0)
+        
+        # For FX change, we try to get it from the global DISPLAY_KRW_PER_USD context
+        # but a safer way is to fetch the KRW=X change
+        _, fx_change_pct, _ = get_robust_price("KRW=X")
+        fx_change_pct = _to_num(fx_change_pct) or 0.0
+        rate_val_prev = rate_val / (1 + fx_change_pct / 100.0)
+        
+        krw_per_g_prev = (usd_val_prev * rate_val_prev) / TROY_OUNCE_IN_GRAMS
+        
+        # 3. Calculate Actual KRW Change Percent
+        if krw_per_g_prev > 0:
+            actual_change_pct = (krw_per_g_curr - krw_per_g_prev) / krw_per_g_prev * 100.0
+        else:
+            actual_change_pct = usd_change_pct # Fallback
 
         # Strip '실시간 (' and ')' if present to simplify display
         clean_source = usd_source
         if isinstance(clean_source, str) and clean_source.startswith("실시간 (") and clean_source.endswith(")"):
             clean_source = clean_source[len("실시간 ("):-1]
 
-        return float(krw_per_g), float(change_val), clean_source
+        return float(krw_per_g_curr), float(actual_change_pct), clean_source
 
     # Load file data once for fallback
     mdf = load_merged_data()
@@ -1583,15 +1608,26 @@ try:
         btc_p = usd_to_krw(btc_raw_p, krw_rate)
         btc_source = f"{btc_s} × KRW/USD 환산({krw_s})" if krw_p else btc_s
 
-    # 3. Gold (Woori Gold Banking KRW)
+    # 3. Gold (Naver Domestic Gold preferred via robust chain)
     gold_p, gold_c, gold_s = get_realtime_metric("WOORI_GOLDBANK_KRW", mdf, "gold_close", "Gold", realtime_only=True)
+    
     if gold_p is None or gold_p <= 0:
+        # Fallback to International Gold (XAU) -> KRW/g if domestic fails
         g_ref_p, g_ref_c, g_ref_s = _reference_commodity_krw_per_g("GC=F", krw_rate)
         if g_ref_p is not None and g_ref_p > 0:
             gold_p, gold_c, gold_s = g_ref_p, g_ref_c, g_ref_s
 
-    # 4. Silver (Shinhan SilverRush KRW)
+    # 4. Silver (Naver International Silver via robust chain)
     silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=True)
+    
+    # If the source returned from get_realtime_metric is USD/oz (indicated by '국제' in source), 
+    # we convert it to KRW/g using actual conversion logic.
+    if silver_p is not None and "국제" in str(silver_s):
+        # The fetcher returned USD price. Convert it properly including FX change.
+        s_ref_p, s_ref_c, s_ref_s = _reference_commodity_krw_per_g("SI=F", krw_rate)
+        if s_ref_p is not None:
+             silver_p, silver_c, silver_s = s_ref_p, s_ref_c, s_ref_s
+    
     if silver_p is None or silver_p <= 0:
         s_ref_p, s_ref_c, s_ref_s = _reference_commodity_krw_per_g("SI=F", krw_rate)
         if s_ref_p is not None and s_ref_p > 0:
@@ -1605,25 +1641,49 @@ try:
     sp_p = sp_usd_p
     sp_source = sp_s
 
-    def render_premium_metric(label, value, delta_val, source):
+    def render_premium_metric(label, value_text, delta_pct, source):
         # Red/Blue convention: Red=Up, Blue=Down
         try:
-            delta_val = float(delta_val)
-            if not np.isfinite(delta_val):
-                delta_val = 0.0
+            delta_pct = float(delta_pct)
+            if not np.isfinite(delta_pct):
+                delta_pct = 0.0
         except Exception:
-            delta_val = 0.0
+            delta_pct = 0.0
+
+        # Extract numeric value for absolute change calculation if possible
+        # value_text is like "₩4,193.47" or "$98,000.00"
+        curr_val = None
+        try:
+            clean_val_str = value_text.replace("₩", "").replace("$", "").replace(",", "").strip()
+            curr_val = float(clean_val_str)
+        except Exception:
+            pass
+
+        abs_diff_text = ""
+        if curr_val is not None:
+            # Prev = Curr / (1 + pct/100)
+            # Diff = Curr - Prev
+            prev_val = curr_val / (1 + delta_pct / 100.0)
+            abs_diff = curr_val - prev_val
+            prefix = "+" if abs_diff >= 0 else "-"
+            # Format based on magnitude
+            if abs(abs_diff) >= 100:
+                abs_diff_text = f"{prefix}{abs(abs_diff):,.0f}"
+            elif abs(abs_diff) >= 1:
+                abs_diff_text = f"{prefix}{abs(abs_diff):,.1f}"
+            else:
+                abs_diff_text = f"{prefix}{abs(abs_diff):,.2f}"
 
         delta_color = "#94a3b8"
         value_color = "#94a3b8"
         delta_icon = ""
         metric_state = "metric-neutral"
-        if delta_val > 0:
+        if delta_pct > 0:
             delta_color = "#ff4b4b" # Red for Up
             value_color = "#ff4b4b"
             delta_icon = "↑"
             metric_state = "metric-up"
-        elif delta_val < 0:
+        elif delta_pct < 0:
             delta_color = "#3b82f6" # Blue for Down
             value_color = "#3b82f6"
             delta_icon = "↓"
@@ -1637,9 +1697,10 @@ try:
         st.markdown(f"""
         <div class="premium-metric-card {metric_state}" style="margin-bottom: 2px; padding: 9px 11px;">
             <div class="metric-label" style="font-size: 0.58rem; color: #94a3b8; font-weight: 600; margin-bottom: 2px;">{label}</div>
-            <div class="metric-value" style="font-size: 1.3rem; font-weight: 800; color: {value_color} !important; margin-bottom: 1px;">{value}</div>
+            <div class="metric-value" style="font-size: 1.3rem; font-weight: 800; color: {value_color} !important; margin-bottom: 1px;">{value_text}</div>
             <div class="metric-delta" style="font-size: 0.65rem; font-weight: 700; color: {delta_color} !important; display: flex; align-items: center; gap: 3px;">
-                <span style="font-size: 0.77rem; color: {delta_color} !important;">{delta_icon}</span> {abs(delta_val):.2f}%
+                <span style="font-size: 0.77rem; color: {delta_color} !important;">{delta_icon}</span> 
+                {abs_diff_text} ({abs(delta_pct):.2f}%)
             </div>
             <div class="metric-source" style="font-size: 0.46rem; color: #64748b; margin-top: 4px;">출처: {source_html}</div>
         </div>
