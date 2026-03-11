@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-10 14:39:53
-**Run ID:** run_20260310_233952
+**Generated:** 2026-03-11 13:21:03
+**Run ID:** run_20260311_132101
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -49,18 +49,18 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                         |   z_score |   current_mean |       ref_mean |
-|:--------------------------------|----------:|---------------:|---------------:|
-| geo_ovx_close                   |   4.22356 |     60.758     |   35.9886      |
-| wheat_fut_close                 |   3.78051 |    567.858     |  518.786       |
-| oil_fut_close                   |   3.69277 |     70.1033    |   60.6555      |
-| log_wheat_fut_close             |   3.59567 |      6.34089   |    6.25118     |
-| log_oil_fut_close               |   3.24178 |      4.24087   |    4.10433     |
-| oil_fut_close_ret30d            |   2.84067 |      0.135693  |   -0.0109894   |
-| oil_fut_front_next_spread_proxy |   2.72652 |      0.0737925 |   -0.00170445  |
-| gold_fut_oi_change_7d_proxy     |   2.69032 |     56.1975    |    5.51471     |
-| oil_fut_roll_return_20d         |   2.663   |      0.116366  |   -0.00484569  |
-| oil_fut_close_ret7d             |   2.44558 |      0.0788723 |    0.000253785 |
-| gold_fut_close                  |   2.21157 |   5089.03      | 4103.24        |
-| wheat_fut_close_ret30d          |   2.1536  |      0.0844709 |   -0.00113933  |
-| log_gold_fut_close              |   2.03347 |      8.53465   |    8.31367     |
+| feature                         |   z_score |   current_mean |         ref_mean |
+|:--------------------------------|----------:|---------------:|-----------------:|
+| geo_ovx_close                   |   4.57152 |     64.17      |     36.2367      |
+| oil_fut_close                   |   4.08921 |     71.1817    |     60.6671      |
+| wheat_fut_close                 |   4.02201 |    571.15      |    519.043       |
+| log_wheat_fut_close             |   3.82341 |      6.34689   |      6.25168     |
+| log_oil_fut_close               |   3.58766 |      4.25634   |      4.10451     |
+| oil_fut_close_ret30d            |   2.99861 |      0.147084  |     -0.00929298  |
+| oil_fut_front_next_spread_proxy |   2.88311 |      0.0780597 |     -0.00100343  |
+| oil_fut_roll_return_20d         |   2.82352 |      0.126171  |     -0.00362995  |
+| oil_fut_close_ret7d             |   2.57081 |      0.0833241 |      0.000627273 |
+| wheat_fut_close_ret30d          |   2.27098 |      0.0891458 |     -0.000235974 |
+| oil_fut_volume                  |   2.25621 | 493842         | 253451           |
+| gold_fut_close                  |   2.18967 |   5103.5       |   4121.54        |
+| log_gold_fut_close              |   2.01731 |      8.53749   |      8.31811     |
