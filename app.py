@@ -1617,14 +1617,17 @@ try:
         if g_ref_p is not None and g_ref_p > 0:
             gold_p, gold_c, gold_s = g_ref_p, g_ref_c, g_ref_s
 
-    # 4. Silver (Naver International Silver via robust chain)
+    # 4. Silver (Naver International Silver -> KRW/g preferred)
     silver_p, silver_c, silver_s = get_realtime_metric("SHINHAN_SILVER_KRW", mdf, "silver_close", "Silver", realtime_only=True)
     
-    # If the source returned from get_realtime_metric is USD/oz (indicated by '국제' in source), 
-    # we convert it to KRW/g using actual conversion logic.
-    if silver_p is not None and "국제" in str(silver_s):
-        # The fetcher returned USD price. Convert it properly including FX change.
-        s_ref_p, s_ref_c, s_ref_s = _reference_commodity_krw_per_g("SI=F", krw_rate)
+    # If using Naver source, ensure we use Naver exchange rate for conversion.
+    if silver_p is not None and "네이버" in str(silver_s):
+        from src.data_fetcher import fetch_naver_marketindex_usd_krw
+        n_rate, n_chg, n_src = fetch_naver_marketindex_usd_krw()
+        rate_to_use = n_rate if (n_rate and n_rate > 0) else krw_rate
+        
+        # Proper conversion including Naver FX change for delta calculation
+        s_ref_p, s_ref_c, s_ref_s = _reference_commodity_krw_per_g("SI=F", rate_to_use)
         if s_ref_p is not None:
              silver_p, silver_c, silver_s = s_ref_p, s_ref_c, s_ref_s
     
