@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-11 13:21:03
-**Run ID:** run_20260311_132101
+**Generated:** 2026-03-11 14:40:52
+**Run ID:** run_20260311_234052
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -52,15 +52,15 @@
 | feature                         |   z_score |   current_mean |         ref_mean |
 |:--------------------------------|----------:|---------------:|-----------------:|
 | geo_ovx_close                   |   4.57152 |     64.17      |     36.2367      |
-| oil_fut_close                   |   4.08921 |     71.1817    |     60.6671      |
+| oil_fut_close                   |   4.09142 |     71.1873    |     60.6671      |
 | wheat_fut_close                 |   4.02201 |    571.15      |    519.043       |
 | log_wheat_fut_close             |   3.82341 |      6.34689   |      6.25168     |
-| log_oil_fut_close               |   3.58766 |      4.25634   |      4.10451     |
-| oil_fut_close_ret30d            |   2.99861 |      0.147084  |     -0.00929298  |
-| oil_fut_front_next_spread_proxy |   2.88311 |      0.0780597 |     -0.00100343  |
-| oil_fut_roll_return_20d         |   2.82352 |      0.126171  |     -0.00362995  |
-| oil_fut_close_ret7d             |   2.57081 |      0.0833241 |      0.000627273 |
+| log_oil_fut_close               |   3.58927 |      4.25641   |      4.10451     |
+| oil_fut_close_ret30d            |   3.0003  |      0.147172  |     -0.00929298  |
+| oil_fut_front_next_spread_proxy |   2.88574 |      0.0781317 |     -0.00100343  |
+| oil_fut_roll_return_20d         |   2.82537 |      0.126256  |     -0.00362995  |
+| oil_fut_close_ret7d             |   2.57317 |      0.0834    |      0.000627273 |
 | wheat_fut_close_ret30d          |   2.27098 |      0.0891458 |     -0.000235974 |
-| oil_fut_volume                  |   2.25621 | 493842         | 253451           |
-| gold_fut_close                  |   2.18967 |   5103.5       |   4121.54        |
-| log_gold_fut_close              |   2.01731 |      8.53749   |      8.31811     |
+| oil_fut_volume                  |   2.25622 | 493844         | 253451           |
+| gold_fut_close                  |   2.18963 |   5103.48      |   4121.54        |
+| log_gold_fut_close              |   2.01728 |      8.53748   |      8.31811     |
