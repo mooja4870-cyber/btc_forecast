@@ -9,6 +9,8 @@
     "sp500_volume",
     "nasdaq_close",
     "nasdaq_volume",
+    "dxy_close",
+    "dxy_volume",
     "krw_close",
     "fed_rate",
     "cpi",
@@ -69,6 +71,9 @@
     "nasdaq_close_ret1d",
     "nasdaq_close_ret7d",
     "nasdaq_close_ret30d",
+    "dxy_close_ret1d",
+    "dxy_close_ret7d",
+    "dxy_close_ret30d",
     "krw_close_ret1d",
     "krw_close_ret7d",
     "krw_close_ret30d",
@@ -155,6 +160,7 @@
     "log_oil_close",
     "log_sp500_close",
     "log_nasdaq_close",
+    "log_dxy_close",
     "log_krw_close",
     "log_oil_fut_close",
     "log_gold_fut_close",
@@ -169,5 +175,5 @@
   "seq_len": 60,
   "horizon": 2,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-03-11"
+  "last_train_date": "2026-03-12"
 }
