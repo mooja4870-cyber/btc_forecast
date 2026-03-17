@@ -268,10 +268,15 @@ st.markdown("""
         line-height: 1.2 !important;
     }
 
-    /* Monumental Title Override */
+    /* Monumental Title Override - Rainbow Animation Added */
     .monumental-title {
         font-size: 2.6rem !important;
-        background: linear-gradient(135deg, #818cf8, #38bdf8, #f59e0b) !important;
+        background: linear-gradient(
+            to right, 
+            #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff,
+            #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff
+        ) !important;
+        background-size: 200% auto !important;
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
         font-weight: 900 !important;
@@ -280,6 +285,12 @@ st.markdown("""
         font-family: var(--font-heading) !important;
         display: block !important;
         text-align: center !important;
+        animation: rainbow 5s linear infinite !important;
+    }
+
+    @keyframes rainbow {
+        0% { background-position: 0% center; }
+        100% { background-position: -200% center; }
     }
     
     /* Tab styling — Premium Glass Buttons */
@@ -2069,7 +2080,12 @@ try:
         if krw_p is not None and krw_p > 0:
             ks = str(krw_s)
             is_real = ("실시간" in ks and "실패" not in ks)
-            src_text = f"환율망{'-실시간' if is_real else ''}" if "환율" in ks else ks
+            if "네이버" in ks:
+                src_text = f"네이버{'-실시간' if is_real else ''}"
+            elif "환율" in ks:
+                src_text = f"환율망{'-실시간' if is_real else ''}"
+            else:
+                src_text = ks
             render_premium_metric("달러 환율 (KRW/USD)", f"₩{krw_p:,.1f}", krw_c, src_text)
         else:
             # Fallback for display rate if real-time failed

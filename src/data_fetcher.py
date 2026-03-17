@@ -901,7 +901,7 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     - WOORI_GOLDBANK_KRW: Naver domestic gold KRW -> Woori Gold Banking KRW -> Shinhan GoldRush KRW
     - SHINHAN_SILVER_KRW: Shinhan SilverRush KRW -> Woori Gold Banking (if applicable) fallback
     - GC=F, ^GSPC: Yahoo Finance -> Alpha Vantage -> Investing.com
-    - KRW=X: Upbit KRW-USDT(USD proxy) -> Naver Finance -> ExchangeRate-API -> Google Finance -> FinanceDataReader
+    - KRW=X: Naver Finance -> Upbit KRW-USDT(USD proxy) -> ExchangeRate-API -> Google Finance -> FinanceDataReader
     - Others: Yahoo Finance chain
     """
     # Woori Gold Banking KRW dedicated chain
@@ -955,8 +955,8 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     # KRW/USD dedicated trusted chain
     if symbol == "KRW=X":
         for fn in [
-            fetch_upbit_usdt_krw,
             fetch_naver_marketindex_usd_krw,
+            fetch_upbit_usdt_krw,
             fetch_exchangerate_api_usd_krw,
             fetch_google_finance_usd_krw,
             fetch_financedatareader_usd_krw,
