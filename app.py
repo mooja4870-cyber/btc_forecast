@@ -1604,8 +1604,13 @@ try:
     # Load file data once for fallback
     mdf = load_merged_data()
 
-    # 1. KRW/USD (KRW=X)
-    krw_p, krw_c, krw_s = get_realtime_metric("KRW=X", mdf, "krw_close", "KRW/USD", realtime_only=True)
+    # 1. KRW/USD (Naver direct priority for display consistency)
+    from src.data_fetcher import fetch_naver_marketindex_usd_krw
+    n_krw_p, n_krw_c, n_krw_s = fetch_naver_marketindex_usd_krw()
+    if n_krw_p is not None and n_krw_p > 0:
+        krw_p, krw_c, krw_s = n_krw_p, (n_krw_c or 0.0), n_krw_s
+    else:
+        krw_p, krw_c, krw_s = get_realtime_metric("KRW=X", mdf, "krw_close", "KRW/USD", realtime_only=True)
     krw_rate = krw_p if (krw_p is not None and krw_p > 0) else resolve_display_krw_rate(mdf)
     if krw_rate and krw_rate > 0:
         DISPLAY_KRW_PER_USD = float(krw_rate)
