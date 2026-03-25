@@ -175,5 +175,5 @@
   "seq_len": 60,
   "horizon": 60,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-01-23"
+  "last_train_date": "2026-01-24"
 }
