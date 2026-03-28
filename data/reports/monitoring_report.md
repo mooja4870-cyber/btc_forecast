@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-27 14:45:01
-**Run ID:** run_20260327_234500
+**Generated:** 2026-03-28 14:24:39
+**Run ID:** run_20260328_232438
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -10,10 +10,10 @@
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $2504.75 | $4015.68 |
-| **RMSE** | $3072.96 | $4253.14 |
-| **MAPE** | 3.6% | 5.6% |
-| **Count** | 150 | 61 |
+| **MAE** | $2504.75 | $4110.76 |
+| **RMSE** | $3072.96 | $4318.85 |
+| **MAPE** | 3.6% | 5.7% |
+| **Count** | 150 | 59 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
@@ -51,16 +51,16 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                         |   z_score |   current_mean |        ref_mean |
 |:--------------------------------|----------:|---------------:|----------------:|
-| oil_fut_close                   |   9.61487 |     86.829     |     60.7527     |
-| log_oil_fut_close               |   7.83552 |      4.45405   |      4.10583    |
-| geo_ovx_close                   |   7.45217 |     90.798     |     37.5333     |
-| oil_fut_roll_return_20d         |   6.64336 |      0.299824  |      0.00238302 |
-| oil_fut_close_ret30d            |   6.33308 |      0.353698  |      0.00060292 |
-| oil_fut_front_next_spread_proxy |   4.76458 |      0.132198  |      0.00117662 |
-| wheat_fut_close                 |   4.4329  |    593.975     |    523.126      |
-| log_wheat_fut_close             |   4.20363 |      6.38654   |      6.25937    |
-| geo_ovx_close_ret30d            |   3.14836 |      0.82601   |      0.086379   |
-| geo_vix_close                   |   2.87145 |     24.3797    |     17.2037     |
-| oil_fut_volume                  |   2.78502 | 557872         | 259992          |
-| oil_fut_close_ret7d             |   2.71038 |      0.0928485 |      0.00183395 |
-| wheat_fut_close_ret30d          |   2.11992 |      0.0946848 |      0.0111974  |
+| oil_fut_close                   |   9.97672 |     87.9327    |     60.7606     |
+| log_oil_fut_close               |   8.10826 |      4.46771   |      4.10595    |
+| geo_ovx_close                   |   7.41421 |     91.9163    |     37.6713     |
+| oil_fut_roll_return_20d         |   6.66785 |      0.3015    |      0.00255868 |
+| oil_fut_close_ret30d            |   6.58047 |      0.367934  |      0.00151723 |
+| oil_fut_front_next_spread_proxy |   4.79426 |      0.133155  |      0.00122552 |
+| wheat_fut_close                 |   4.44081 |    595.733     |    523.392      |
+| log_wheat_fut_close             |   4.20858 |      6.38952   |      6.25985    |
+| geo_ovx_close_ret30d            |   3.19049 |      0.837201  |      0.0882757  |
+| geo_vix_close                   |   2.96841 |     24.6427    |     17.2322     |
+| oil_fut_volume                  |   2.83534 | 560037         | 261697          |
+| oil_fut_close_ret7d             |   2.70956 |      0.0928077 |      0.00182301 |
+| wheat_fut_close_ret30d          |   2.09827 |      0.0950324 |      0.0117182  |
