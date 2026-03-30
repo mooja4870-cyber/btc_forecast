@@ -1262,12 +1262,6 @@ with st.sidebar:
             except Exception:
                 pass
             st.caption(f"Reality Check 재계산 시각: {rc_recomputed_at}")
-        if rc_data_ts:
-            try:
-                rc_data_ts = pd.to_datetime(rc_data_ts).strftime("%Y-%m-%d %H:%M")
-            except Exception:
-                pass
-            st.caption(f"Reality Check 기준 데이터 시각: {rc_data_ts}")
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
             st.markdown(f"**{model_run['run_display']}**")
