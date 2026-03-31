@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-03-30 14:58:04
-**Run ID:** run_20260330_235803
+**Generated:** 2026-03-31 14:55:22
+**Run ID:** run_20260331_235521
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 16 features
+- ⚠️ Expansion feature drift detected: 17 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 16
+- Drifted features (30d vs prev 180d): 17
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,18 +51,18 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                          |   z_score |   current_mean |        ref_mean |
 |:---------------------------------|----------:|---------------:|----------------:|
-| oil_fut_close                    |  10.6606  |     90.2287    |     60.7839     |
-| log_oil_fut_close                |   8.61557 |      4.49568   |      4.10631    |
-| geo_ovx_close                    |   7.38273 |     94.4       |     37.9686     |
-| oil_fut_close_ret30d             |   7.14104 |      0.399174  |      0.00279826 |
-| oil_fut_roll_return_20d          |   6.69289 |      0.304398  |      0.0029915  |
-| oil_fut_front_next_spread_proxy  |   4.84673 |      0.13543   |      0.00141396 |
-| gold_fut_oi_change_7d_proxy      |   4.31325 |     87.7441    |      5.7255     |
-| wheat_fut_close                  |   4.19398 |    597.142     |    524.097      |
-| log_wheat_fut_close              |   3.98989 |      6.39191   |      6.26114    |
-| geo_vix_close                    |   3.30348 |     25.494     |     17.2646     |
-| geo_ovx_close_ret30d             |   3.29973 |      0.864376  |      0.0920983  |
-| oil_fut_volume                   |   2.7848  | 555823         | 266895          |
-| oil_fut_close_ret7d              |   2.7638  |      0.094619  |      0.00171261 |
-| corn_fut_close                   |   2.09065 |    452.092     |    427.785      |
-| gold_fut_front_next_spread_proxy |   2.0363  |     -0.0320656 |      0.0227122  |
+| oil_fut_close                    |  10.9588  |     91.3823    |     60.8007     |
+| log_oil_fut_close                |   8.83348 |      4.50956   |      4.10656    |
+| oil_fut_close_ret30d             |   7.44446 |      0.415573  |      0.00320807 |
+| geo_ovx_close                    |   7.26653 |     95.4653    |     38.1466     |
+| oil_fut_roll_return_20d          |   6.78486 |      0.30984   |      0.00322097 |
+| oil_fut_front_next_spread_proxy  |   4.85861 |      0.136423  |      0.00156458 |
+| wheat_fut_close                  |   4.0351  |    597.6       |    524.504      |
+| log_wheat_fut_close              |   3.84892 |      6.39268   |      6.26187    |
+| geo_vix_close                    |   3.43854 |     25.867     |     17.2896     |
+| geo_ovx_close_ret30d             |   3.32465 |      0.871394  |      0.0946249  |
+| oil_fut_close_ret7d              |   2.90367 |      0.0994088 |      0.00183306 |
+| oil_fut_volume                   |   2.7284  | 549198         | 269323          |
+| corn_fut_close                   |   2.16277 |    452.75      |    428.011      |
+| gold_fut_front_next_spread_proxy |   2.14769 |     -0.0350498 |      0.0227434  |
+| log_corn_fut_close               |   2.08314 |      6.11502   |      6.05879    |
