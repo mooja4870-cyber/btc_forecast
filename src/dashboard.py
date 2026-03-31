@@ -22,12 +22,46 @@ except ImportError:
 # 🌈 무지개 스타일 정의 (사용자 요청 반영)
 # ──────────────────────────────────────────────────────────────────────────────
 def apply_custom_style():
-    """중학생도 이해할 수 있는 화려한 무지개 스타일을 적용합니다!"""
+    """중학생도 이해할 수 있는 화려한 무지개 스타일과 이중 물결 배경을 적용합니다!"""
     st.markdown("""
     <style>
-    /* 1. 배경을 어둡고 고급스럽게 */
+    /* 1. 배경을 전체적으로 어둡게 하고, 이중 물결 애니메이션 적용 */
     .stApp {
         background-color: #0e1117;
+    }
+
+    /* 뒤쪽 레이어: 천천히 흐르는 메인 색상 배경 */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: -2;
+        background: linear-gradient(135deg, #0e1117 0%, #1a2235 50%, #0e1117 100%);
+        background-size: 200% 200%;
+        animation: wave-bg 12s ease-in-out infinite alternate;
+    }
+
+    /* 앞쪽 레이어: 물결이 일렁이는 느낌을 주는 부드러운 빛 효과 */
+    .stApp::after {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 30% 70%, rgba(30, 80, 150, 0.15) 0%, transparent 60%),
+            radial-gradient(circle at 70% 30%, rgba(150, 60, 30, 0.1) 0%, transparent 60%);
+        animation: wave-fluid 15s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+    @keyframes wave-bg {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    @keyframes wave-fluid {
+        0% { transform: scale(1) translateY(0px) rotate(0deg); }
+        100% { transform: scale(1.1) translateY(-30px) rotate(5deg); }
     }
 
     /* 2. 무지개처럼 반짝이며 움직이는 애니메이션 정의 */
