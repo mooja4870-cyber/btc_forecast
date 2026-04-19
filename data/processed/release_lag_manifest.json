@@ -1,0 +1,80 @@
+{
+  "default_release_lag_days": 1,
+  "group_release_lag_days": {
+    "macro": 3,
+    "rates_expectation": 1,
+    "geopolitical": 1,
+    "futures": 0,
+    "derivatives": 0
+  },
+  "rows": [
+    {
+      "series": "active_addresses",
+      "lag_days": 1
+    },
+    {
+      "series": "btc_deriv_basis_proxy",
+      "lag_days": 0
+    },
+    {
+      "series": "btc_deriv_funding_rate",
+      "lag_days": 0
+    },
+    {
+      "series": "btc_deriv_iv_proxy",
+      "lag_days": 1
+    },
+    {
+      "series": "btc_deriv_long_short_skew",
+      "lag_days": 0
+    },
+    {
+      "series": "btc_deriv_open_interest",
+      "lag_days": 0
+    },
+    {
+      "series": "cpi",
+      "lag_days": 14
+    },
+    {
+      "series": "fear_greed",
+      "lag_days": 1
+    },
+    {
+      "series": "fed_rate",
+      "lag_days": 1
+    },
+    {
+      "series": "gdp",
+      "lag_days": 30
+    },
+    {
+      "series": "hashrate",
+      "lag_days": 1
+    },
+    {
+      "series": "m2",
+      "lag_days": 7
+    },
+    {
+      "series": "miners_revenue_usd",
+      "lag_days": 1
+    },
+    {
+      "series": "treasury_10y",
+      "lag_days": 1
+    },
+    {
+      "series": "tx_count",
+      "lag_days": 1
+    },
+    {
+      "series": "tx_volume_usd",
+      "lag_days": 1
+    },
+    {
+      "series": "unemployment",
+      "lag_days": 7
+    }
+  ]
+}

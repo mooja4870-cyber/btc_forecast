@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-04-17T15:00:10.743422",
+  "run_id": "run_20260418_000009",
+  "retrain_recommended": true,
+  "reasons": [
+    "rolling_mae",
+    "residual_p90",
+    "direction_accuracy",
+    "feature_drift"
+  ],
+  "recent_metrics": {
+    "mae": 6929.828657670455,
+    "rmse": 7310.77030955509,
+    "mape": 9.299097732727258,
+    "count": 44,
+    "rolling_mae": 10126.183794642857,
+    "residual_p90": 10004.333218750002,
+    "direction_accuracy": 0.13953488372093023
+  },
+  "drift_count": 14,
+  "stale_feature_count": 0
+}

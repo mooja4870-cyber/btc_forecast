@@ -31,7 +31,7 @@ echo "============================================================" >> "$LOG_FIL
 if [ "$#" -gt 0 ]; then
     echo "⚠️ Args ignored by policy. Forcing full pipeline run (data + retrain)." >> "$LOG_FILE"
 fi
-/usr/bin/python3 src/run_pipeline.py >> "$LOG_FILE" 2>&1
+"${PROJECT_DIR}/.venv/bin/python3" src/run_pipeline.py >> "$LOG_FILE" 2>&1
 
 EXIT_CODE=$?
 
@@ -41,9 +41,9 @@ if [ $EXIT_CODE -eq 0 ]; then
     # Optional override:
     #   TRANSFORMER_HORIZONS="1,2,3,5" ./scripts/run_daily.sh
     if [ -n "${TRANSFORMER_HORIZONS:-}" ]; then
-        /usr/bin/python3 src/train_transformer.py --horizons "$TRANSFORMER_HORIZONS" >> "$LOG_FILE" 2>&1
+        "${PROJECT_DIR}/.venv/bin/python3" src/train_transformer.py --horizons "$TRANSFORMER_HORIZONS" >> "$LOG_FILE" 2>&1
     else
-        /usr/bin/python3 src/train_transformer.py >> "$LOG_FILE" 2>&1
+        "${PROJECT_DIR}/.venv/bin/python3" src/train_transformer.py >> "$LOG_FILE" 2>&1
     fi
     TF_EXIT_CODE=$?
     if [ $TF_EXIT_CODE -ne 0 ]; then
@@ -51,7 +51,7 @@ if [ $EXIT_CODE -eq 0 ]; then
     fi
 
     echo "Step RC: Reality Check sync" >> "$LOG_FILE"
-    /usr/bin/python3 src/verify_reliability.py >> "$LOG_FILE" 2>&1
+    "${PROJECT_DIR}/.venv/bin/python3" src/verify_reliability.py >> "$LOG_FILE" 2>&1
     RC_EXIT_CODE=$?
     if [ $TF_EXIT_CODE -eq 0 ] && [ $RC_EXIT_CODE -eq 0 ]; then
         echo "✅ Scheduled run completed successfully at $(date)" >> "$LOG_FILE"

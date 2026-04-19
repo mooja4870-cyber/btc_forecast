@@ -6,33 +6,33 @@
     "updated_at": "2026-02-24 22:54:56"
   },
   "BTC-USD": {
-    "current": 92420000.0,
-    "change": -3.0749223900000002,
+    "current": 112614000.0,
+    "change": -1.01869512,
     "source": "실시간 (Upbit KRW)",
-    "updated_at": "2026-02-24 22:54:56"
+    "updated_at": "2026-04-18 23:26:55"
   },
   "WOORI_GOLDBANK_KRW": {
-    "current": 240442.73,
-    "change": 0.7637279172201276,
-    "source": "실시간 (우리은행 골드뱅크가격)",
-    "updated_at": "2026-02-24 22:54:56"
+    "current": 229046.7,
+    "change": 0.3893963777598935,
+    "source": "실시간 (네이버 국내금, 신한은행 기준, 2026.04.17 23:59)",
+    "updated_at": "2026-04-18 23:26:55"
   },
   "SHINHAN_SILVER_KRW": {
-    "current": 4088.76,
-    "change": 6.104548568581459,
+    "current": 3816.16,
+    "change": 1.8674923922908557,
     "source": "실시간 (신한은행 실버리슈)",
-    "updated_at": "2026-02-24 22:54:56"
+    "updated_at": "2026-04-18 23:26:55"
   },
   "^KS11": {
-    "current": 5969.64,
-    "change": 2.11,
+    "current": 6191.92,
+    "change": -0.55,
     "source": "실시간 (네이버 금융)",
-    "updated_at": "2026-02-24 22:54:56"
+    "updated_at": "2026-04-18 23:26:55"
   },
   "^GSPC": {
-    "current": 6837.75,
-    "change": 0.0,
-    "source": "실시간 (Investing.com HTML)",
-    "updated_at": "2026-02-24 22:54:56"
+    "current": 7126.06005859375,
+    "change": 1.2040463669150832,
+    "source": "실시간 (Yahoo Finance/yfinance 23:26)",
+    "updated_at": "2026-04-18 23:26:55"
   }
 }
