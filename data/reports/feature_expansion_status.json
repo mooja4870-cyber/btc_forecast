@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-04-22T15:05:01.256968",
-  "rows": 4421,
-  "columns": 208,
+  "generated_at": "2026-04-23T15:30:47.025327",
+  "rows": 4422,
+  "columns": 205,
   "flags": {
     "futures_term_structure": true,
     "rates_expectation": true,

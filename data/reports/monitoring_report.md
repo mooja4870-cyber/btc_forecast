@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-04-22 15:04:46
-**Run ID:** run_20260423_000445
+**Generated:** 2026-04-23 15:30:35
+**Run ID:** run_20260424_003034
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 7 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 7
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,13 +49,12 @@
 | curve_2y10y_spread_proxy         |                     0    |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |    ref_mean |
-|:----------------------------|----------:|---------------:|------------:|
-| oil_fut_close               |   3.17604 |     97.6       |  64.0699    |
-| log_oil_fut_close           |   3.03199 |      4.57691   |   4.149     |
-| rate_fvx_close              |   2.75179 |      3.95027   |   3.70898   |
-| gold_fut_close_ret30d       |   2.60391 |     -0.0726387 |   0.0595755 |
-| gold_fut_oi_change_7d_proxy |   2.51228 |     53.0919    |   5.78907   |
-| rate_tnx_close              |   2.28847 |      4.325     |   4.13064   |
-| wheat_fut_close             |   2.02357 |    593.825     | 534.946     |
-| log_wheat_fut_close         |   2.0033  |      6.3864    |   6.28075   |
+| feature                     |   z_score |   current_mean |   ref_mean |
+|:----------------------------|----------:|---------------:|-----------:|
+| oil_fut_close               |   3.14348 |     97.8597    |  64.1984   |
+| log_oil_fut_close           |   2.99552 |      4.57979   |   4.15069  |
+| rate_fvx_close              |   2.60698 |      3.9468    |   3.71084  |
+| gold_fut_oi_change_7d_proxy |   2.56435 |     54.0754    |   5.7945   |
+| gold_fut_close_ret30d       |   2.36527 |     -0.0660846 |   0.058266 |
+| rate_tnx_close              |   2.17592 |      4.3217    |   4.13215  |
+| wheat_fut_close             |   2.02014 |    594.592     | 535.325    |
