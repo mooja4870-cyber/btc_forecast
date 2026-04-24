@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-04-23 15:30:35
-**Run ID:** run_20260424_003034
+**Generated:** 2026-04-24 15:02:02
+**Run ID:** run_20260425_000201
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 7 features
+- ⚠️ Expansion feature drift detected: 6 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 7
+- Drifted features (30d vs prev 180d): 6
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,10 +51,9 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                     |   z_score |   current_mean |   ref_mean |
 |:----------------------------|----------:|---------------:|-----------:|
-| oil_fut_close               |   3.14348 |     97.8597    |  64.1984   |
-| log_oil_fut_close           |   2.99552 |      4.57979   |   4.15069  |
-| rate_fvx_close              |   2.60698 |      3.9468    |   3.71084  |
-| gold_fut_oi_change_7d_proxy |   2.56435 |     54.0754    |   5.7945   |
-| gold_fut_close_ret30d       |   2.36527 |     -0.0660846 |   0.058266 |
-| rate_tnx_close              |   2.17592 |      4.3217    |   4.13215  |
-| wheat_fut_close             |   2.02014 |    594.592     | 535.325    |
+| oil_fut_close               |   3.07671 |     97.923     | 64.3505    |
+| log_oil_fut_close           |   2.93158 |      4.58048   |  4.15265   |
+| rate_fvx_close              |   2.53074 |      3.94563   |  3.71218   |
+| gold_fut_close_ret30d       |   2.13912 |     -0.0592174 |  0.0569702 |
+| rate_tnx_close              |   2.11749 |      4.32037   |  4.13319   |
+| gold_fut_oi_change_7d_proxy |   2.015   |     43.5295    |  5.67072   |
