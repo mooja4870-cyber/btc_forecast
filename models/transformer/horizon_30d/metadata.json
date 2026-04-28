@@ -12,7 +12,6 @@
     "dxy_close",
     "dxy_volume",
     "krw_close",
-    "fed_rate",
     "cpi",
     "m2",
     "unemployment",
@@ -175,5 +174,5 @@
   "seq_len": 60,
   "horizon": 30,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-03-28"
+  "last_train_date": "2026-03-29"
 }
