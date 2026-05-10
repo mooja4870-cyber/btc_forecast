@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-09 14:43:26
-**Run ID:** run_20260509_234325
+**Generated:** 2026-05-10 14:44:40
+**Run ID:** run_20260510_234440
 
 ## 🚨 Status Dashboard
 ✅ All Systems Normal
@@ -32,18 +32,18 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| corn_fut_oi_change_7d_proxy      |                    13.33 |            0 |
-| gold_fut_oi_change_7d_proxy      |                    13.33 |            0 |
-| oil_fut_oi_change_7d_proxy       |                    13.33 |            0 |
-| wheat_fut_oi_change_7d_proxy     |                    13.33 |            0 |
-| commodity_shock_score            |                     0    |            0 |
-| corn_fut_close                   |                     0    |            0 |
-| corn_fut_close_ret1d             |                     0    |            0 |
-| corn_fut_close_ret30d            |                     0    |            0 |
-| corn_fut_close_ret7d             |                     0    |            0 |
-| corn_fut_days_to_expiry          |                     0    |            0 |
-| corn_fut_expiry_week             |                     0    |            0 |
-| corn_fut_front_next_spread_proxy |                     0    |            0 |
-| corn_fut_roll_return_20d         |                     0    |            0 |
-| corn_fut_volume                  |                     0    |            0 |
-| curve_2y10y_spread_proxy         |                     0    |            0 |
+| corn_fut_oi_change_7d_proxy      |                       10 |            0 |
+| gold_fut_oi_change_7d_proxy      |                       10 |            0 |
+| oil_fut_oi_change_7d_proxy       |                       10 |            0 |
+| wheat_fut_oi_change_7d_proxy     |                       10 |            0 |
+| commodity_shock_score            |                        0 |            0 |
+| corn_fut_close                   |                        0 |            0 |
+| corn_fut_close_ret1d             |                        0 |            0 |
+| corn_fut_close_ret30d            |                        0 |            0 |
+| corn_fut_close_ret7d             |                        0 |            0 |
+| corn_fut_days_to_expiry          |                        0 |            0 |
+| corn_fut_expiry_week             |                        0 |            0 |
+| corn_fut_front_next_spread_proxy |                        0 |            0 |
+| corn_fut_roll_return_20d         |                        0 |            0 |
+| corn_fut_volume                  |                        0 |            0 |
+| curve_2y10y_spread_proxy         |                        0 |            0 |
