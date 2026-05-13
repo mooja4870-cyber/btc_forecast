@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-12 16:12:05
-**Run ID:** run_20260513_011204
+**Generated:** 2026-05-13 16:13:55
+**Run ID:** run_20260514_011354
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -32,23 +32,23 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| corn_fut_oi_change_7d_proxy      |                     3.33 |            0 |
-| gold_fut_oi_change_7d_proxy      |                     3.33 |            0 |
-| oil_fut_oi_change_7d_proxy       |                     3.33 |            0 |
-| wheat_fut_oi_change_7d_proxy     |                     3.33 |            0 |
-| commodity_shock_score            |                     0    |            0 |
-| corn_fut_close                   |                     0    |            0 |
-| corn_fut_close_ret1d             |                     0    |            0 |
-| corn_fut_close_ret30d            |                     0    |            0 |
-| corn_fut_close_ret7d             |                     0    |            0 |
-| corn_fut_days_to_expiry          |                     0    |            0 |
-| corn_fut_expiry_week             |                     0    |            0 |
-| corn_fut_front_next_spread_proxy |                     0    |            0 |
-| corn_fut_roll_return_20d         |                     0    |            0 |
-| corn_fut_volume                  |                     0    |            0 |
-| curve_2y10y_spread_proxy         |                     0    |            0 |
+| commodity_shock_score            |                        0 |            0 |
+| corn_fut_close                   |                        0 |            0 |
+| corn_fut_close_ret1d             |                        0 |            0 |
+| corn_fut_close_ret30d            |                        0 |            0 |
+| corn_fut_close_ret7d             |                        0 |            0 |
+| corn_fut_days_to_expiry          |                        0 |            0 |
+| corn_fut_expiry_week             |                        0 |            0 |
+| corn_fut_front_next_spread_proxy |                        0 |            0 |
+| corn_fut_oi_change_7d_proxy      |                        0 |            0 |
+| corn_fut_roll_return_20d         |                        0 |            0 |
+| corn_fut_volume                  |                        0 |            0 |
+| curve_2y10y_spread_proxy         |                        0 |            0 |
+| days_to_fomc                     |                        0 |            0 |
+| expected_policy_rate_3m          |                        0 |            0 |
+| expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |   ref_mean |
-|:----------------------------|----------:|---------------:|-----------:|
-| gold_fut_oi_change_7d_proxy |   4.23725 |        192.535 |    9.56179 |
+| feature         |   z_score |   current_mean |   ref_mean |
+|:----------------|----------:|---------------:|-----------:|
+| wheat_fut_close |   2.01866 |        611.633 |    544.621 |

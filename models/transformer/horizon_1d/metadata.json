@@ -13,9 +13,8 @@
     "dxy_volume",
     "krw_close",
     "fed_rate",
-    "m2",
+    "cpi",
     "unemployment",
-    "gdp",
     "treasury_10y",
     "hashrate",
     "fear_greed",
@@ -174,5 +173,5 @@
   "seq_len": 60,
   "horizon": 1,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-05-11"
+  "last_train_date": "2026-05-12"
 }
