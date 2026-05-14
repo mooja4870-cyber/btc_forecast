@@ -1,33 +1,33 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-13 16:13:55
-**Run ID:** run_20260514_011354
+**Generated:** 2026-05-14 16:03:20
+**Run ID:** run_20260515_010319
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 1 features
+- ⚠️ Expansion feature drift detected: 2 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $3734.18 | $7261.72 |
-| **RMSE** | $4740.12 | $7790.24 |
-| **MAPE** | 5.1% | 9.6% |
-| **Count** | 205 | 51 |
+| **MAE** | $4026.23 | $7658.32 |
+| **RMSE** | $5133.86 | $8252.92 |
+| **MAPE** | 5.5% | 9.9% |
+| **Count** | 214 | 51 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
 | target_date         | horizon   |   predicted_price |   actual_price |   error_pct |
 |:--------------------|:----------|------------------:|---------------:|------------:|
-| 2026-04-20 00:00:00 | 60d       |           70555   |        75872.5 |    -7.00851 |
-| 2026-05-11 00:00:00 | 90d       |           71274.3 |        81728.3 |   -12.7912  |
-| 2026-05-11 00:00:00 | 90d       |           71274.3 |        81728.3 |   -12.7912  |
-| 2026-05-11 00:00:00 | 90d       |           71274.3 |        81728.3 |   -12.7912  |
-| 2026-05-11 00:00:00 | 90d       |           71274.3 |        81728.3 |   -12.7912  |
+| 2026-05-14 00:00:00 | 90d       |           71287.3 |        81339.9 |    -12.3587 |
+| 2026-05-14 00:00:00 | 90d       |           70636.4 |        81339.9 |    -13.159  |
+| 2026-05-14 00:00:00 | 90d       |           70133.4 |        81339.9 |    -13.7774 |
+| 2026-05-14 00:00:00 | 90d       |           72180.6 |        81339.9 |    -11.2605 |
+| 2026-05-14 00:00:00 | 90d       |           69565.3 |        81339.9 |    -14.4758 |
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 1
+- Drifted features (30d vs prev 180d): 2
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,6 +49,7 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature         |   z_score |   current_mean |   ref_mean |
-|:----------------|----------:|---------------:|-----------:|
-| wheat_fut_close |   2.01866 |        611.633 |    544.621 |
+| feature             |   z_score |   current_mean |   ref_mean |
+|:--------------------|----------:|---------------:|-----------:|
+| wheat_fut_close     |   2.10521 |       614.842  |  545.085   |
+| log_wheat_fut_close |   2.04131 |         6.4208 |    6.29915 |
