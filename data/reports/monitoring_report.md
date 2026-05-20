@@ -1,33 +1,33 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-19 16:44:01
-**Run ID:** run_20260520_014400
+**Generated:** 2026-05-20 16:43:51
+**Run ID:** run_20260521_014350
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 5 features
+- ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $4478.13 | $7973.42 |
-| **RMSE** | $5535.69 | $8343.61 |
-| **MAPE** | 6.0% | 10.1% |
-| **Count** | 250 | 51 |
+| **MAE** | $4444.68 | $7771.95 |
+| **RMSE** | $5512.54 | $8270.97 |
+| **MAPE** | 6.0% | 9.8% |
+| **Count** | 252 | 51 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
 | target_date         | horizon   |   predicted_price |   actual_price |   error_pct |
 |:--------------------|:----------|------------------:|---------------:|------------:|
-| 2026-05-19 00:00:00 | 90d       |           80858.8 |          76683 |     5.44555 |
-| 2026-05-19 00:00:00 | 90d       |           80606.4 |          76683 |     5.11643 |
-| 2026-05-19 00:00:00 | 90d       |           79797.9 |          76683 |     4.06201 |
-| 2026-05-19 00:00:00 | 90d       |           80192.8 |          76683 |     4.57698 |
-| 2026-05-19 00:00:00 | 90d       |           80084.3 |          76683 |     4.43553 |
+| 2026-05-19 00:00:00 | 90d       |           79909.5 |        76750.9 |    4.11537  |
+| 2026-05-19 00:00:00 | 90d       |           80084.3 |        76750.9 |    4.34312  |
+| 2026-05-19 00:00:00 | 90d       |           80858.8 |        76750.9 |    5.35224  |
+| 2026-05-20 00:00:00 | 90d       |           76766.3 |        77248.3 |   -0.623938 |
+| 2026-05-20 00:00:00 | 90d       |           77838.2 |        77248.3 |    0.763718 |
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 5
+- Drifted features (30d vs prev 180d): 4
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,10 +49,9 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |   ref_mean |
-|:----------------------------|----------:|---------------:|-----------:|
-| gold_fut_oi_change_7d_proxy |   2.55308 |      120.154   |    9.59247 |
-| wheat_fut_close             |   2.25825 |      622.783   |  547.575   |
-| log_wheat_fut_close         |   2.17408 |        6.43368 |    6.3037  |
-| rate_fvx_close              |   2.16553 |        4.0203  |    3.75072 |
-| rate_tnx_close              |   2.00173 |        4.38383 |    4.16583 |
+| feature             |   z_score |   current_mean |   ref_mean |
+|:--------------------|----------:|---------------:|-----------:|
+| wheat_fut_close     |   2.32336 |      625.383   |  548.081   |
+| rate_fvx_close      |   2.28159 |        4.03503 |    3.75216 |
+| log_wheat_fut_close |   2.23085 |        6.43781 |    6.30463 |
+| rate_tnx_close      |   2.117   |        4.3964  |    4.16727 |
