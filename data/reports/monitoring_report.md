@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-25 16:15:31
-**Run ID:** run_20260526_011530
+**Generated:** 2026-05-26 17:19:06
+**Run ID:** run_20260527_021906
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 9 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 9
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,11 +51,12 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                     |   z_score |   current_mean |   ref_mean |
 |:----------------------------|----------:|---------------:|-----------:|
-| rate_fvx_close              |   2.7384  |       4.09707  |   3.76077  |
-| rate_tnx_close              |   2.58823 |       4.4476   |   4.17563  |
-| wheat_fut_close             |   2.42613 |     632.925    | 550.669    |
-| log_wheat_fut_close         |   2.31549 |       6.44985  |   6.30928  |
-| corn_fut_oi_change_7d_proxy |   2.29227 |     370.212    |  30.2136   |
-| corn_fut_close              |   2.04733 |     462.292    | 438.772    |
-| curve_2y10y_spread_proxy    |   2.0273  |       0.859633 |   0.559961 |
-| log_corn_fut_close          |   2.01926 |       6.13609  |   6.08364  |
+| rate_fvx_close              |   2.81543 |       4.10827  |   3.76254  |
+| rate_tnx_close              |   2.66006 |       4.45587  |   4.17737  |
+| wheat_fut_close             |   2.43427 |     634.192    | 551.126    |
+| log_wheat_fut_close         |   2.32107 |       6.45187  |   6.31009  |
+| corn_fut_oi_change_7d_proxy |   2.29237 |     370.224    |  30.2088   |
+| curve_2y10y_spread_proxy    |   2.08913 |       0.868167 |   0.562644 |
+| corn_fut_close              |   2.05168 |     462.567    | 438.918    |
+| expected_policy_rate_6m     |   2.03515 |       3.79593  |   3.67385  |
+| log_corn_fut_close          |   2.02287 |       6.13669  |   6.08397  |
