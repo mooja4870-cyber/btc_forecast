@@ -1649,6 +1649,9 @@ try:
     # 5. KOSPI (^KS11)
     kospi_p, kospi_c, kospi_s = get_realtime_metric("^KS11", mdf, "kospi_close", "KOSPI", realtime_only=False)
 
+    # 5-2. KOSDAQ (^KQ11)
+    kosdaq_p, kosdaq_c, kosdaq_s = get_realtime_metric("^KQ11", mdf, "kosdaq_close", "KOSDAQ", realtime_only=True)
+
     # 6. S&P 500 (^GSPC, USD original)
     sp_usd_p, sp_c, sp_s = get_realtime_metric("^GSPC", mdf, "sp500_close", "S&P500", realtime_only=False)
     sp_p = sp_usd_p
@@ -1730,6 +1733,7 @@ try:
         "GC=F": "#F59E0B",     # Gold amber
         "SI=F": "#D1D5DB",     # Silver gray
         "^KS11": "#EF4444",    # KOSPI red
+        "^KQ11": "#EC4899",    # KOSDAQ pink
         "^GSPC": "#10B981",    # S&P500 green
         "KRW=X": "#3B82F6",    # KRW/USD blue
     }
@@ -1840,6 +1844,44 @@ try:
             return pd.Series(dtype=float)
 
     @st.cache_data(ttl=300, show_spinner=False)
+    def _fetch_kosdaq_naver_series(start_date_str, end_date_str):
+        """KOSDAQ fallback: Naver Finance chart endpoint daily close."""
+        try:
+            import requests
+
+            url = "https://fchart.stock.naver.com/sise.nhn?symbol=KOSDAQ&timeframe=day&count=6000&requestType=0"
+            resp = requests.get(url, timeout=10)
+            if resp.status_code != 200:
+                return pd.Series(dtype=float)
+
+            items = re.findall(r'<item data="([^"]+)"', resp.text)
+            if not items:
+                return pd.Series(dtype=float)
+
+            idx = []
+            vals = []
+            for row in items:
+                parts = row.split("|")
+                if len(parts) < 5:
+                    continue
+                d = pd.to_datetime(parts[0], format="%Y%m%d", errors="coerce")
+                c = pd.to_numeric(parts[4], errors="coerce")
+                if pd.isna(d) or pd.isna(c):
+                    continue
+                idx.append(d)
+                vals.append(float(c))
+
+            if not idx:
+                return pd.Series(dtype=float)
+
+            series = pd.Series(vals, index=idx).sort_index()
+            start_dt = pd.to_datetime(start_date_str)
+            end_dt = pd.to_datetime(end_date_str)
+            return series.loc[(series.index >= start_dt) & (series.index <= end_dt)]
+        except Exception:
+            return pd.Series(dtype=float)
+
+    @st.cache_data(ttl=300, show_spinner=False)
     def _fetch_trend_series(ticker, start_date_str, end_date_str):
         """
         Fetch trend data with retry.
@@ -1876,6 +1918,11 @@ try:
             kospi_series = _fetch_kospi_naver_series(start_date_str, end_date_str)
             if not kospi_series.empty:
                 return kospi_series, "naver_kospi_chart"
+
+        if ticker == "^KQ11":
+            kosdaq_series = _fetch_kosdaq_naver_series(start_date_str, end_date_str)
+            if not kosdaq_series.empty:
+                return kosdaq_series, "naver_kosdaq_chart"
 
         local_col = TREND_LOCAL_COLUMN_MAP.get(ticker)
         if local_col:
@@ -1957,6 +2004,7 @@ try:
             "금 (Gold)": "GC=F",
             "은 (Silver)": "SI=F",
             "코스피 (KOSPI)": "^KS11",
+            "코스닥 (KOSDAQ)": "^KQ11",
             "S&P 500": "^GSPC",
             "원/달러 환율": "KRW=X"
         }
@@ -1998,7 +2046,7 @@ try:
             
             fig.update_layout(**PLOTLY_LAYOUT)
             fig.update_layout(
-                title="<b>주요 5개 지표 상대 가치 비교 (시작점 = 100)</b>",
+                title="<b>주요 6개 지표 상대 가치 비교 (시작점 = 100)</b>",
                 height=550,
                 xaxis_title="",
                 yaxis_title="지수 (기준=100)",
@@ -2017,7 +2065,7 @@ try:
                 st.caption(f"외부 시세망 이슈로 {fallback_count}개 지표는 대체 소스로 표시했습니다.")
             st.caption("※ 2014년경을 기준 세팅점(100)으로 삼아, 각 자산의 가치가 시점별로 어떻게 변화했는지 비교할 수 있습니다.")
 
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
     with col1:
         if btc_p is not None:
             render_premium_metric("현재 BTC 가격 (KRW)", f"₩{btc_p:,.0f}", btc_c, f"업비트{'-실시간' if isinstance(btc_source, str) and '실시간' in btc_source else ''}")
@@ -2065,6 +2113,17 @@ try:
             show_trend_modal("코스피 (KOSPI)", "^KS11")
 
     with col5:
+        if kosdaq_p is not None and kosdaq_p > 0:
+            ks = str(kosdaq_s)
+            is_real = ("실시간" in ks and "실패" not in ks)
+            src_text = f"네이버{'-실시간' if is_real else ''}" if "네이버" in ks else ks
+            render_premium_metric("KOSDAQ 지수", f"{kosdaq_p:,.2f}", kosdaq_c, src_text)
+        else:
+            st.metric("KOSDAQ 지수", "N/A")
+        if st.button("📈 과거 30년 추세보기", key="btn_kosdaq_trend", use_container_width=True):
+            show_trend_modal("코스닥 (KOSDAQ)", "^KQ11")
+
+    with col6:
         if sp_p is not None and sp_p > 0:
             sps = str(sp_source)
             is_real = ("실시간" in sps and "실패" not in sps)
@@ -2075,7 +2134,7 @@ try:
         if st.button("📈 과거 30년 추세보기", key="btn_sp500_trend", use_container_width=True):
             show_trend_modal("S&P 500", "^GSPC")
 
-    with col6:
+    with col7:
         if krw_p is not None and krw_p > 0:
             ks = str(krw_s)
             is_real = ("실시간" in ks and "실패" not in ks)
@@ -2096,8 +2155,8 @@ try:
         if st.button("📈 과거 30년 추세보기", key="btn_krw_trend", use_container_width=True):
             show_trend_modal("원/달러 환율", "KRW=X")
 
-    # 5개 지표 통합 추세비교 버튼 추가 (최하단 긴 박스 형태)
-    if st.button("📈 추세비교-종합 (5개 지표 동시비교)", key="btn_combined_trend", use_container_width=True):
+    # 6개 지표 통합 추세비교 버튼 추가 (최하단 긴 박스 형태)
+    if st.button("📈 추세비교-종합 (6개 지표 동시비교)", key="btn_combined_trend", use_container_width=True):
         show_combined_trend_modal()
 
 except Exception as e:

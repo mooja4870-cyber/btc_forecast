@@ -1,0 +1,12 @@
+{
+  "ai_settings": {
+    "default_model": "Qwen 3.6 (35B)",
+    "personas": {
+      "@2": "Qwen 3.6 (35B)"
+    },
+    "global_rules": [
+      "CRITICAL GLOBAL RULE: Every single response from the AI MUST start with the exact format '[YYYYMMDDHHMMSS] [Model Name]' at the very first line. Do not skip this rule under any circumstances. Example: [20260504022309] [Qwen 3.6 (35B)]",
+      "WORKSPACE RESTRICTION RULE: Unless explicitly requested by the user, the AI must never access, inspect, refer to, or mention any files, folders, or active documents located outside the current active workspace directory (where the workspace's antigravity.config.json resides). Even if the IDE metadata sends active or open document paths from other directories, the AI must ignore them completely."
+    ]
+  }
+}

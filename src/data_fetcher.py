@@ -524,42 +524,37 @@ def fetch_financedatareader_usd_krw():
 
 
 def fetch_naver_kospi():
-    """Primary KOSPI source: Naver Finance."""
+    """Primary KOSPI source: Naver Mobile JSON API (실시간, delayTime=0)."""
     try:
-        url = "https://finance.naver.com/sise/"
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
-            "Referer": "https://finance.naver.com/",
-        }
-        resp = requests.get(url, headers=headers, timeout=6)
+        url = "https://m.stock.naver.com/api/index/KOSPI/basic"
+        resp = requests.get(url, headers=NAVER_HEADERS, timeout=6)
         if resp.status_code != 200:
             return None, None, None
 
-        html = resp.text
-        m_val = re.search(r'id="KOSPI_now"[^>]*>([0-9,\.]+)', html)
-        if not m_val:
-            return None, None, None
-            
-        current = _to_float(m_val.group(1))
+        data = resp.json()
+        current = _to_float(str(data.get("closePrice", "")).replace(",", ""))
+        change = _to_float(data.get("fluctuationsRatio"))  # 이미 % 값
         if current is None:
             return None, None, None
+        return current, change or 0.0, "실시간 (네이버 모바일 API)"
+    except Exception:
+        return None, None, None
 
-        change = 0.0
-        # parse <span id="KOSPI_change" ... > ...  -0.25% ... </span>
-        idx = html.find('id="KOSPI_change"')
-        if idx != -1:
-            snippet = html[idx:idx+200]
-            m_chg = re.search(r'([+\-0-9\.]+)%', snippet)
-            if m_chg:
-                parsed = _to_float(m_chg.group(1))
-                if parsed is not None:
-                    change = parsed
 
-        return current, change, "실시간 (네이버 금융)"
+def fetch_naver_kosdaq():
+    """Primary KOSDAQ source: Naver Mobile JSON API (실시간, delayTime=0)."""
+    try:
+        url = "https://m.stock.naver.com/api/index/KOSDAQ/basic"
+        resp = requests.get(url, headers=NAVER_HEADERS, timeout=6)
+        if resp.status_code != 200:
+            return None, None, None
+
+        data = resp.json()
+        current = _to_float(str(data.get("closePrice", "")).replace(",", ""))
+        change = _to_float(data.get("fluctuationsRatio"))  # 이미 % 값
+        if current is None:
+            return None, None, None
+        return current, change or 0.0, "실시간 (네이버 모바일 API)"
     except Exception:
         return None, None, None
 
@@ -942,6 +937,19 @@ def fetch_data_robust(symbol, asset_type="crypto"):
     # KOSPI special path
     if symbol == "^KS11":
         p, c, s = fetch_naver_kospi()
+        if p is not None:
+            return p, c, s
+            
+        # Fallback to yahoo
+        for fn in [fetch_yahoo_quote_api, fetch_yfinance_quote, fetch_yahoo_requests]:
+            p, c, s = fn(symbol)
+            if p is not None:
+                return p, c, s
+        return None, None, None
+
+    # KOSDAQ special path
+    if symbol == "^KQ11":
+        p, c, s = fetch_naver_kosdaq()
         if p is not None:
             return p, c, s
             
