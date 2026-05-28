@@ -702,7 +702,7 @@ def fetch_yfinance_quote(symbol):
         else:
             change = (current - prev) / prev * 100
         time_str = datetime.now().strftime("%H:%M")
-        return current, change, f"실시간 (Yahoo Finance/yfinance {time_str})"
+        return current, change, f"실시간 (Yahoo Finance {time_str})"
     except Exception:
         return None, None, None
 
