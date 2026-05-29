@@ -1657,6 +1657,11 @@ try:
     sp_p = sp_usd_p
     sp_source = sp_s
 
+    # 6-2. NASDAQ (^IXIC, USD original)
+    nasdaq_usd_p, nasdaq_c, nasdaq_s = get_realtime_metric("^IXIC", mdf, "nasdaq_close", "NASDAQ", realtime_only=False)
+    nasdaq_p = nasdaq_usd_p
+    nasdaq_source = nasdaq_s
+
     def render_premium_metric(label, value_text, delta_pct, source):
         # Red/Blue convention: Red=Up, Blue=Down
         try:
@@ -1726,6 +1731,7 @@ try:
         "BTC-USD": "btc_close",
         "GC=F": "gold_close",
         "^GSPC": "sp500_close",
+        "^IXIC": "nasdaq_close",
         "KRW=X": "krw_close",
     }
     TREND_TICKER_COLOR_MAP = {
@@ -1735,6 +1741,7 @@ try:
         "^KS11": "#EF4444",    # KOSPI red
         "^KQ11": "#EC4899",    # KOSDAQ pink
         "^GSPC": "#10B981",    # S&P500 green
+        "^IXIC": "#38bdf8",    # NASDAQ sky blue
         "KRW=X": "#3B82F6",    # KRW/USD blue
     }
 
@@ -1974,7 +1981,7 @@ try:
                     margin=dict(l=40, r=40, t=60, b=40)
                 )
                 
-                if ticker in ["GC=F", "SI=F", "^GSPC"]:
+                if ticker in ["GC=F", "SI=F", "^GSPC", "^IXIC"]:
                     fig.update_layout(yaxis_tickformat="$,.0f")
                 elif "BTC" in ticker:
                     fig.update_layout(yaxis_tickformat="$,.0f")
@@ -2065,7 +2072,7 @@ try:
                 st.caption(f"외부 시세망 이슈로 {fallback_count}개 지표는 대체 소스로 표시했습니다.")
             st.caption("※ 2014년경을 기준 세팅점(100)으로 삼아, 각 자산의 가치가 시점별로 어떻게 변화했는지 비교할 수 있습니다.")
 
-    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
     with col1:
         if btc_p is not None:
             render_premium_metric("현재 BTC 가격 (KRW)", f"₩{btc_p:,.0f}", btc_c, f"업비트{'-실시간' if isinstance(btc_source, str) and '실시간' in btc_source else ''}")
@@ -2135,6 +2142,17 @@ try:
             show_trend_modal("S&P 500", "^GSPC")
 
     with col7:
+        if nasdaq_p is not None and nasdaq_p > 0:
+            nasdaq_s_str = str(nasdaq_source)
+            is_real = ("실시간" in nasdaq_s_str and "실패" not in nasdaq_s_str)
+            src_text = f"야후{'-실시간' if is_real else ''}" if "야후" in nasdaq_s_str else nasdaq_s_str
+            render_premium_metric("NASDAQ 지수", f"{nasdaq_p:,.2f}", nasdaq_c, src_text)
+        else:
+            st.metric("NASDAQ 지수", "N/A")
+        if st.button("📈 과거 30년 추세보기", key="btn_nasdaq_trend", use_container_width=True):
+            show_trend_modal("NASDAQ 지수", "^IXIC")
+
+    with col8:
         if krw_p is not None and krw_p > 0:
             ks = str(krw_s)
             is_real = ("실시간" in ks and "실패" not in ks)
