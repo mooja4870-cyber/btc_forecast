@@ -1,5 +1,8 @@
 # Version History
 
+## v1.0.4 (2026-05-29)
+- **Button Font Optimization**: Adjusted the font-size of streamlit buttons (`st.button`) in Custom CSS from `0.77rem`/`0.8rem` to `0.68rem`/`0.7rem` (88% size reduction) to prevent text wrapping on narrow columns (e.g. "추세보\n기").
+
 ## v1.0.3 (2026-05-29)
 - **NASDAQ Card Integration**: Added NASDAQ (^IXIC) index card between S&P 500 and USD/KRW Exchange Rate.
 - **Aesthetic Alignment**: Expanded the grid header columns to 8-col format to seamlessly support NASDAQ.

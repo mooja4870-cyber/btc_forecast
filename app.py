@@ -262,7 +262,7 @@ st.markdown("""
 
     /* Shrink buttons by approx 77% */
     .stButton button {
-        font-size: 0.77rem !important;
+        font-size: 0.68rem !important;
         padding: 0.2rem 0.5rem !important;
         min-height: 2rem !important;
         line-height: 1.2 !important;
@@ -467,7 +467,7 @@ st.markdown("""
         padding-top: 0 !important;
         padding-bottom: 0 !important;
         line-height: 24px !important;
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
         border-radius: 6px !important;
     }
     
