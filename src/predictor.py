@@ -92,6 +92,72 @@ def _augment_predictions_with_interpolation(
     return out
 
 
+def _load_horizon_confidence() -> dict:
+    """Read per-horizon honest val metrics (incl. low_confidence flags).
+
+    Returns {horizon:int -> metrics dict}. Empty if metrics not yet generated.
+    """
+    conf = {}
+    base = os.path.join(MODELS_DIR, "transformer")
+    for h in HORIZONS:
+        h = int(h)
+        p = os.path.join(base, f"horizon_{h}d", "val_metrics.json")
+        if os.path.exists(p):
+            try:
+                with open(p) as f:
+                    conf[h] = json.load(f)
+            except Exception:
+                pass
+    return conf
+
+
+def _reconstruct_low_confidence_long_horizons(pred_df: pd.DataFrame,
+                                              current_price: float) -> pd.DataFrame:
+    """Mid-term-centered strategy: extrapolate low-confidence long horizons from
+    the trend of the reliable (trusted) horizons instead of trusting their own
+    degenerate model output (e.g. the 365d "always-down" artifact).
+
+    Only horizons that are BOTH flagged low_confidence AND longer than the
+    longest reliable horizon are replaced — the trustworthy mid-range is left
+    untouched. The trend is a least-squares slope through the origin (0d→0
+    log-return) over the reliable horizons' predicted log-returns, so the
+    extrapolation follows the model's own mid-term signal (bullish or bearish),
+    with no hardcoded direction.
+    """
+    conf = _load_horizon_confidence()
+    if not conf or pred_df is None or pred_df.empty:
+        return pred_df
+
+    reliable = [h for h, m in conf.items() if not m.get("low_confidence", False)]
+    if not reliable:
+        # Nothing trustworthy to anchor a trend — leave raw output as-is.
+        return pred_df
+    h_max_rel = max(reliable)
+
+    pts = pred_df[pred_df["horizon_days"].astype(int).isin(reliable)]
+    hs = pts["horizon_days"].astype(float).values
+    lrs = pts["predicted_log_return"].astype(float).values
+    denom = float(np.sum(hs ** 2))
+    if denom <= 0:
+        return pred_df
+    slope = float(np.sum(hs * lrs) / denom)  # per-day log-return trend
+
+    out = pred_df.copy()
+    for idx, row in out.iterrows():
+        h = int(row["horizon_days"])
+        if h <= h_max_rel:
+            continue
+        m = conf.get(h)
+        if not m or not m.get("low_confidence", False):
+            continue
+        new_lr = slope * h
+        out.loc[idx, "predicted_log_return"] = round(new_lr, 6)
+        out.loc[idx, "predicted_price"] = round(float(current_price) * float(np.exp(new_lr)), 2)
+        out.loc[idx, "predicted_pct_return"] = round((float(np.exp(new_lr)) - 1.0) * 100.0, 2)
+        out.loc[idx, "model_name"] = "trend-extrapolated (low-conf)"
+    return out
+
+
 def _phase_num_from_name(phase_name: str) -> int:
     if isinstance(phase_name, str) and phase_name.lower().startswith("phase"):
         tail = phase_name[5:]
@@ -321,6 +387,11 @@ def predict_multi_horizon(
     # live here. It overwrote the model's raw output and masked genuine bearish
     # signals. Removed — bias, if any, should be addressed at the data/target
     # level (sampling, retraining), not by editing inference results.
+
+    # Mid-term-centered strategy: replace low-confidence long horizons (e.g. the
+    # degenerate 365d model) with a trend extrapolated from the reliable
+    # horizons. Driven by data (val_metrics low_confidence flags), not hardcoded.
+    pred_df = _reconstruct_low_confidence_long_horizons(pred_df, current_price)
 
     pred_df = _augment_predictions_with_interpolation(
         pred_df=pred_df,

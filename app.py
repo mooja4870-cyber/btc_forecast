@@ -910,7 +910,12 @@ def load_transformer_val_metrics(phase: int, horizon: int = 30):
                     "mae": m.get("mae"),
                     "r2": m.get("r2"),
                     "direction_accuracy": m.get("direction_accuracy"),
+                    "direction_skill": m.get("direction_skill"),
+                    "majority_baseline_acc": m.get("majority_baseline_acc"),
+                    "val_positive_ratio": m.get("val_positive_ratio"),
                     "price_mape_pct": m.get("price_mape_pct"),
+                    "degenerate": m.get("degenerate", False),
+                    "low_confidence": m.get("low_confidence", False),
                     "out_of_sample": m.get("out_of_sample", True),
                 }
             except Exception:
@@ -2250,7 +2255,11 @@ with tab1:
                     tf_da = tf_val.get("direction_accuracy", "N/A")
                     if isinstance(tf_da, float):
                         tf_da = f"{tf_da:.1%}"
-                    st.markdown(f"🤖 **transformer**: R²={tf_r2}, 방향={tf_da} (val:30d)")
+                    skill = tf_val.get("direction_skill")
+                    skill_txt = f", skill={skill:+.1%}" if isinstance(skill, float) else ""
+                    st.markdown(f"🤖 **transformer**: R²={tf_r2}, 방향={tf_da}{skill_txt} (val:30d)")
+                    if tf_val.get("low_confidence"):
+                        st.caption("⚠️ 저신뢰: 검증 표본 부족/편중 또는 실력 미검증")
                 else:
                     st.info("Transformer 메트릭 없음")
 
@@ -2504,8 +2513,20 @@ with tab2:
                     if isinstance(tf_val.get("direction_accuracy"), float)
                     else "-"
                 ),
+                "방향 skill": (
+                    f"{tf_val.get('direction_skill', 0):+.1%}"
+                    if isinstance(tf_val.get("direction_skill"), float)
+                    else "-"
+                ),
             }]
             st.dataframe(pd.DataFrame(metric_rows), use_container_width=True, hide_index=True)
+            if tf_val.get("low_confidence"):
+                base = tf_val.get("majority_baseline_acc")
+                base_txt = f" (다수클래스 기준 {base:.1%})" if isinstance(base, float) else ""
+                st.warning(
+                    "⚠️ 이 검증 결과는 **저신뢰**입니다 — 검증 표본이 부족하거나 한쪽으로 편중되어 "
+                    f"방향 정확도가 부풀려질 수 있습니다{base_txt}. '방향 skill'(기준 대비 실력)을 보세요."
+                )
     else:
         st.info("Transformer(30일) 검증 데이터 없음")
     

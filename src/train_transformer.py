@@ -21,6 +21,23 @@ from src.config import cfg
 SEQ_LEN = 60
 BATCH_SIZE = 32
 
+# ── Training-stability hyperparameters ──
+LEARNING_RATE = 1e-4
+WEIGHT_DECAY = 1e-4        # L2 regularization to curb instant overfitting
+DROPOUT = 0.2             # raised from 0.1 for stronger regularization
+MIN_EPOCHS = 5           # don't early-stop on first-epoch validation noise
+LR_SCHED_FACTOR = 0.5    # halve LR when validation loss plateaus
+LR_SCHED_PATIENCE = 2
+
+# ── Confidence / degeneracy thresholds for hold-out metrics ──
+# A long-horizon validation window can be tiny and one-sided (e.g. 365d had
+# 155 samples, 1.3% positive), making "direction accuracy" trivially gamed by
+# always predicting the majority class. We expose skill-vs-baseline and flag
+# these cases instead of presenting them as genuine accuracy.
+MIN_RELIABLE_VAL_SAMPLES = 200
+IMBALANCE_LOW = 0.10     # positive-ratio below this → degenerate (one-sided)
+IMBALANCE_HIGH = 0.90    # positive-ratio above this → degenerate (one-sided)
+
 
 def _normalize_horizons(horizons):
     if horizons is None:
@@ -100,9 +117,14 @@ def _train_model(X_scaled, y, num_features, epochs, device, shuffle=True,
     else:
         train_loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=shuffle)
 
-    model = TimeSformer(num_features=num_features).to(device)
+    model = TimeSformer(num_features=num_features, dropout=DROPOUT).to(device)
     criterion = nn.SmoothL1Loss()  # More stable than MSE
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+    scheduler = None
+    if val_loader is not None:
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode="min", factor=LR_SCHED_FACTOR, patience=LR_SCHED_PATIENCE,
+        )
 
     best_val = float("inf")
     best_epoch = epochs
@@ -138,6 +160,8 @@ def _train_model(X_scaled, y, num_features, epochs, device, shuffle=True,
                         v_total += v_loss.item()
                         v_batches += 1
             v_avg = v_total / v_batches if v_batches > 0 else float("inf")
+            if scheduler is not None:
+                scheduler.step(v_avg)
             if v_avg < best_val - 1e-6:
                 best_val = v_avg
                 best_epoch = epoch + 1
@@ -145,7 +169,8 @@ def _train_model(X_scaled, y, num_features, epochs, device, shuffle=True,
                 bad_epochs = 0
             else:
                 bad_epochs += 1
-                if bad_epochs >= patience:
+                # Guard against stopping on first-epoch validation noise.
+                if bad_epochs >= patience and (epoch + 1) >= MIN_EPOCHS:
                     break
 
     if best_state is not None:
@@ -184,6 +209,13 @@ def _compute_metrics(y_true, y_pred, base_prices=None, actual_future_prices=None
     r2 = float(1.0 - ss_res / ss_tot) if ss_tot > 0 else 0.0
     direction_accuracy = float(np.mean((y_true > 0) == (y_pred > 0)))
 
+    # Honest direction skill: a one-sided window inflates raw accuracy because
+    # always predicting the majority class scores ~majority_ratio. Skill is the
+    # accuracy *above* that trivial baseline (negative = no skill / worse).
+    pos_ratio = float(np.mean(y_true > 0))
+    majority_baseline_acc = float(max(pos_ratio, 1.0 - pos_ratio))
+    direction_skill = float(direction_accuracy - majority_baseline_acc)
+
     price_mape_pct = None
     if base_prices is not None and actual_future_prices is not None:
         base = np.asarray(base_prices, dtype=float)
@@ -200,6 +232,9 @@ def _compute_metrics(y_true, y_pred, base_prices=None, actual_future_prices=None
         "mae": mae,
         "r2": r2,
         "direction_accuracy": direction_accuracy,
+        "majority_baseline_acc": majority_baseline_acc,
+        "direction_skill": direction_skill,
+        "val_positive_ratio": pos_ratio,
         "price_mape_pct": price_mape_pct,
     }
 
@@ -250,13 +285,31 @@ def _evaluate_holdout(df, feature_cols, target_col, horizon, val_start, device, 
         actual_future_prices = df["btc_close"].shift(-horizon).reindex(eval_dates).values.astype(float)
 
     metrics = _compute_metrics(y_true, y_pred, base_prices, actual_future_prices)
+
+    # Degeneracy: too few validation samples or a one-sided window means the
+    # metrics can't be trusted (the 365d case). Low confidence additionally
+    # covers "model shows no real skill" (negative R² and no direction edge).
+    n_val = int(len(val_eval))
+    pos_ratio = metrics.get("val_positive_ratio", 0.5)
+    degenerate = (
+        n_val < MIN_RELIABLE_VAL_SAMPLES
+        or pos_ratio < IMBALANCE_LOW
+        or pos_ratio > IMBALANCE_HIGH
+    )
+    low_confidence = bool(
+        degenerate
+        or (metrics.get("r2", 0.0) < 0.0 and metrics.get("direction_skill", 0.0) <= 0.0)
+    )
+
     metrics.update({
         "horizon": int(horizon),
-        "n_val_samples": int(len(val_eval)),
+        "n_val_samples": n_val,
         "val_start": str(pd.Timestamp(val_start).date()),
         "val_end": str(val_eval.index[-1].date()),
         "eval_train_end": str(train_eval.index[-1].date()),
         "best_epoch": int(best_epoch),
+        "degenerate": bool(degenerate),
+        "low_confidence": low_confidence,
         "out_of_sample": True,
     })
     return metrics

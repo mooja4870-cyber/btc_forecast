@@ -6,6 +6,14 @@
 
 ---
 
+## v1.0.7 (2026-06-04)
+모델 품질 3대 개선 (학습 안정화 · 365d 재설계 · 중기 중심 전략)
+- **① 학습 안정화** (`src/train_transformer.py`): Adam weight_decay(1e-4) L2 정규화, dropout 0.1→0.2, ReduceLROnPlateau 스케줄러(검증손실 정체 시 LR 절반), MIN_EPOCHS=5 가드(1-epoch 노이즈성 조기종료 방지)
+- **② 365d 재설계 — 정직한 평가** (`src/train_transformer.py`, `app.py`): 방향 skill(=방향정확도−다수클래스 baseline) 지표 추가로 한쪽 쏠린 구간의 착시 제거(365d 방향98%→skill≈0). degenerate/low_confidence 플래그(표본<200·양수비율<10%/>90%·R²<0&skill≤0)를 val_metrics.json 저장, 대시보드에 skill·저신뢰 경고 표시
+- **③ 중기 중심 전략 재편** (`src/predictor.py`): predictor가 신뢰도 플래그를 읽어, 저신뢰 장기 horizon(예: 365d degenerate)을 신뢰 horizon 추세(원점 통과 최소제곱 기울기)로 외삽 재구성. 하드코딩 방향 없이 모델 자체 중기 신호 추종, 라벨로 투명 표시
+
+---
+
 ## v1.0.6 (2026-06-04)
 예측 신뢰도 정밀 개선 (데이터 누수 제거 · 편향 수정 · 학습 안정화)
 - **#1 시계열 hold-out 도입** (`src/train_transformer.py`): 검증 시작일(운영 phase, 2025-01-01) 이전 데이터로만 별도 **검증 모델** 학습 + 타깃 누수 방지 embargo, 스케일러도 train 구간만 fit. 정직한 out-of-sample 지표를 `val_metrics.json`에 저장. 운영 모델은 전체 데이터 학습 유지. → 대시보드 검증 R²/방향정확도가 실제 예측력 반영
