@@ -911,6 +911,9 @@ def load_transformer_val_metrics(phase: int, horizon: int = 30):
                     "r2": m.get("r2"),
                     "direction_accuracy": m.get("direction_accuracy"),
                     "direction_skill": m.get("direction_skill"),
+                    "direction_skill_std": m.get("direction_skill_std"),
+                    "skill_significant": m.get("skill_significant"),
+                    "n_seeds": m.get("n_seeds"),
                     "majority_baseline_acc": m.get("majority_baseline_acc"),
                     "val_positive_ratio": m.get("val_positive_ratio"),
                     "price_mape_pct": m.get("price_mape_pct"),
@@ -2256,10 +2259,18 @@ with tab1:
                     if isinstance(tf_da, float):
                         tf_da = f"{tf_da:.1%}"
                     skill = tf_val.get("direction_skill")
-                    skill_txt = f", skill={skill:+.1%}" if isinstance(skill, float) else ""
+                    skill_std = tf_val.get("direction_skill_std")
+                    if isinstance(skill, float) and isinstance(skill_std, float):
+                        skill_txt = f", skill={skill:+.1%}±{skill_std:.1%}"
+                    elif isinstance(skill, float):
+                        skill_txt = f", skill={skill:+.1%}"
+                    else:
+                        skill_txt = ""
                     st.markdown(f"🤖 **transformer**: R²={tf_r2}, 방향={tf_da}{skill_txt} (val:30d)")
-                    if tf_val.get("low_confidence"):
-                        st.caption("⚠️ 저신뢰: 검증 표본 부족/편중 또는 실력 미검증")
+                    if tf_val.get("skill_significant") is False:
+                        st.caption("⚠️ 방향 skill이 시드 노이즈 범위 — 통계적으로 유의미하지 않음")
+                    elif tf_val.get("low_confidence"):
+                        st.caption("⚠️ 저신뢰: 검증 표본 부족/편중")
                 else:
                     st.info("Transformer 메트릭 없음")
 
@@ -2513,14 +2524,26 @@ with tab2:
                     if isinstance(tf_val.get("direction_accuracy"), float)
                     else "-"
                 ),
-                "방향 skill": (
-                    f"{tf_val.get('direction_skill', 0):+.1%}"
+                "방향 skill (평균±편차)": (
+                    f"{tf_val.get('direction_skill', 0):+.1%} ± {tf_val.get('direction_skill_std', 0):.1%}"
                     if isinstance(tf_val.get("direction_skill"), float)
-                    else "-"
+                    and isinstance(tf_val.get("direction_skill_std"), float)
+                    else (
+                        f"{tf_val.get('direction_skill', 0):+.1%}"
+                        if isinstance(tf_val.get("direction_skill"), float) else "-"
+                    )
                 ),
             }]
             st.dataframe(pd.DataFrame(metric_rows), use_container_width=True, hide_index=True)
-            if tf_val.get("low_confidence"):
+            n_seeds = tf_val.get("n_seeds")
+            if tf_val.get("skill_significant") is False:
+                seed_txt = f"{n_seeds}개 시드 재학습 결과 " if n_seeds else ""
+                st.warning(
+                    f"⚠️ {seed_txt}방향 skill이 **시드 노이즈 범위 안**입니다 — 평균이 편차보다 작아 "
+                    "**통계적으로 유의미한 예측력이 확인되지 않습니다**. 예측치는 참고용이며 투자 판단 근거로 "
+                    "삼지 마세요."
+                )
+            elif tf_val.get("low_confidence"):
                 base = tf_val.get("majority_baseline_acc")
                 base_txt = f" (다수클래스 기준 {base:.1%})" if isinstance(base, float) else ""
                 st.warning(
@@ -2577,9 +2600,11 @@ with tab3:
     실제 투자 판단의 근거로 사용해서는 안 됩니다. 암호화폐 시장은 매우 변동성이 높으며 
     예측 불가능한 요인에 의해 큰 폭으로 변동할 수 있습니다.
     <br>
-    <strong>✅ 개선사항</strong>: 각 시계열(7일/30일/60일/90일/180일/365일)별로 독립된 
-    모델이 <strong>직접 예측</strong>합니다. 재귀적 오차 누적 없이 한 번에 예측하여 
-    신뢰도가 크게 향상되었습니다.
+    <strong>📊 정직한 검증 결과</strong>: 각 시계열별 독립 모델이 직접 예측합니다. 그러나
+    <strong>2025년 이후 검증(out-of-sample)에서 어떤 시계열도 통계적으로 유의미한 방향
+    예측력을 보이지 못했습니다</strong> — 시드 간 변동이 실제 신호보다 큽니다.
+    예측치는 <strong>가능성의 참고 지표</strong>일 뿐, 신뢰할 수 있는 미래 가격이 아닙니다.
+    장기(180·365일)는 모델이 불안정해 중기 추세로 외삽한 값입니다.
     </div>
     """, unsafe_allow_html=True)
     

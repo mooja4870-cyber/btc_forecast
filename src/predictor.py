@@ -128,7 +128,11 @@ def _reconstruct_low_confidence_long_horizons(pred_df: pd.DataFrame,
     if not conf or pred_df is None or pred_df.empty:
         return pred_df
 
-    reliable = [h for h, m in conf.items() if not m.get("low_confidence", False)]
+    # Anchor on NON-DEGENERATE horizons (enough samples, two-sided window) — not
+    # on "has skill", because out-of-sample skill is within seed noise almost
+    # everywhere. Only genuinely degenerate long horizons (e.g. the 365d
+    # one-sided / tiny-sample case) are replaced by the mid-term trend.
+    reliable = [h for h, m in conf.items() if not m.get("degenerate", False)]
     if not reliable:
         # Nothing trustworthy to anchor a trend — leave raw output as-is.
         return pred_df
@@ -148,7 +152,7 @@ def _reconstruct_low_confidence_long_horizons(pred_df: pd.DataFrame,
         if h <= h_max_rel:
             continue
         m = conf.get(h)
-        if not m or not m.get("low_confidence", False):
+        if not m or not m.get("degenerate", False):
             continue
         new_lr = slope * h
         out.loc[idx, "predicted_log_return"] = round(new_lr, 6)

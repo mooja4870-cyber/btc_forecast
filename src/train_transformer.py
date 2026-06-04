@@ -47,6 +47,11 @@ MIN_RELIABLE_VAL_SAMPLES = 200
 IMBALANCE_LOW = 0.10     # positive-ratio below this → degenerate (one-sided)
 IMBALANCE_HIGH = 0.90    # positive-ratio above this → degenerate (one-sided)
 
+# Direction skill from a single training run is dominated by random-seed noise
+# (±3–5%). We retrain the hold-out model over several seeds and report
+# mean ± std so the dashboard can state whether any skill is real or just noise.
+N_SEEDS_EVAL = 3
+
 
 def _normalize_horizons(horizons):
     if horizons is None:
@@ -276,19 +281,9 @@ def _evaluate_holdout(df, feature_cols, target_col, horizon, val_start, device, 
     X_train_scaled = np.nan_to_num((X_train_raw - mean) / std, nan=0.0, posinf=0.0, neginf=0.0)
     y_train = np.nan_to_num(train_eval[target_col].values, nan=0.0, posinf=0.0, neginf=0.0)
 
-    # Inner temporal validation split drives early stopping; best_epoch is then
-    # reused to train the production model (which has no hold-out of its own).
-    eval_model, _, best_epoch = _train_model(
-        X_train_scaled, y_train, len(feature_cols), epochs, device,
-        val_fraction=0.15, patience=3,
-    )
-    eval_model.eval()
-
     all_feat_values = df[feature_cols].values
     all_index = df.index
     eval_dates = val_eval.index
-
-    y_pred = _predict_sequences(eval_model, all_feat_values, all_index, eval_dates, mean, std, device)
     y_true = val_eval[target_col].values.astype(float)
 
     base_prices = None
@@ -297,7 +292,50 @@ def _evaluate_holdout(df, feature_cols, target_col, horizon, val_start, device, 
         base_prices = df["btc_close"].reindex(eval_dates).values.astype(float)
         actual_future_prices = df["btc_close"].shift(-horizon).reindex(eval_dates).values.astype(float)
 
-    metrics = _compute_metrics(y_true, y_pred, base_prices, actual_future_prices)
+    # Retrain over several seeds: a single run's direction skill is dominated by
+    # initialization noise, so we aggregate to mean ± std and test significance.
+    per_seed = []
+    best_epochs = []
+    for seed in range(N_SEEDS_EVAL):
+        torch.manual_seed(42 + seed)
+        np.random.seed(42 + seed)
+        # Inner temporal validation split drives early stopping; best_epoch is
+        # then reused to train the production model (no hold-out of its own).
+        eval_model, _, best_epoch = _train_model(
+            X_train_scaled, y_train, len(feature_cols), epochs, device,
+            val_fraction=0.15, patience=3,
+        )
+        eval_model.eval()
+        y_pred = _predict_sequences(eval_model, all_feat_values, all_index, eval_dates, mean, std, device)
+        per_seed.append(_compute_metrics(y_true, y_pred, base_prices, actual_future_prices))
+        best_epochs.append(int(best_epoch))
+
+    # Aggregate headline metrics (mean) and skill dispersion across seeds.
+    def _avg(key):
+        vals = [m[key] for m in per_seed if m.get(key) is not None]
+        return float(np.mean(vals)) if vals else None
+
+    skills = np.array([m["direction_skill"] for m in per_seed], dtype=float)
+    skill_mean = float(np.mean(skills))
+    skill_std = float(np.std(skills))
+    # "Real" skill: mean stays positive even one std below — i.e. the seed noise
+    # band does not include zero. Otherwise the apparent skill is just noise.
+    skill_significant = bool((skill_mean - skill_std) > 0.0)
+
+    metrics = {
+        "rmse": _avg("rmse"),
+        "mae": _avg("mae"),
+        "r2": _avg("r2"),
+        "direction_accuracy": _avg("direction_accuracy"),
+        "majority_baseline_acc": per_seed[0].get("majority_baseline_acc"),
+        "direction_skill": skill_mean,
+        "direction_skill_std": skill_std,
+        "skill_significant": skill_significant,
+        "n_seeds": int(N_SEEDS_EVAL),
+        "val_positive_ratio": per_seed[0].get("val_positive_ratio"),
+        "price_mape_pct": _avg("price_mape_pct"),
+    }
+    best_epoch = int(np.median(best_epochs))
 
     # Degeneracy: too few validation samples or a one-sided window means the
     # metrics can't be trusted (the 365d case). Low confidence additionally
