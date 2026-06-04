@@ -6,6 +6,15 @@
 
 ---
 
+## v1.0.8 (2026-06-04)
+모델 구조 재설계 (과적합 해소) — 3대 후속개선 ①
+- **아키텍처 스윕** (`scripts/arch_sweep.py` 신규): 정직한 hold-out으로 5개 구조를 15d·90d에서 비교. 승자 `small_seq90`(d_model 64→32, 레이어 2→1, seq 60→90, dropout 0.2→0.3)
+- **구조 적용** (`src/transformer_model.py`, `src/train_transformer.py`): 파라미터 ~100K→18K로 축소. 진단이었던 ep=1 즉시 과적합 해소 → 대부분 horizon이 ep=7~20까지 실제 학습. R² 전반 개선(5d -0.51→-0.04, 90d -0.14→+0.007), 30d skill +5.1%
+- **metadata 기반 로딩** (`src/predictor.py`): 학습 구조를 metadata.json에 기록, 로더가 재구성 → 구조 변경 시 추론 불일치 방지
+- 한계: skill은 여전히 작고 run간 변동 큼(신호 자체가 약함). 180d/365d는 ep=1 유지→중기 추세 외삽
+
+---
+
 ## v1.0.7 (2026-06-04)
 모델 품질 3대 개선 (학습 안정화 · 365d 재설계 · 중기 중심 전략)
 - **① 학습 안정화** (`src/train_transformer.py`): Adam weight_decay(1e-4) L2 정규화, dropout 0.1→0.2, ReduceLROnPlateau 스케줄러(검증손실 정체 시 LR 절반), MIN_EPOCHS=5 가드(1-epoch 노이즈성 조기종료 방지)

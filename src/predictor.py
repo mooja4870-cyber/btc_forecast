@@ -207,12 +207,22 @@ def load_transformer_model(horizon: int):
         # Load scaler stats
         scaler_stats = joblib.load(os.path.join(h_dir, "scaler_stats.joblib"))
         
-        # Initialize model
+        # Initialize model — reconstruct the exact architecture it was trained
+        # with (stored in metadata). Falls back to TimeSformer defaults for
+        # legacy artifacts saved before arch was recorded.
         from src.transformer_model import TimeSformer
         import torch
-        
+
         device = torch.device("cpu") # Use CPU for inference to avoid issues
-        model = TimeSformer(num_features=len(feature_cols))
+        arch = metadata.get("arch", {})
+        model = TimeSformer(
+            num_features=len(feature_cols),
+            d_model=arch.get("d_model", 32),
+            nhead=arch.get("nhead", 4),
+            num_layers=arch.get("num_layers", 1),
+            dim_feedforward=arch.get("dim_feedforward", 128),
+            dropout=arch.get("dropout", 0.3),
+        )
         model.load_state_dict(torch.load(os.path.join(h_dir, "model.pth"), map_location=device))
         model.to(device)
         model.eval()

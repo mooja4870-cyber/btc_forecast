@@ -18,13 +18,22 @@ from src.transformer_model import TimeSformer, CryptoSequenceDataset
 from src.feature_engineer import HORIZONS
 from src.config import cfg
 
-SEQ_LEN = 60
+SEQ_LEN = 90              # longer lookback won the arch sweep (mid-term signal)
 BATCH_SIZE = 32
+
+# ── Model architecture (chosen via scripts/arch_sweep.py honest hold-out) ──
+# Smaller capacity than the original 64/2-layer: with 164 features and ~3900
+# trainable rows, the big model overfit instantly (best_epoch=1). 32-dim /
+# 1-layer + seq90 actually trains (ep≈16) and gives the best out-of-sample skill.
+ARCH_D_MODEL = 32
+ARCH_NHEAD = 4
+ARCH_NUM_LAYERS = 1
+ARCH_DIM_FF = 128
 
 # ── Training-stability hyperparameters ──
 LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 1e-4        # L2 regularization to curb instant overfitting
-DROPOUT = 0.2             # raised from 0.1 for stronger regularization
+DROPOUT = 0.3             # raised for stronger regularization
 MIN_EPOCHS = 5           # don't early-stop on first-epoch validation noise
 LR_SCHED_FACTOR = 0.5    # halve LR when validation loss plateaus
 LR_SCHED_PATIENCE = 2
@@ -117,7 +126,11 @@ def _train_model(X_scaled, y, num_features, epochs, device, shuffle=True,
     else:
         train_loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=shuffle)
 
-    model = TimeSformer(num_features=num_features, dropout=DROPOUT).to(device)
+    model = TimeSformer(
+        num_features=num_features,
+        d_model=ARCH_D_MODEL, nhead=ARCH_NHEAD, num_layers=ARCH_NUM_LAYERS,
+        dim_feedforward=ARCH_DIM_FF, dropout=DROPOUT,
+    ).to(device)
     criterion = nn.SmoothL1Loss()  # More stable than MSE
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
     scheduler = None
@@ -430,6 +443,13 @@ def train_all_horizons(horizons=None, epochs: int = 15, eval_holdout: bool = Tru
             "horizon": horizon,
             "model_type": "TimeSformer",
             "last_train_date": str(train_valid.index[-1].date()),
+            "arch": {
+                "d_model": ARCH_D_MODEL,
+                "nhead": ARCH_NHEAD,
+                "num_layers": ARCH_NUM_LAYERS,
+                "dim_feedforward": ARCH_DIM_FF,
+                "dropout": DROPOUT,
+            },
         }
         with open(os.path.join(h_dir, "metadata.json"), "w") as f:
             json.dump(metadata, f, indent=2)

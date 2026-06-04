@@ -165,8 +165,15 @@
     "log_geo_vix_close",
     "log_geo_ovx_close"
   ],
-  "seq_len": 60,
+  "seq_len": 90,
   "horizon": 60,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-04-05"
+  "last_train_date": "2026-04-05",
+  "arch": {
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 1,
+    "dim_feedforward": 128,
+    "dropout": 0.3
+  }
 }

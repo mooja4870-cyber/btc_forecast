@@ -12,8 +12,8 @@ class TimeSformer(nn.Module):
     Encodes a sequence of past features (lookback window) and predicts
     future log returns for specific horizons (e.g., 7, 30, 60, 90, 180, 365 days).
     """
-    def __init__(self, num_features, d_model=64, nhead=4, num_layers=2, 
-                 dim_feedforward=256, dropout=0.1, output_dim=1):
+    def __init__(self, num_features, d_model=32, nhead=4, num_layers=1,
+                 dim_feedforward=128, dropout=0.3, output_dim=1):
         super(TimeSformer, self).__init__()
         
         self.d_model = d_model
