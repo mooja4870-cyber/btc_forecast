@@ -839,6 +839,19 @@ def load_merged_data():
     return pd.read_csv(path, index_col=0, parse_dates=True)
 
 
+@st.cache_data(ttl=300)
+def load_scenario_bands():
+    """Volatility-scaled empirical scenario bands (honest 'range, not point')."""
+    try:
+        from src.scenario import compute_scenario_bands
+        df = load_merged_data().sort_index()
+        if "btc_close" not in df.columns:
+            return pd.DataFrame(), {}
+        return compute_scenario_bands(df["btc_close"])
+    except Exception:
+        return pd.DataFrame(), {}
+
+
 def _resolve_phase_artifact_path(phase: int, filename: str) -> str:
     latest_path = os.path.join(MODELS_DIR, "latest", f"phase{phase}", filename)
     if os.path.exists(latest_path):
@@ -2607,7 +2620,74 @@ with tab3:
     장기(180·365일)는 모델이 불안정해 중기 추세로 외삽한 값입니다.
     </div>
     """, unsafe_allow_html=True)
-    
+
+    # ── Scenario Bands (honest "range, not point") ──
+    render_yellow_heading(
+        "시나리오 밴드 — 범위로 보는 미래",
+        level=2,
+        tooltip="방향 예측은 통계적으로 검증되지 않았습니다. 대신 현재 변동성으로 조정한 "
+                "역사적 수익률 분포로 '가능한 범위'를 보여줍니다. 중앙선은 예측이 아니라 역사적 중앙 경로입니다.",
+    )
+    try:
+        _bands, _vstats = load_scenario_bands()
+        if not _bands.empty:
+            _ann_recent = _vstats.get("ann_vol_recent_pct", 0.0)
+            _ann_hist = _vstats.get("ann_vol_hist_pct", 0.0)
+            _vol_ratio = _vstats.get("vol_ratio", 1.0)
+            _regime = "차분한 편" if _vol_ratio < 0.9 else ("격렬한 편" if _vol_ratio > 1.1 else "평소 수준")
+
+            fig_band = go.Figure()
+            x = _bands["target_date"]
+            # outer band p5-p95
+            fig_band.add_trace(go.Scatter(x=x, y=_bands["p95"], line=dict(width=0),
+                                          showlegend=False, hoverinfo="skip"))
+            fig_band.add_trace(go.Scatter(
+                x=x, y=_bands["p5"], fill="tonexty", line=dict(width=0),
+                fillcolor="rgba(99,102,241,0.12)", name="5–95% 범위",
+                hovertemplate="p5: $%{y:,.0f}<extra></extra>"))
+            # inner band p25-p75
+            fig_band.add_trace(go.Scatter(x=x, y=_bands["p75"], line=dict(width=0),
+                                          showlegend=False, hoverinfo="skip"))
+            fig_band.add_trace(go.Scatter(
+                x=x, y=_bands["p25"], fill="tonexty", line=dict(width=0),
+                fillcolor="rgba(99,102,241,0.28)", name="25–75% 범위",
+                hovertemplate="p25: $%{y:,.0f}<extra></extra>"))
+            # median path
+            fig_band.add_trace(go.Scatter(
+                x=x, y=_bands["p50"], line=dict(color=COLORS["btc"], width=2.5),
+                name="역사적 중앙 경로", hovertemplate="중앙: $%{y:,.0f}<extra></extra>"))
+            fig_band.update_layout(
+                **PLOTLY_LAYOUT, height=420, title="향후 1년 BTC 시나리오 콘 (현재 변동성 반영)",
+                xaxis_title="", yaxis_title="가격 (USD)")
+            st.plotly_chart(fig_band, use_container_width=True)
+
+            cvol1, cvol2, cvol3 = st.columns(3)
+            cvol1.metric("최근 연율 변동성", f"{_ann_recent:.0f}%")
+            cvol2.metric("역사적 연율 변동성", f"{_ann_hist:.0f}%")
+            cvol3.metric("현재 변동성 국면", _regime, f"{_vol_ratio:.2f}× 역사평균")
+
+            # Quick range table at key horizons
+            from src.scenario import band_coverage_note
+            _key = _bands[_bands["horizon_days"].isin([30, 90, 180, 365])].copy()
+            if not _key.empty:
+                tbl = pd.DataFrame({
+                    "기간": _key["horizon_days"].astype(int).astype(str) + "일",
+                    "하단(p5)": _key["p5"].map(lambda v: f"${v:,.0f}"),
+                    "중앙(p50)": _key["p50"].map(lambda v: f"${v:,.0f}"),
+                    "상단(p95)": _key["p95"].map(lambda v: f"${v:,.0f}"),
+                })
+                st.dataframe(tbl, use_container_width=True, hide_index=True)
+            st.caption(
+                "※ " + band_coverage_note() +
+                " 중앙선은 예측이 아니라 역사적 중앙 경로이며, 밴드 폭은 현재 변동성으로 조정했습니다."
+            )
+        else:
+            st.info("시나리오 밴드를 계산할 데이터가 부족합니다.")
+    except Exception as e:
+        st.warning(f"시나리오 밴드 표시 실패: {e}")
+
+    st.markdown("---")
+
     # ── Date Selection (Backtest Support) ──
     render_yellow_heading("예측 기준일 설정", level=3)
     
