@@ -12,13 +12,6 @@
     "dxy_close",
     "dxy_volume",
     "krw_close",
-    "fed_rate",
-    "cpi",
-    "m2",
-    "unemployment",
-    "gdp",
-    "treasury_10y",
-    "hashrate",
     "fear_greed",
     "oil_fut_close",
     "oil_fut_volume",
@@ -175,5 +168,5 @@
   "seq_len": 60,
   "horizon": 90,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-02-26"
+  "last_train_date": "2026-03-06"
 }

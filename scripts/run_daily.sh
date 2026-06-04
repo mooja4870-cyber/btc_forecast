@@ -15,6 +15,22 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_DIR" || exit 1
 
+# Resolve Python executable with strict fallback order.
+# Hard guard: only use interpreter that can import required runtime modules.
+PYTHON_BIN=""
+for CANDIDATE in \
+    "${PROJECT_DIR}/.venv/bin/python3" \
+    "${PROJECT_DIR}/venv/bin/python3" \
+    "$(command -v python3 2>/dev/null)"
+do
+    if [ -n "$CANDIDATE" ] && [ -x "$CANDIDATE" ]; then
+        if "$CANDIDATE" -c "import yaml, pandas, numpy" >/dev/null 2>&1; then
+            PYTHON_BIN="$CANDIDATE"
+            break
+        fi
+    fi
+done
+
 # 3. Define Log File
 LOG_FILE="$PROJECT_DIR/data/logs/cron_job.log"
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -23,7 +39,14 @@ echo "============================================================" >> "$LOG_FIL
 echo "Starting Scheduled Pipeline Run: $(date)" >> "$LOG_FILE"
 echo "Project Directory: $PROJECT_DIR" >> "$LOG_FILE"
 echo "Working Directory: $(pwd)" >> "$LOG_FILE"
+echo "Python Executable: ${PYTHON_BIN:-NOT_FOUND}" >> "$LOG_FILE"
 echo "============================================================" >> "$LOG_FILE"
+
+if [ -z "$PYTHON_BIN" ]; then
+    echo "❌ Scheduled run FAILED: usable python3 not found (missing required modules) at $(date)" >> "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+    exit 1
+fi
 
 # 4. Run Pipeline
 # Policy: once daily at 00:00, always run full pipeline (data refresh + retrain).
@@ -31,7 +54,7 @@ echo "============================================================" >> "$LOG_FIL
 if [ "$#" -gt 0 ]; then
     echo "⚠️ Args ignored by policy. Forcing full pipeline run (data + retrain)." >> "$LOG_FILE"
 fi
-"${PROJECT_DIR}/.venv/bin/python3" src/run_pipeline.py >> "$LOG_FILE" 2>&1
+"$PYTHON_BIN" src/run_pipeline.py >> "$LOG_FILE" 2>&1
 
 EXIT_CODE=$?
 
@@ -41,9 +64,9 @@ if [ $EXIT_CODE -eq 0 ]; then
     # Optional override:
     #   TRANSFORMER_HORIZONS="1,2,3,5" ./scripts/run_daily.sh
     if [ -n "${TRANSFORMER_HORIZONS:-}" ]; then
-        "${PROJECT_DIR}/.venv/bin/python3" src/train_transformer.py --horizons "$TRANSFORMER_HORIZONS" >> "$LOG_FILE" 2>&1
+        "$PYTHON_BIN" src/train_transformer.py --horizons "$TRANSFORMER_HORIZONS" >> "$LOG_FILE" 2>&1
     else
-        "${PROJECT_DIR}/.venv/bin/python3" src/train_transformer.py >> "$LOG_FILE" 2>&1
+        "$PYTHON_BIN" src/train_transformer.py >> "$LOG_FILE" 2>&1
     fi
     TF_EXIT_CODE=$?
     if [ $TF_EXIT_CODE -ne 0 ]; then
@@ -51,7 +74,7 @@ if [ $EXIT_CODE -eq 0 ]; then
     fi
 
     echo "Step RC: Reality Check sync" >> "$LOG_FILE"
-    "${PROJECT_DIR}/.venv/bin/python3" src/verify_reliability.py >> "$LOG_FILE" 2>&1
+    "$PYTHON_BIN" src/verify_reliability.py >> "$LOG_FILE" 2>&1
     RC_EXIT_CODE=$?
     if [ $TF_EXIT_CODE -eq 0 ] && [ $RC_EXIT_CODE -eq 0 ]; then
         echo "✅ Scheduled run completed successfully at $(date)" >> "$LOG_FILE"
@@ -59,6 +82,23 @@ if [ $EXIT_CODE -eq 0 ]; then
         echo "⚠️ Pipeline succeeded and Reality Check synced, but Transformer retrain failed at $(date)" >> "$LOG_FILE"
     else
         echo "⚠️ Pipeline succeeded, but Reality Check sync failed (exit $RC_EXIT_CODE) at $(date)" >> "$LOG_FILE"
+    fi
+
+    # 학습 완료 후 GitHub에 자동 push (Render 배포 앱 최신화)
+    echo "Step GIT: Pushing updated data & models to GitHub..." >> "$LOG_FILE"
+    cd "$PROJECT_DIR" || exit 1
+    git config user.name "local-cron" 2>/dev/null
+    git config user.email "local-cron@localhost" 2>/dev/null
+    git add data/ models/ >> "$LOG_FILE" 2>&1
+    GIT_COMMIT_MSG="Auto-update data, models, and logs: $(date +'%Y-%m-%d %H:%M KST')"
+    git commit -m "$GIT_COMMIT_MSG" >> "$LOG_FILE" 2>&1 || echo "Nothing to commit." >> "$LOG_FILE"
+    git pull --rebase origin main >> "$LOG_FILE" 2>&1
+    git push origin main >> "$LOG_FILE" 2>&1
+    GIT_EXIT=$?
+    if [ $GIT_EXIT -eq 0 ]; then
+        echo "✅ GitHub push 완료 at $(date)" >> "$LOG_FILE"
+    else
+        echo "⚠️ GitHub push 실패 (exit $GIT_EXIT) at $(date)" >> "$LOG_FILE"
     fi
 else
     echo "❌ Scheduled run FAILED with exit code $EXIT_CODE at $(date)" >> "$LOG_FILE"

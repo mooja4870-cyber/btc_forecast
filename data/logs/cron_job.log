@@ -1,0 +1,670 @@
+============================================================
+Starting Scheduled Pipeline Run: Mon Jun  1 17:08:11 KST 2026
+Project Directory: /Users/l/Documents/project/d_BTCn
+Working Directory: /Users/l/Documents/project/d_BTCn
+Python Executable: /usr/bin/python3
+============================================================
+Traceback (most recent call last):
+  File "/Users/l/Documents/project/d_BTCn/src/run_pipeline.py", line 28, in <module>
+    from src.config import cfg
+  File "/Users/l/Documents/project/d_BTCn/src/config.py", line 3, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'
+❌ Scheduled run FAILED with exit code 1 at Mon Jun  1 17:08:12 KST 2026
+
+============================================================
+Starting Scheduled Pipeline Run: Mon Jun  1 17:09:41 KST 2026
+Project Directory: /Users/l/Documents/project/d_BTCn
+Working Directory: /Users/l/Documents/project/d_BTCn
+Python Executable: /usr/bin/python3
+============================================================
+2026-06-01 17:09:42,519 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+/Users/l/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2026-06-01 17:09:59,447 - INFO - Starting Pipeline Run: run_20260601_170959
+2026-06-01 17:09:59,448 - INFO - Step 0: Monitoring & Reporting
+2026-06-01 17:09:59,462 - INFO - Fetching actuals for BTC-USD from 2023-12-31
+2026-06-01 17:09:59,463 - INFO - Failed to create TzCache, reason: Error creating TzCache folder: '/Users/l/Library/Caches/py-yfinance' reason: [Errno 1] Operation not permitted: '/Users/l/Library/Caches/py-yfinance'. TzCache will not be used. Tip: You can direct cache to use a different location with 'set_tz_cache_location(mylocation)'
+2026-06-01 17:09:59,463 - INFO - Failed to create CookieCache, reason: Error creating CookieCache folder: '/Users/l/Library/Caches/py-yfinance' reason: [Errno 1] Operation not permitted: '/Users/l/Library/Caches/py-yfinance'. CookieCache will not be used. Tip: You can direct cache to use a different location with 'set_tz_cache_location(mylocation)'
+2026-06-01 17:09:59,467 - ERROR - Failed to get ticker 'BTC-USD' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:09:59,476 - ERROR - 
+1 Failed download:
+2026-06-01 17:09:59,477 - ERROR - ['BTC-USD']: DNSError('Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')
+2026-06-01 17:09:59,487 - INFO - Updated eval log. Total rows: 354, Rows with actuals: 0
+2026-06-01 17:09:59,487 - INFO - Step 1: Data Collection
+2026-06-01 17:09:59,488 - ERROR - Failed to get ticker 'BTC-USD' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:09:59,500 - ERROR - 
+1 Failed download:
+2026-06-01 17:09:59,501 - ERROR - ['BTC-USD']: DNSError('Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')
+2026-06-01 17:09:59,807 - ERROR - Failed to get ticker 'GC=F' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:09:59,808 - ERROR - $GC=F: possibly delisted; no timezone found
+2026-06-01 17:09:59,819 - ERROR - 
+1 Failed download:
+2026-06-01 17:09:59,819 - ERROR - ['GC=F']: possibly delisted; no timezone found
+2026-06-01 17:10:00,137 - ERROR - Failed to get ticker 'CL=F' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:10:00,138 - ERROR - $CL=F: possibly delisted; no timezone found
+2026-06-01 17:10:00,147 - ERROR - 
+1 Failed download:
+2026-06-01 17:10:00,148 - ERROR - ['CL=F']: possibly delisted; no timezone found
+2026-06-01 17:10:00,456 - ERROR - Failed to get ticker '^GSPC' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:10:00,457 - ERROR - $^GSPC: possibly delisted; no timezone found
+2026-06-01 17:10:00,468 - ERROR - 
+1 Failed download:
+2026-06-01 17:10:00,468 - ERROR - ['^GSPC']: possibly delisted; no timezone found
+2026-06-01 17:10:00,774 - ERROR - Failed to get ticker '^IXIC' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:10:00,775 - ERROR - $^IXIC: possibly delisted; no timezone found
+2026-06-01 17:10:00,786 - ERROR - 
+1 Failed download:
+2026-06-01 17:10:00,786 - ERROR - ['^IXIC']: possibly delisted; no timezone found
+2026-06-01 17:10:01,090 - ERROR - Failed to get ticker 'DX-Y.NYB' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:10:01,091 - ERROR - $DX-Y.NYB: possibly delisted; no timezone found
+2026-06-01 17:10:01,102 - ERROR - 
+1 Failed download:
+2026-06-01 17:10:01,102 - ERROR - ['DX-Y.NYB']: possibly delisted; no timezone found
+2026-06-01 17:10:01,407 - ERROR - Failed to get ticker 'KRW=X' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-01 17:10:01,407 - ERROR - $KRW=X: possibly delisted; no timezone found
+2026-06-01 17:10:01,418 - ERROR - 
+1 Failed download:
+2026-06-01 17:10:01,419 - ERROR - ['KRW=X']: possibly delisted; no timezone found
+2026-06-01 17:10:01,726 - INFO - Step 2: Feature Engineering
+2026-06-01 17:10:02,428 - INFO - Step 3: Model Training (Transformer-only)
+2026-06-01 17:19:56,197 - INFO - Updated latest model pointer (relative) -> run_20260601_170959
+2026-06-01 17:19:56,197 - INFO - Step 4: Reality Check Sync
+2026-06-01 17:19:56,316 - INFO - Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.
+2026-06-01 17:19:56,316 - INFO - Pipeline finished successfully. Run ID: run_20260601_170959
+============================================================
+BTC Prediction — Data Collection
+Range: 2014-01-01 to None
+============================================================
+
+[1/8] Collecting market data (yfinance)...
+  ↓ yfinance: btc (BTC-USD)
+    ⚠ No data for BTC-USD
+  ↓ yfinance: gold (GC=F)
+    ⚠ No data for GC=F
+  ↓ yfinance: oil (CL=F)
+    ⚠ No data for CL=F
+  ↓ yfinance: sp500 (^GSPC)
+    ⚠ No data for ^GSPC
+  ↓ yfinance: nasdaq (^IXIC)
+    ⚠ No data for ^IXIC
+  ↓ yfinance: dxy (DX-Y.NYB)
+    ⚠ No data for DX-Y.NYB
+  ↓ yfinance: krw (KRW=X)
+    ⚠ No data for KRW=X
+    ⚠ No yfinance data collected.
+Critical Data Missing: yfinance data is empty.
+Feature Engineering:
+  ✓ As-of lag policy
+  ✓ Lag features
+  ✓ Moving averages
+  ✓ Return features
+  ✓ Volatility
+  ✓ RSI
+  ✓ MACD
+  ✓ Bollinger Bands
+  ✓ Cross-asset ratios & correlations
+  ✓ Futures expiry / curve proxies
+  ✓ Rates expectation proxies
+  ✓ Geopolitical risk proxies
+  ✓ Multi-horizon targets (1d, 2d, 3d, 5d, 7d, 15d, 30d, 60d, 90d, 180d, 365d)
+
+✅ Total features: 205
+
+💾 Saved to /Users/l/Documents/project/d_BTCn/data/processed/featured_dataset.csv
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000860
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001513
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.002045
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.002904
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003924
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.005322
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.004971
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.004815
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005455
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.005897
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.006814
+
+🎉 All Transformer models trained and saved.
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-04-23, Today=$78,360, Pred=$70,156
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-03-24, Today=$78,360, Pred=$81,083
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-04-22, Today=$78,360, Pred=$78,494
+
+🚀 Reality Check synced with production models successfully.
+Step TF: Transformer retrain sync
+2026-06-01 17:19:58,100 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000910
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001418
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.002028
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.003199
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003683
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.004764
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.004839
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.005377
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005908
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.006202
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.007711
+
+🎉 All Transformer models trained and saved.
+Step RC: Reality Check sync
+2026-06-01 17:29:22,646 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-04-23, Today=$78,360, Pred=$82,735
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-03-24, Today=$78,360, Pred=$78,818
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-04-22, Today=$78,360, Pred=$78,612
+
+🚀 Reality Check synced with production models successfully.
+✅ Scheduled run completed successfully at Mon Jun  1 17:29:23 KST 2026
+
+============================================================
+Starting Scheduled Pipeline Run: Tue Jun  2 08:01:17 KST 2026
+Project Directory: /Users/l/Documents/project/d_BTCn
+Working Directory: /Users/l/Documents/project/d_BTCn
+Python Executable: /usr/bin/python3
+============================================================
+2026-06-02 08:01:17,519 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+/Users/l/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2026-06-02 08:01:18,991 - INFO - Starting Pipeline Run: run_20260602_080118
+2026-06-02 08:01:18,991 - INFO - Step 0: Monitoring & Reporting
+2026-06-02 08:01:19,006 - INFO - Fetching actuals for BTC-USD from 2023-12-31
+2026-06-02 08:01:19,007 - INFO - Failed to create TzCache, reason: Error creating TzCache folder: '/Users/l/Library/Caches/py-yfinance' reason: [Errno 1] Operation not permitted: '/Users/l/Library/Caches/py-yfinance'. TzCache will not be used. Tip: You can direct cache to use a different location with 'set_tz_cache_location(mylocation)'
+2026-06-02 08:01:19,007 - INFO - Failed to create CookieCache, reason: Error creating CookieCache folder: '/Users/l/Library/Caches/py-yfinance' reason: [Errno 1] Operation not permitted: '/Users/l/Library/Caches/py-yfinance'. CookieCache will not be used. Tip: You can direct cache to use a different location with 'set_tz_cache_location(mylocation)'
+2026-06-02 08:01:19,011 - ERROR - Failed to get ticker 'BTC-USD' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:19,018 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:19,019 - ERROR - ['BTC-USD']: DNSError('Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')
+2026-06-02 08:01:19,033 - INFO - Updated eval log. Total rows: 354, Rows with actuals: 0
+2026-06-02 08:01:19,034 - INFO - Step 1: Data Collection
+2026-06-02 08:01:19,035 - ERROR - Failed to get ticker 'BTC-USD' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:19,047 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:19,047 - ERROR - ['BTC-USD']: DNSError('Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')
+2026-06-02 08:01:19,351 - ERROR - Failed to get ticker 'GC=F' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:19,352 - ERROR - $GC=F: possibly delisted; no timezone found
+2026-06-02 08:01:19,363 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:19,363 - ERROR - ['GC=F']: possibly delisted; no timezone found
+2026-06-02 08:01:19,668 - ERROR - Failed to get ticker 'CL=F' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:19,669 - ERROR - $CL=F: possibly delisted; no timezone found
+2026-06-02 08:01:19,680 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:19,680 - ERROR - ['CL=F']: possibly delisted; no timezone found
+2026-06-02 08:01:19,987 - ERROR - Failed to get ticker '^GSPC' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:19,989 - ERROR - $^GSPC: possibly delisted; no timezone found
+2026-06-02 08:01:19,996 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:19,996 - ERROR - ['^GSPC']: possibly delisted; no timezone found
+2026-06-02 08:01:20,304 - ERROR - Failed to get ticker '^IXIC' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:20,305 - ERROR - $^IXIC: possibly delisted; no timezone found
+2026-06-02 08:01:20,316 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:20,316 - ERROR - ['^IXIC']: possibly delisted; no timezone found
+2026-06-02 08:01:20,620 - ERROR - Failed to get ticker 'DX-Y.NYB' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:20,621 - ERROR - $DX-Y.NYB: possibly delisted; no timezone found
+2026-06-02 08:01:20,632 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:20,632 - ERROR - ['DX-Y.NYB']: possibly delisted; no timezone found
+2026-06-02 08:01:20,940 - ERROR - Failed to get ticker 'KRW=X' reason: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-06-02 08:01:20,941 - ERROR - $KRW=X: possibly delisted; no timezone found
+2026-06-02 08:01:20,950 - ERROR - 
+1 Failed download:
+2026-06-02 08:01:20,951 - ERROR - ['KRW=X']: possibly delisted; no timezone found
+2026-06-02 08:01:21,253 - INFO - Step 2: Feature Engineering
+2026-06-02 08:01:21,909 - INFO - Step 3: Model Training (Transformer-only)
+2026-06-02 08:11:11,160 - INFO - Updated latest model pointer (relative) -> run_20260602_080118
+2026-06-02 08:11:11,161 - INFO - Step 4: Reality Check Sync
+2026-06-02 08:11:11,281 - INFO - Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.
+2026-06-02 08:11:11,281 - INFO - Pipeline finished successfully. Run ID: run_20260602_080118
+============================================================
+BTC Prediction — Data Collection
+Range: 2014-01-01 to None
+============================================================
+
+[1/8] Collecting market data (yfinance)...
+  ↓ yfinance: btc (BTC-USD)
+    ⚠ No data for BTC-USD
+  ↓ yfinance: gold (GC=F)
+    ⚠ No data for GC=F
+  ↓ yfinance: oil (CL=F)
+    ⚠ No data for CL=F
+  ↓ yfinance: sp500 (^GSPC)
+    ⚠ No data for ^GSPC
+  ↓ yfinance: nasdaq (^IXIC)
+    ⚠ No data for ^IXIC
+  ↓ yfinance: dxy (DX-Y.NYB)
+    ⚠ No data for DX-Y.NYB
+  ↓ yfinance: krw (KRW=X)
+    ⚠ No data for KRW=X
+    ⚠ No yfinance data collected.
+Critical Data Missing: yfinance data is empty.
+Feature Engineering:
+  ✓ As-of lag policy
+  ✓ Lag features
+  ✓ Moving averages
+  ✓ Return features
+  ✓ Volatility
+  ✓ RSI
+  ✓ MACD
+  ✓ Bollinger Bands
+  ✓ Cross-asset ratios & correlations
+  ✓ Futures expiry / curve proxies
+  ✓ Rates expectation proxies
+  ✓ Geopolitical risk proxies
+  ✓ Multi-horizon targets (1d, 2d, 3d, 5d, 7d, 15d, 30d, 60d, 90d, 180d, 365d)
+
+✅ Total features: 205
+
+💾 Saved to /Users/l/Documents/project/d_BTCn/data/processed/featured_dataset.csv
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000953
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001583
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.002034
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.002937
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003938
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.005122
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.005147
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.005116
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005439
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.005375
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.007781
+
+🎉 All Transformer models trained and saved.
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-04-23, Today=$78,360, Pred=$74,583
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-03-24, Today=$78,360, Pred=$79,548
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-04-22, Today=$78,360, Pred=$78,415
+
+🚀 Reality Check synced with production models successfully.
+Step TF: Transformer retrain sync
+2026-06-02 08:11:13,193 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000919
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001448
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.001977
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.002890
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003604
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.004812
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.005074
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.005279
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005579
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.005889
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.007096
+
+🎉 All Transformer models trained and saved.
+Step RC: Reality Check sync
+2026-06-02 08:20:24,098 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-04-23, Today=$78,360, Pred=$68,815
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-03-24, Today=$78,360, Pred=$75,822
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-04-22, Today=$78,360, Pred=$77,799
+
+🚀 Reality Check synced with production models successfully.
+✅ Scheduled run completed successfully at Tue Jun  2 08:20:25 KST 2026
+
+============================================================
+Starting Scheduled Pipeline Run: Thu Jun  4 15:06:58 KST 2026
+Project Directory: /Users/l/Documents/project/d_BTCn
+Working Directory: /Users/l/Documents/project/d_BTCn
+Python Executable: /usr/bin/python3
+============================================================
+2026-06-04 15:06:59,063 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+/Users/l/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2026-06-04 15:07:02,425 - INFO - Starting Pipeline Run: run_20260604_150702
+2026-06-04 15:07:02,426 - INFO - Step 0: Monitoring & Reporting
+2026-06-04 15:07:02,441 - INFO - Fetching actuals for BTC-USD from 2023-12-31
+2026-06-04 15:07:05,410 - INFO - Updated eval log. Total rows: 354, Rows with actuals: 252
+2026-06-04 15:07:05,515 - INFO - Report generated at data/reports/monitoring_report.md
+2026-06-04 15:07:05,515 - INFO - Step 1: Data Collection
+2026-06-04 15:09:16,298 - INFO - Step 2: Feature Engineering
+2026-06-04 15:09:16,940 - INFO - Step 3: Model Training (Transformer-only)
+2026-06-04 15:14:58,511 - INFO - Updated latest model pointer (relative) -> run_20260604_150702
+2026-06-04 15:14:58,511 - INFO - Step 4: Reality Check Sync
+2026-06-04 15:14:58,615 - INFO - Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.
+2026-06-04 15:14:58,615 - INFO - Pipeline finished successfully. Run ID: run_20260604_150702
+============================================================
+BTC Prediction — Data Collection
+Range: 2014-01-01 to None
+============================================================
+
+[1/8] Collecting market data (yfinance)...
+  ↓ yfinance: btc (BTC-USD)
+  ↓ yfinance: gold (GC=F)
+  ↓ yfinance: oil (CL=F)
+  ↓ yfinance: sp500 (^GSPC)
+  ↓ yfinance: nasdaq (^IXIC)
+  ↓ yfinance: dxy (DX-Y.NYB)
+  ↓ yfinance: krw (KRW=X)
+
+[2/8] Collecting macroeconomic data (FRED)...
+  ⚠ No FRED API key — skipping macro data from FRED
+
+[3/8] Collecting on-chain data...
+  ↓ Blockchain.com: hash rate
+    ✗ Hash rate error: HTTPSConnectionPool(host='api.blockchain.info', port=443): Read timed out. (read timeout=60)
+
+[4/8] Collecting sentiment data...
+  ↓ Alternative.me: Fear & Greed Index
+
+[5/8] Collecting optional futures data...
+  ↓ Optional: futures term-structure source data
+  ↓ yfinance: oil_fut (CL=F)
+  ↓ yfinance: gold_fut (GC=F)
+  ↓ yfinance: corn_fut (ZC=F)
+  ↓ yfinance: wheat_fut (ZW=F)
+
+[6/8] Collecting optional rates expectation data...
+  ↓ Optional: rates expectation proxy data
+  ↓ yfinance: rate_irx (^IRX)
+  ↓ yfinance: rate_fvx (^FVX)
+  ↓ yfinance: rate_tnx (^TNX)
+
+[7/8] Collecting optional geopolitical proxy data...
+  ↓ Optional: geopolitical risk proxy data
+  ↓ yfinance: geo_vix (^VIX)
+  ↓ yfinance: geo_ovx (^OVX)
+
+[8/8] Creating engineered features...
+  ✓ Creating event dummy variables
+  ✓ Creating halving features
+
+Merging all datasets...
+
+✅ Final dataset: 4464 rows × 38 columns
+   Date range: 2014-01-01 — 2026-06-04
+   Columns: ['btc_close', 'btc_volume', 'gold_close', 'gold_volume', 'oil_close', 'oil_volume', 'sp500_close', 'sp500_volume', 'nasdaq_close', 'nasdaq_volume', 'dxy_close', 'dxy_volume', 'krw_close', 'fear_greed', 'oil_fut_close', 'oil_fut_volume', 'gold_fut_close', 'gold_fut_volume', 'corn_fut_close', 'corn_fut_volume', 'wheat_fut_close', 'wheat_fut_volume', 'rate_irx_close', 'rate_fvx_close', 'rate_tnx_close', 'geo_vix_close', 'geo_ovx_close', 'event_covid_crash', 'event_china_btc_ban', 'event_ukraine_war', 'event_luna_terra_crash', 'event_ftx_collapse', 'event_spot_btc_etf', 'event_us_election_2024', 'days_since_halving', 'halving_era', 'days_to_fomc', 'is_fomc_week']
+   Missing values:
+btc_close            185
+btc_volume           185
+gold_close             1
+gold_volume            1
+oil_close              1
+oil_volume             1
+sp500_close            1
+sp500_volume           1
+nasdaq_close           1
+nasdaq_volume          1
+dxy_close              1
+dxy_volume             1
+fear_greed          1418
+oil_fut_close          1
+oil_fut_volume         1
+gold_fut_close         1
+gold_fut_volume        1
+corn_fut_close         1
+corn_fut_volume        1
+wheat_fut_close        1
+wheat_fut_volume       1
+rate_irx_close         1
+rate_fvx_close         1
+rate_tnx_close         1
+geo_vix_close          1
+geo_ovx_close          1
+dtype: int64
+
+💾 Saved to /Users/l/Documents/project/d_BTCn/data/processed/merged_dataset.csv
+Feature Engineering:
+  ✓ As-of lag policy
+  ✓ Lag features
+  ✓ Moving averages
+  ✓ Return features
+  ✓ Volatility
+  ✓ RSI
+  ✓ MACD
+  ✓ Bollinger Bands
+  ✓ Cross-asset ratios & correlations
+  ✓ Futures expiry / curve proxies
+  ✓ Rates expectation proxies
+  ✓ Geopolitical risk proxies
+  ✓ Multi-horizon targets (1d, 2d, 3d, 5d, 7d, 15d, 30d, 60d, 90d, 180d, 365d)
+
+✅ Total features: 201
+
+💾 Saved to /Users/l/Documents/project/d_BTCn/data/processed/featured_dataset.csv
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000904
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001542
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.002006
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.002988
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003887
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.004970
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.005072
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.004746
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005247
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.005972
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.006990
+
+🎉 All Transformer models trained and saved.
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-06-04, Today=$64,064, Pred=$81,490
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-05-05, Today=$64,064, Pred=$77,118
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-06-03, Today=$64,064, Pred=$64,793
+
+🚀 Reality Check synced with production models successfully.
+Step TF: Transformer retrain sync
+2026-06-04 15:15:00,176 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+✅ 1d Model Trained. Loss: 0.000979
+
+Training for Horizon: 2 days...
+✅ 2d Model Trained. Loss: 0.001445
+
+Training for Horizon: 3 days...
+✅ 3d Model Trained. Loss: 0.002098
+
+Training for Horizon: 5 days...
+✅ 5d Model Trained. Loss: 0.002947
+
+Training for Horizon: 7 days...
+✅ 7d Model Trained. Loss: 0.003733
+
+Training for Horizon: 15 days...
+✅ 15d Model Trained. Loss: 0.004547
+
+Training for Horizon: 30 days...
+✅ 30d Model Trained. Loss: 0.005372
+
+Training for Horizon: 60 days...
+✅ 60d Model Trained. Loss: 0.005512
+
+Training for Horizon: 90 days...
+✅ 90d Model Trained. Loss: 0.005429
+
+Training for Horizon: 180 days...
+✅ 180d Model Trained. Loss: 0.006232
+
+Training for Horizon: 365 days...
+✅ 365d Model Trained. Loss: 0.007367
+
+🎉 All Transformer models trained and saved.
+Step RC: Reality Check sync
+2026-06-04 15:20:05,381 - INFO - Loaded configuration from /Users/l/Documents/project/d_BTCn/config/config.yaml
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-06-04, Today=$64,064, Pred=$73,473
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-05-05, Today=$64,064, Pred=$83,777
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-06-03, Today=$64,064, Pred=$67,375
+
+🚀 Reality Check synced with production models successfully.
+✅ Scheduled run completed successfully at Thu Jun  4 15:20:06 KST 2026
+

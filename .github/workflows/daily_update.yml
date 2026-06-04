@@ -43,6 +43,26 @@ jobs:
           python src/run_pipeline.py 2>&1 | tee -a data/logs/cron_job.log
           echo "✅ Daily run finished at $(date)" >> data/logs/cron_job.log
 
+      - name: Train Transformer Models
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          echo "============================================================" >> data/logs/cron_job.log
+          echo "Step TF: Transformer retrain sync" >> data/logs/cron_job.log
+          python src/train_transformer.py 2>&1 | tee -a data/logs/cron_job.log
+          TF_EXIT=${PIPESTATUS[0]}
+          if [ $TF_EXIT -eq 0 ]; then
+            echo "✅ Transformer retrain completed at $(date)" >> data/logs/cron_job.log
+          else
+            echo "⚠️ Transformer retrain failed (exit $TF_EXIT) at $(date)" >> data/logs/cron_job.log
+          fi
+
+      - name: Reality Check Sync
+        run: |
+          echo "Step RC: Reality Check sync" >> data/logs/cron_job.log
+          python src/verify_reliability.py 2>&1 | tee -a data/logs/cron_job.log
+          echo "✅ Scheduled run completed successfully at $(date)" >> data/logs/cron_job.log
+
       - name: Commit and Push changes
         run: |
           git config --local user.name "github-actions[bot]"

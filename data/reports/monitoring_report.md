@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-05-27 16:57:33
-**Run ID:** run_20260528_015733
+**Generated:** 2026-06-04 15:07:05
+**Run ID:** run_20260604_150702
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 9 features
+- ⚠️ Expansion feature drift detected: 6 features
 
 ## 📈 Performance Metrics
 
@@ -27,36 +27,33 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 9
+- Drifted features (30d vs prev 180d): 6
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| commodity_shock_score            |                        0 |            0 |
-| corn_fut_close                   |                        0 |            0 |
-| corn_fut_close_ret1d             |                        0 |            0 |
-| corn_fut_close_ret30d            |                        0 |            0 |
-| corn_fut_close_ret7d             |                        0 |            0 |
-| corn_fut_days_to_expiry          |                        0 |            0 |
-| corn_fut_expiry_week             |                        0 |            0 |
-| corn_fut_front_next_spread_proxy |                        0 |            0 |
-| corn_fut_oi_change_7d_proxy      |                        0 |            0 |
-| corn_fut_roll_return_20d         |                        0 |            0 |
-| corn_fut_volume                  |                        0 |            0 |
-| curve_2y10y_spread_proxy         |                        0 |            0 |
-| days_to_fomc                     |                        0 |            0 |
-| expected_policy_rate_3m          |                        0 |            0 |
-| expected_policy_rate_6m          |                        0 |            0 |
+| corn_fut_oi_change_7d_proxy      |                    13.33 |            0 |
+| gold_fut_oi_change_7d_proxy      |                    13.33 |            0 |
+| oil_fut_oi_change_7d_proxy       |                    13.33 |            0 |
+| wheat_fut_oi_change_7d_proxy     |                    13.33 |            0 |
+| commodity_shock_score            |                     0    |            0 |
+| corn_fut_close                   |                     0    |            0 |
+| corn_fut_close_ret1d             |                     0    |            0 |
+| corn_fut_close_ret30d            |                     0    |            0 |
+| corn_fut_close_ret7d             |                     0    |            0 |
+| corn_fut_days_to_expiry          |                     0    |            0 |
+| corn_fut_expiry_week             |                     0    |            0 |
+| corn_fut_front_next_spread_proxy |                     0    |            0 |
+| corn_fut_roll_return_20d         |                     0    |            0 |
+| corn_fut_volume                  |                     0    |            0 |
+| curve_2y10y_spread_proxy         |                     0    |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
 | feature                     |   z_score |   current_mean |   ref_mean |
 |:----------------------------|----------:|---------------:|-----------:|
-| rate_fvx_close              |   2.89161 |        4.11947 |   3.76424  |
-| rate_tnx_close              |   2.73321 |        4.46413 |   4.17911  |
-| wheat_fut_close             |   2.43449 |      635.183   | 551.567    |
-| log_wheat_fut_close         |   2.31979 |        6.45347 |   6.31087  |
-| corn_fut_oi_change_7d_proxy |   2.2924  |      370.225   |  30.2014   |
-| curve_2y10y_spread_proxy    |   2.14708 |        0.8767  |   0.565078 |
-| expected_policy_rate_6m     |   2.09874 |        3.80025 |   3.67411  |
-| corn_fut_close              |   2.04037 |      462.667   | 439.046    |
-| log_corn_fut_close          |   2.01145 |        6.13691 |   6.08426  |
+| oil_fut_close               |   3.07671 |     97.923     | 64.3505    |
+| log_oil_fut_close           |   2.93158 |      4.58048   |  4.15265   |
+| rate_fvx_close              |   2.53074 |      3.94563   |  3.71218   |
+| gold_fut_close_ret30d       |   2.13912 |     -0.0592174 |  0.0569702 |
+| rate_tnx_close              |   2.11749 |      4.32037   |  4.13319   |
+| gold_fut_oi_change_7d_proxy |   2.015   |     43.5295    |  5.67072   |
