@@ -1,0 +1,14 @@
+{
+  "rmse": 0.2734198886567138,
+  "mae": 0.22881966867984857,
+  "r2": 0.12039772899714163,
+  "direction_accuracy": 0.6529411764705882,
+  "price_mape_pct": 21.43119402021242,
+  "horizon": 180,
+  "n_val_samples": 340,
+  "val_start": "2025-01-01",
+  "val_end": "2025-12-06",
+  "eval_train_end": "2024-07-04",
+  "best_epoch": 4,
+  "out_of_sample": true
+}
