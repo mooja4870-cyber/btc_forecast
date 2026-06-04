@@ -399,6 +399,46 @@ def create_halving_features(index: pd.DatetimeIndex) -> pd.DataFrame:
 
 
 # ================================================================
+#  Source-aware forward fill
+# ================================================================
+# Carry limits (in calendar days / index rows) per data cadence.
+_FFILL_MACRO_LIMIT = 95     # FRED monthly/quarterly releases (GDP ~quarterly)
+_FFILL_MARKET_LIMIT = 4     # equities/commodities/FX/yields — weekends + holidays
+_FFILL_DAILY_LIMIT = 7      # on-chain / sentiment — bridge short sampling gaps
+
+_MACRO_COLS = {"fed_rate", "cpi", "m2", "unemployment", "gdp", "treasury_10y"}
+_DAILY_AUX_COLS = {"hashrate", "fear_greed"}
+
+
+def _ffill_limit_for_column(col: str) -> int:
+    """Pick a forward-fill carry limit based on the column's data source cadence."""
+    if col in _MACRO_COLS:
+        return _FFILL_MACRO_LIMIT
+    if col in _DAILY_AUX_COLS:
+        return _FFILL_DAILY_LIMIT
+    # Market-cadence series: prices/volumes, futures, rate & geo proxies.
+    if (
+        col.endswith("_close")
+        or col.endswith("_volume")
+        or "_fut_" in col
+        or col.startswith("rate_")
+        or col.startswith("geo_")
+    ):
+        return _FFILL_MARKET_LIMIT
+    # event_*/halving/fomc calendar columns are computed on the full index and
+    # have no gaps; a market-level limit is a harmless no-op for them.
+    return _FFILL_MARKET_LIMIT
+
+
+def _forward_fill_by_source(merged: pd.DataFrame) -> pd.DataFrame:
+    """Forward-fill each column with a limit matched to its release cadence."""
+    out = merged.copy()
+    for col in out.columns:
+        out[col] = out[col].ffill(limit=_ffill_limit_for_column(col))
+    return out
+
+
+# ================================================================
 #  Master collection function
 # ================================================================
 def collect_all_data(start_date: str = DATA_START, 
@@ -481,8 +521,11 @@ def collect_all_data(start_date: str = DATA_START,
     merged = merged.join(halving, how="left")
     merged = merged.join(fomc_calendar, how="left")
 
-    # Forward-fill monthly/quarterly data and weekend gaps
-    merged = merged.ffill()
+    # Source-aware forward-fill: carry each series forward only as far as its
+    # real release cadence allows. A blanket ffill silently propagates very
+    # stale values across long data outages (e.g. an API gap would freeze a
+    # market price for weeks); group-specific limits keep staleness bounded.
+    merged = _forward_fill_by_source(merged)
 
     # Filter date range
     merged = merged.loc[start_date:end_date]

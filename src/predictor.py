@@ -317,29 +317,10 @@ def predict_multi_horizon(
     
     pred_df = pd.DataFrame(predictions)
 
-    # 180일 모델 편향 보정: 최근 약세 데이터 과학습 현상 완화
-    # 2025년 이후 데이터 불균형으로 인한 음수 편향 제거
-    if 180 in pred_df["horizon_days"].values:
-        ret_180_idx = pred_df[pred_df["horizon_days"] == 180].index
-        if len(ret_180_idx) > 0:
-            curr_ret_180 = float(pred_df.loc[ret_180_idx[0], "predicted_pct_return"])
-            # 180일 음수 예측은 최소 +1%로 클리핑 (역사적 평균 +0.251 기반)
-            if curr_ret_180 < 1.0:
-                # 365일 예측과 선형 보간으로 더 합리적인 값 도출
-                ret_365 = pred_df[pred_df["horizon_days"] == 365]["predicted_pct_return"]
-                if not ret_365.empty:
-                    ret_365_val = float(ret_365.iloc[0])
-                    # 180d = 365d의 약 50~55% (지수 성장 기반)
-                    adjusted_ret_180 = max(1.0, ret_365_val * 0.52)
-                else:
-                    adjusted_ret_180 = 1.0
-
-                adjusted_lr_180 = np.log(1.0 + adjusted_ret_180 / 100.0)
-                adjusted_price_180 = current_price * np.exp(adjusted_lr_180)
-
-                pred_df.loc[ret_180_idx[0], "predicted_pct_return"] = round(adjusted_ret_180, 2)
-                pred_df.loc[ret_180_idx[0], "predicted_log_return"] = round(adjusted_lr_180, 6)
-                pred_df.loc[ret_180_idx[0], "predicted_price"] = round(adjusted_price_180, 2)
+    # NOTE: A manual override that clipped the 180d prediction to >= +1% used to
+    # live here. It overwrote the model's raw output and masked genuine bearish
+    # signals. Removed — bias, if any, should be addressed at the data/target
+    # level (sampling, retraining), not by editing inference results.
 
     pred_df = _augment_predictions_with_interpolation(
         pred_df=pred_df,

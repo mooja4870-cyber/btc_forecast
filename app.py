@@ -21,7 +21,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 warnings.filterwarnings("ignore")
 
@@ -891,7 +891,31 @@ def load_champion_challenger_report():
 
 @st.cache_data(ttl=300)
 def load_transformer_val_metrics(phase: int, horizon: int = 30):
-    """Compute transformer validation metrics for a phase/horizon on featured data."""
+    """Validation metrics for a phase/horizon.
+
+    For the production evaluation phase we prefer the honest out-of-sample
+    metrics saved at train time (models trained strictly before the validation
+    window). Recomputing here against the production model would be in-sample
+    (the production model is trained on all data) and thus overstate accuracy.
+    """
+    # Prefer honest hold-out metrics saved during training.
+    if phase == EVAL_PHASE_ID:
+        saved_path = os.path.join(MODELS_DIR, "transformer", f"horizon_{horizon}d", "val_metrics.json")
+        if os.path.exists(saved_path):
+            try:
+                with open(saved_path) as f:
+                    m = json.load(f)
+                return {
+                    "rmse": m.get("rmse"),
+                    "mae": m.get("mae"),
+                    "r2": m.get("r2"),
+                    "direction_accuracy": m.get("direction_accuracy"),
+                    "price_mape_pct": m.get("price_mape_pct"),
+                    "out_of_sample": m.get("out_of_sample", True),
+                }
+            except Exception:
+                pass
+
     try:
         from src.predictor import load_transformer_model
         tf = load_transformer_model(horizon)
@@ -1150,14 +1174,27 @@ def load_latest_model_training_run():
 
     run_compact = run_id.replace("run_", "") if run_id else "deployed"
     run_display = "배포된 모델"
+    run_ts = None
     if run_id:
         try:
             # New runs are in KST (run_pipeline modification). 
             # We assume most runs follow this or it's 'local time' of the pipeline.
             dt_obj = datetime.strptime(run_compact, "%Y%m%d_%H%M%S")
+            run_ts = dt_obj
             run_display = dt_obj.strftime("%Y-%m-%d %H:%M") + " (KST)"
         except Exception:
             run_display = run_compact
+
+    stale_days = 0
+    try:
+        if run_ts is not None:
+            kst = timezone(timedelta(hours=9))
+            now_kst = datetime.now(timezone.utc).astimezone(kst)
+            stale_days = (now_kst.date() - run_ts.date()).days
+            if stale_days < 0:
+                stale_days = 0
+    except Exception:
+        stale_days = 0
 
     # Next scheduled run info (00:00 KST)
     try:
@@ -1174,7 +1211,8 @@ def load_latest_model_training_run():
         "run_id": run_id, 
         "run_compact": run_compact, 
         "run_display": run_display,
-        "next_run_str": next_run_str
+        "next_run_str": next_run_str,
+        "stale_days": stale_days,
     }
 
 
@@ -1265,6 +1303,12 @@ with st.sidebar:
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
             st.markdown(f"**{model_run['run_display']}**")
+        stale_days = int(model_run.get("stale_days", 0) or 0)
+        if stale_days >= 1:
+            st.error(
+                f"🚨 자동학습 지연 경고: 최신 학습이 {stale_days}일 전입니다. "
+                "스케줄러/실행 환경을 즉시 점검하세요."
+            )
         with st.popover("🔶 차기 자동학습 예정시각", use_container_width=True):
             st.markdown(f"**{model_run.get('next_run_str', '매일 00:00 (KST)')}**")
             st.caption("※ GitHub Actions 스케줄러 상황에 따라 약간의 지연이 발생할 수 있습니다.")
