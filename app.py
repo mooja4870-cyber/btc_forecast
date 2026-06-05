@@ -541,6 +541,15 @@ st.markdown("""
         color: white !important;
     }
     
+    /* ── No word splits across lines (keep each word on one line) ── */
+    .stApp, .stApp * {
+        word-break: keep-all !important;   /* don't break inside CJK words */
+        overflow-wrap: normal !important;  /* don't break inside Latin words */
+        word-wrap: normal !important;
+        hyphens: none !important;
+        -webkit-hyphens: none !important;
+    }
+
     /* ── Global text color overrides for dark theme ── */
     .stApp, .stApp p, .stApp span, .stApp label {
         color: #e2e8f0;
