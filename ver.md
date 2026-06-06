@@ -6,6 +6,16 @@
 
 ---
 
+## v1.1.2 (2026-06-06)
+자동학습 재개 — LaunchAgent 권한 오류 해결
+- **원인**: LaunchAgent `Operation not permitted` 오류 → 2일 이상 학습 미실행
+- **진단**: stderr.log에서 권한 거부 반복 확인, plist 재로드 필요 판단
+- **조치**: `launchctl unload/load ~/Library/LaunchAgents/com.btcn.daily.plist` → 권한 캐시 초기화
+- **검증**: 수동 테스트 후 스탐프 파일(2026-06-06) 생성 확인, 자동 커밋(14:44 KST) 푸시 확인
+- **다음 학습**: 매시간 체크, 오전 9시 이후 자동 실행 재개
+
+---
+
 ## v1.1.1 (2026-06-04)
 - **단어 줄바꿈 금지** (`app.py` 전역 CSS): 모든 텍스트에 `word-break: keep-all`(한글 단어 보존) + `overflow-wrap/word-wrap: normal`(영문 단어 중간 분리 금지) + `hyphens: none` 적용 → 한 단어가 절대 두 라인에 걸쳐 나타나지 않음
 
