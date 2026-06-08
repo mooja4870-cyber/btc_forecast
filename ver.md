@@ -6,6 +6,17 @@
 
 ---
 
+## v1.1.3 (2026-06-08)
+자동학습 지연 **근본 원인 규명 및 영구 해결** — 프로젝트를 TCC 보호폴더 밖으로 이동
+- **증상**: "자동학습 지연 경고: 최신 학습이 2일 전" (마지막 학습 6/6, 이후 미실행)
+- **진짜 원인(확정)**: 프로젝트가 `~/Documents` 안에 위치 → macOS **TCC(개인정보 보호)**가 launchd로 실행된 `/bin/bash`의 Documents 접근을 차단. stderr에 `getcwd: Operation not permitted` / `run_daily_guard.sh: Operation not permitted` 매시간 반복. 터미널은 사용자 승인 권한이 있어 수동 실행만 성공 → 6/6 학습은 그 결과였음.
+- **v1.1.2 오진 정정**: 당시 `launchctl unload/load`는 표면 조치였고 TCC 문제는 미해결로 남아 즉시 재발. chmod·재로드로는 구조적으로 해결 불가.
+- **영구 조치**: 저장소 통째 이동 `~/Documents/project/d_BTCn` → `/Users/l/btcn` (TCC 미보호 경로). plist의 ProgramArguments/StandardOut·ErrPath/WorkingDirectory를 새 경로로 갱신 후 `launchctl bootout`→`bootstrap`로 재등록. 스크립트는 전부 `$0` 기반 동적 경로라 코드 수정 불필요(venv·하드코딩 절대경로 없음).
+- **검증**: stderr 비우고 `launchctl kickstart` 강제 실행 → 권한오류 0건, launchd가 guard→run_daily→run_pipeline.py 정상 spawn(PID 확인), 당일 파이프라인 학습 진행 확인. 향후 OS 업데이트에도 재발 없음(GUI 권한 부여 불필요).
+- **배포 영향 없음**: GitHub/Streamlit Cloud는 원격 기준이라 로컬 경로 이동과 무관.
+
+---
+
 ## v1.1.2 (2026-06-06)
 자동학습 재개 — LaunchAgent 권한 오류 해결
 - **원인**: LaunchAgent `Operation not permitted` 오류 → 2일 이상 학습 미실행
