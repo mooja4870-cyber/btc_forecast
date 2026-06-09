@@ -67,8 +67,14 @@ jobs:
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          # 데이터, 모델, 로그 폴더의 변경사항을 추적
-          git add data/ models/
-          git commit -m "Auto-update data, models, and logs: $(date +'%Y-%m-%d %H:%M KST')" || echo "No changes to commit"
-          git pull --rebase origin main
+          # data/·models/는 .gitignore에 등재돼 있으나 배포에 필요한 추적 자산이므로 -f로 강제 스테이징.
+          # (이 -f 누락이 v1.1.3까지 "git add" exit 1 → set -e로 단계 전체 실패의 근본 원인이었음)
+          git add -f data/ models/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update data, models, and logs: $(date +'%Y-%m-%d %H:%M KST')"
+          fi
+          # 원격이 앞서가도 안전하게 정합: 미스테이징 변경은 --autostash로 자동 보관 후 리베이스
+          git pull --rebase --autostash origin main
           git push origin main

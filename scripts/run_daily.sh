@@ -89,10 +89,15 @@ if [ $EXIT_CODE -eq 0 ]; then
     cd "$PROJECT_DIR" || exit 1
     git config user.name "local-cron" 2>/dev/null
     git config user.email "local-cron@localhost" 2>/dev/null
-    git add data/ models/ >> "$LOG_FILE" 2>&1
+    # data/·models/는 .gitignore 등재 자산이므로 -f로 강제 스테이징 (add 누락 시 exit 1 → 푸시 실패 방지)
+    git add -f data/ models/ >> "$LOG_FILE" 2>&1
     GIT_COMMIT_MSG="Auto-update data, models, and logs: $(date +'%Y-%m-%d %H:%M KST')"
-    git commit -m "$GIT_COMMIT_MSG" >> "$LOG_FILE" 2>&1 || echo "Nothing to commit." >> "$LOG_FILE"
-    git pull --rebase origin main >> "$LOG_FILE" 2>&1
+    if git diff --cached --quiet; then
+        echo "Nothing to commit." >> "$LOG_FILE"
+    else
+        git commit -m "$GIT_COMMIT_MSG" >> "$LOG_FILE" 2>&1
+    fi
+    git pull --rebase --autostash origin main >> "$LOG_FILE" 2>&1
     git push origin main >> "$LOG_FILE" 2>&1
     GIT_EXIT=$?
     if [ $GIT_EXIT -eq 0 ]; then

@@ -6,6 +6,20 @@
 
 ---
 
+## v1.1.4 (2026-06-09)
+자동학습 지연의 **진짜(클라우드) 근본 원인 규명 및 해결** — GitHub Actions 일일 푸시 복구
+- **증상**: "자동학습 지연 경고: 최신 학습이 1일 전" 재발 (배포 앱 기준 마지막 학습 6/8).
+- **진짜 원인(확정·재현)**: 배포 앱은 **GitHub 레포**를 읽는데, GitHub Actions `Daily BTC Pipeline`이 매일 정상 스케줄 실행(`state: active`)되지만 **9단계 "Commit and Push changes"에서 매일 실패**(06-01~ 전부 `failure`, 공개 API 확인). 학습 단계는 전부 성공. 실패 명령은 `git add data/ models/` — `.gitignore`가 `data/`·`models/`를 무시(2026-05-28 commit `16947da`에서 추가)하므로 **무시된 경로 지정 시 `git add`가 exit 1** → Actions 기본 `set -e`가 단계 전체를 중단 → 커밋/푸시 무산. 마지막 클라우드(+0000) 자동커밋이 05-27, .gitignore 변경 **바로 다음날부터** 중단된 것과 정확히 일치. (`git add --dry-run data/ models/` → exit 1 직접 재현)
+- **v1.1.3 보완**: TCC(로컬 launchd) 진단은 옳았으나, 그것은 **로컬 백업 경로**의 문제였고 배포 stale의 직접 원인은 위 클라우드 푸시 실패였음. 로컬 Mac 스케줄러는 절전 의존으로 격일 땜질만 하던 상태.
+- **조치**:
+  - `.github/workflows/daily_update.yml`: `git add data/ models/` → `git add -f data/ models/`(.gitignore 우회), `git diff --cached --quiet`로 변경 감지, `git pull --rebase --autostash`로 원격 정합 안전화.
+  - `scripts/run_daily.sh`: 동일 git 블록 수정(백업 경로 일관성). 기존 로그의 `cannot pull with rebase: unstaged changes` 오류도 `--autostash`로 해소.
+  - **로컬 LaunchAgent 비활성화**: `btcn`이 사용자 요청으로 `~/Documents/project/d_BTCn/btcn`(TCC 보호경로)로 이동되며 launchd 접근이 `Operation not permitted`로 재차단됨(exit 126 재현). 클라우드를 단일 진실원천으로 삼아 `com.btcn.daily`를 `bootout` 후 plist를 `.disabled`로 보관(복구 가능).
+- **검증**: `git add -f` exit 0, YAML·bash 문법 검증 통과. 다음 스케줄(매일 23:00 KST) 또는 수동 `Run workflow`에서 커밋·푸시 성공 예상.
+- **구조 변경**: 스케줄링 주체 = 로컬 Mac LaunchAgent → **GitHub Actions(클라우드)**. TCC·Mac 절전과 무관해짐.
+
+---
+
 ## v1.1.3 (2026-06-08)
 자동학습 지연 **근본 원인 규명 및 영구 해결** — 프로젝트를 TCC 보호폴더 밖으로 이동
 - **증상**: "자동학습 지연 경고: 최신 학습이 2일 전" (마지막 학습 6/6, 이후 미실행)
