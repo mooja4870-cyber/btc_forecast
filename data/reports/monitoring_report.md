@@ -1,19 +1,19 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-06-14 15:32:27
-**Run ID:** run_20260615_003227
+**Generated:** 2026-06-15 18:21:09
+**Run ID:** run_20260616_032109
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 5 features
+- ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $4444.68 | $6320.18 |
-| **RMSE** | $5512.55 | $6910.63 |
-| **MAPE** | 6.0% | 8.2% |
-| **Count** | 252 | 30 |
+| **MAE** | $4444.68 | $5742.27 |
+| **RMSE** | $5512.55 | $6502.38 |
+| **MAPE** | 6.0% | 7.5% |
+| **Count** | 252 | 22 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 5
+- Drifted features (30d vs prev 180d): 4
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,10 +49,9 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |   ref_mean |
-|:----------------------------|----------:|---------------:|-----------:|
-| rate_fvx_close              |   2.96054 |       4.22613  |   3.79728  |
-| rate_tnx_close              |   2.70857 |       4.5264   |   4.20845  |
-| expected_policy_rate_6m     |   2.70629 |       3.85025  |   3.67721  |
-| curve_2y10y_spread_proxy    |   2.28347 |       0.926733 |   0.611283 |
-| corn_fut_oi_change_7d_proxy |   2.17029 |     358.157    |  32.0937   |
+| feature                  |   z_score |   current_mean |   ref_mean |
+|:-------------------------|----------:|---------------:|-----------:|
+| rate_fvx_close           |   2.92815 |        4.2292  |   3.79942  |
+| expected_policy_rate_6m  |   2.71828 |        3.85208 |   3.6774   |
+| rate_tnx_close           |   2.6691  |        4.52727 |   4.21019  |
+| curve_2y10y_spread_proxy |   2.26059 |        0.9266  |   0.614133 |
