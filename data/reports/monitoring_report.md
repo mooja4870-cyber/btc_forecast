@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-06-16 18:25:46
-**Run ID:** run_20260617_032530
+**Generated:** 2026-06-17 16:51:28
+**Run ID:** run_20260618_015128
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -10,10 +10,10 @@
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $4444.68 | $5416.12 |
-| **RMSE** | $5512.55 | $6391.97 |
-| **MAPE** | 6.0% | 7.0% |
-| **Count** | 252 | 17 |
+| **MAE** | $4444.68 | $2841.38 |
+| **RMSE** | $5512.55 | $3090.17 |
+| **MAPE** | 6.0% | 3.7% |
+| **Count** | 252 | 10 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
@@ -51,7 +51,7 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                  |   z_score |   current_mean |   ref_mean |
 |:-------------------------|----------:|---------------:|-----------:|
-| rate_fvx_close           |   2.82417 |        4.2277  |   3.80233  |
-| expected_policy_rate_6m  |   2.66785 |        3.85208 |   3.6779   |
-| rate_tnx_close           |   2.54675 |        4.52367 |   4.21267  |
-| curve_2y10y_spread_proxy |   2.1737  |        0.922   |   0.617728 |
+| rate_fvx_close           |   2.72822 |        4.2262  |   3.80531  |
+| expected_policy_rate_6m  |   2.61441 |        3.85208 |   3.67848  |
+| rate_tnx_close           |   2.43384 |        4.52007 |   4.21524  |
+| curve_2y10y_spread_proxy |   2.09052 |        0.9174  |   0.621317 |
