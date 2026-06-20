@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-06-19 16:27:25
-**Run ID:** run_20260620_012724
+**Generated:** 2026-06-20 15:28:32
+**Run ID:** run_20260621_002832
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 4 features
+- ⚠️ Expansion feature drift detected: 6 features
 
 ## 📈 Performance Metrics
 
@@ -27,17 +27,17 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 4
+- Drifted features (30d vs prev 180d): 6
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                     3.33 |            1 |
-| expected_policy_rate_3m          |                     3.33 |            1 |
-| expected_policy_rate_6m          |                     3.33 |            1 |
-| rate_fvx_close                   |                     3.33 |            1 |
-| rate_irx_close                   |                     3.33 |            1 |
-| rate_tnx_close                   |                     3.33 |            1 |
+| curve_2y10y_spread_proxy         |                     6.67 |            2 |
+| expected_policy_rate_3m          |                     6.67 |            2 |
+| expected_policy_rate_6m          |                     6.67 |            2 |
+| rate_fvx_close                   |                     6.67 |            2 |
+| rate_irx_close                   |                     6.67 |            2 |
+| rate_tnx_close                   |                     6.67 |            2 |
 | commodity_shock_score            |                     0    |            0 |
 | corn_fut_close                   |                     0    |            0 |
 | corn_fut_close_ret1d             |                     0    |            0 |
@@ -49,9 +49,11 @@
 | corn_fut_oi_change_7d_proxy      |                     0    |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                  |   z_score |   current_mean |   ref_mean |
-|:-------------------------|----------:|---------------:|-----------:|
-| rate_fvx_close           |   2.54794 |      4.22279   | 3.81162    |
-| expected_policy_rate_6m  |   2.51231 |      3.85206   | 3.67971    |
-| rate_tnx_close           |   2.22118 |      4.51279   | 4.22058    |
-| corn_fut_roll_return_20d |   2.08613 |     -0.0569289 | 0.00817232 |
+| feature                          |   z_score |   current_mean |   ref_mean |
+|:---------------------------------|----------:|---------------:|-----------:|
+| rate_fvx_close                   |   2.43782 |      4.21896   | 3.81527    |
+| expected_policy_rate_6m          |   2.43646 |      3.85116   | 3.6805     |
+| corn_fut_roll_return_20d         |   2.15805 |     -0.0589965 | 0.00826153 |
+| corn_fut_close_ret30d            |   2.10113 |     -0.0595819 | 0.0121444  |
+| rate_tnx_close                   |   2.0942  |      4.50729   | 4.2237     |
+| corn_fut_front_next_spread_proxy |   2.00532 |     -0.0335844 | 0.00396812 |
