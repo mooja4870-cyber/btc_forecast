@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-06-25 16:14:25
-**Run ID:** run_20260626_011425
+**Generated:** 2026-06-26 16:05:43
+**Run ID:** run_20260627_010543
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -32,12 +32,12 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                     3.33 |            1 |
-| expected_policy_rate_3m          |                     3.33 |            1 |
-| expected_policy_rate_6m          |                     3.33 |            1 |
-| rate_fvx_close                   |                     3.33 |            1 |
-| rate_irx_close                   |                     3.33 |            1 |
-| rate_tnx_close                   |                     3.33 |            1 |
+| curve_2y10y_spread_proxy         |                     6.67 |            2 |
+| expected_policy_rate_3m          |                     6.67 |            2 |
+| expected_policy_rate_6m          |                     6.67 |            2 |
+| rate_fvx_close                   |                     6.67 |            2 |
+| rate_irx_close                   |                     6.67 |            2 |
+| rate_tnx_close                   |                     6.67 |            2 |
 | commodity_shock_score            |                     0    |            0 |
 | corn_fut_close                   |                     0    |            0 |
 | corn_fut_close_ret1d             |                     0    |            0 |
@@ -51,8 +51,8 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                          |   z_score |   current_mean |   ref_mean |
 |:---------------------------------|----------:|---------------:|-----------:|
-| corn_fut_close_ret30d            |   2.71948 |     -0.0801169 | 0.0126088  |
-| corn_fut_roll_return_20d         |   2.3802  |     -0.065652  | 0.00832179 |
-| expected_policy_rate_6m          |   2.29392 |      3.85767   | 3.68504    |
-| corn_fut_front_next_spread_proxy |   2.15471 |     -0.0356358 | 0.00431171 |
-| rate_fvx_close                   |   2.14686 |      4.212     | 3.83319    |
+| corn_fut_close_ret30d            |   2.8274  |     -0.0837343 | 0.0126425  |
+| corn_fut_roll_return_20d         |   2.40968 |     -0.0665684 | 0.00832156 |
+| expected_policy_rate_6m          |   2.25213 |      3.85782   | 3.686      |
+| corn_fut_front_next_spread_proxy |   2.15692 |     -0.0357861 | 0.00424601 |
+| rate_fvx_close                   |   2.09622 |      4.21043   | 3.83699    |
