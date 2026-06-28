@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-06-27 15:08:08
-**Run ID:** run_20260628_000808
+**Generated:** 2026-06-28 15:10:49
+**Run ID:** run_20260629_001048
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -32,27 +32,27 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                       10 |            3 |
-| expected_policy_rate_3m          |                       10 |            3 |
-| expected_policy_rate_6m          |                       10 |            3 |
-| rate_fvx_close                   |                       10 |            3 |
-| rate_irx_close                   |                       10 |            3 |
-| rate_tnx_close                   |                       10 |            3 |
-| commodity_shock_score            |                        0 |            0 |
-| corn_fut_close                   |                        0 |            0 |
-| corn_fut_close_ret1d             |                        0 |            0 |
-| corn_fut_close_ret30d            |                        0 |            0 |
-| corn_fut_close_ret7d             |                        0 |            0 |
-| corn_fut_days_to_expiry          |                        0 |            0 |
-| corn_fut_expiry_week             |                        0 |            0 |
-| corn_fut_front_next_spread_proxy |                        0 |            0 |
-| corn_fut_oi_change_7d_proxy      |                        0 |            0 |
+| curve_2y10y_spread_proxy         |                    13.33 |            4 |
+| expected_policy_rate_3m          |                    13.33 |            4 |
+| expected_policy_rate_6m          |                    13.33 |            4 |
+| rate_fvx_close                   |                    13.33 |            4 |
+| rate_irx_close                   |                    13.33 |            4 |
+| rate_tnx_close                   |                    13.33 |            4 |
+| commodity_shock_score            |                     0    |            0 |
+| corn_fut_close                   |                     0    |            0 |
+| corn_fut_close_ret1d             |                     0    |            0 |
+| corn_fut_close_ret30d            |                     0    |            0 |
+| corn_fut_close_ret7d             |                     0    |            0 |
+| corn_fut_days_to_expiry          |                     0    |            0 |
+| corn_fut_expiry_week             |                     0    |            0 |
+| corn_fut_front_next_spread_proxy |                     0    |            0 |
+| corn_fut_oi_change_7d_proxy      |                     0    |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
 | feature                          |   z_score |   current_mean |   ref_mean |
 |:---------------------------------|----------:|---------------:|-----------:|
-| corn_fut_close_ret30d            |   2.86908 |     -0.0854725 | 0.0125238  |
-| corn_fut_roll_return_20d         |   2.39749 |     -0.0662905 | 0.00821122 |
-| expected_policy_rate_6m          |   2.23924 |      3.85913   | 3.68679    |
-| corn_fut_front_next_spread_proxy |   2.08545 |     -0.0347637 | 0.00407686 |
-| rate_fvx_close                   |   2.07423 |      4.21144   | 3.84039    |
+| corn_fut_close_ret30d            |   2.95579 |     -0.088876  | 0.0123426  |
+| corn_fut_roll_return_20d         |   2.4379  |     -0.0676512 | 0.00809785 |
+| expected_policy_rate_6m          |   2.22803 |      3.86057   | 3.6877     |
+| corn_fut_front_next_spread_proxy |   2.11684 |     -0.0355329 | 0.00395031 |
+| rate_fvx_close                   |   2.05411 |      4.21277   | 3.84359    |
