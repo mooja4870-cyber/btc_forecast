@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-07-01 16:14:36
-**Run ID:** run_20260702_011436
+**Generated:** 2026-07-02 15:59:09
+**Run ID:** run_20260703_005909
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 6 features
+- ⚠️ Expansion feature drift detected: 7 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 6
+- Drifted features (30d vs prev 180d): 7
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,11 +49,12 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                  |   z_score |   current_mean |   ref_mean |
-|:-------------------------|----------:|---------------:|-----------:|
-| corn_fut_close_ret30d    |   2.94093 |     -0.0913025 | 0.0114859  |
-| corn_fut_roll_return_20d |   2.33943 |     -0.0657461 | 0.00757861 |
-| expected_policy_rate_6m  |   2.24772 |      3.86817   | 3.69015    |
-| rate_irx_close           |   2.07618 |      3.64127   | 3.58199    |
-| expected_policy_rate_3m  |   2.07618 |      3.64127   | 3.58199    |
-| log_corn_fut_close       |   2.00444 |      6.03525   | 6.09716    |
+| feature                  |   z_score |   current_mean |     ref_mean |
+|:-------------------------|----------:|---------------:|-------------:|
+| corn_fut_close_ret30d    |   2.91812 |     -0.0916111 |   0.0112333  |
+| corn_fut_roll_return_20d |   2.25262 |     -0.0636497 |   0.00742801 |
+| rate_irx_close           |   2.24328 |      3.64377   |   3.58152    |
+| expected_policy_rate_3m  |   2.24328 |      3.64377   |   3.58152    |
+| expected_policy_rate_6m  |   2.23906 |      3.86942   |   3.69096    |
+| log_corn_fut_close       |   2.08397 |      6.03312   |   6.09731    |
+| corn_fut_close           |   2.02394 |    417.092     | 444.872      |
