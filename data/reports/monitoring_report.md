@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-07-03 15:48:05
-**Run ID:** run_20260704_004804
+**Generated:** 2026-07-04 14:57:29
+**Run ID:** run_20260704_235728
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -32,12 +32,12 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                     3.33 |            1 |
-| expected_policy_rate_3m          |                     3.33 |            1 |
-| expected_policy_rate_6m          |                     3.33 |            1 |
-| rate_fvx_close                   |                     3.33 |            1 |
-| rate_irx_close                   |                     3.33 |            1 |
-| rate_tnx_close                   |                     3.33 |            1 |
+| curve_2y10y_spread_proxy         |                     6.67 |            2 |
+| expected_policy_rate_3m          |                     6.67 |            2 |
+| expected_policy_rate_6m          |                     6.67 |            2 |
+| rate_fvx_close                   |                     6.67 |            2 |
+| rate_irx_close                   |                     6.67 |            2 |
+| rate_tnx_close                   |                     6.67 |            2 |
 | commodity_shock_score            |                     0    |            0 |
 | corn_fut_close                   |                     0    |            0 |
 | corn_fut_close_ret1d             |                     0    |            0 |
@@ -51,10 +51,10 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                  |   z_score |   current_mean |     ref_mean |
 |:-------------------------|----------:|---------------:|-------------:|
-| corn_fut_close_ret30d    |   2.85143 |     -0.0907782 |   0.0108236  |
-| expected_policy_rate_3m  |   2.2873  |      3.64459   |   3.58144    |
-| rate_irx_close           |   2.2873  |      3.64459   |   3.58144    |
-| expected_policy_rate_6m  |   2.21434 |      3.87021   |   3.69216    |
-| corn_fut_roll_return_20d |   2.12608 |     -0.0607862 |   0.00702153 |
-| log_corn_fut_close       |   2.12468 |      6.03193   |   6.09735    |
-| corn_fut_close           |   2.06305 |    416.583     | 444.887      |
+| corn_fut_close_ret30d    |   2.74981 |     -0.0897832 |   0.010309   |
+| expected_policy_rate_3m  |   2.31707 |      3.64554   |   3.58147    |
+| rate_irx_close           |   2.31707 |      3.64554   |   3.58147    |
+| expected_policy_rate_6m  |   2.19481 |      3.87124   |   3.69328    |
+| log_corn_fut_close       |   2.18377 |      6.02993   |   6.09728    |
+| corn_fut_close           |   2.12055 |    415.717     | 444.858      |
+| corn_fut_roll_return_20d |   2.07334 |     -0.0598952 |   0.00669151 |
