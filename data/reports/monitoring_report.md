@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-07-04 14:57:29
-**Run ID:** run_20260704_235728
+**Generated:** 2026-07-05 15:05:39
+**Run ID:** run_20260706_000538
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 7 features
+- ⚠️ Expansion feature drift detected: 6 features
 
 ## 📈 Performance Metrics
 
@@ -27,34 +27,33 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 7
+- Drifted features (30d vs prev 180d): 6
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                     6.67 |            2 |
-| expected_policy_rate_3m          |                     6.67 |            2 |
-| expected_policy_rate_6m          |                     6.67 |            2 |
-| rate_fvx_close                   |                     6.67 |            2 |
-| rate_irx_close                   |                     6.67 |            2 |
-| rate_tnx_close                   |                     6.67 |            2 |
-| commodity_shock_score            |                     0    |            0 |
-| corn_fut_close                   |                     0    |            0 |
-| corn_fut_close_ret1d             |                     0    |            0 |
-| corn_fut_close_ret30d            |                     0    |            0 |
-| corn_fut_close_ret7d             |                     0    |            0 |
-| corn_fut_days_to_expiry          |                     0    |            0 |
-| corn_fut_expiry_week             |                     0    |            0 |
-| corn_fut_front_next_spread_proxy |                     0    |            0 |
-| corn_fut_oi_change_7d_proxy      |                     0    |            0 |
+| curve_2y10y_spread_proxy         |                       10 |            3 |
+| expected_policy_rate_3m          |                       10 |            3 |
+| expected_policy_rate_6m          |                       10 |            3 |
+| rate_fvx_close                   |                       10 |            3 |
+| rate_irx_close                   |                       10 |            3 |
+| rate_tnx_close                   |                       10 |            3 |
+| commodity_shock_score            |                        0 |            0 |
+| corn_fut_close                   |                        0 |            0 |
+| corn_fut_close_ret1d             |                        0 |            0 |
+| corn_fut_close_ret30d            |                        0 |            0 |
+| corn_fut_close_ret7d             |                        0 |            0 |
+| corn_fut_days_to_expiry          |                        0 |            0 |
+| corn_fut_expiry_week             |                        0 |            0 |
+| corn_fut_front_next_spread_proxy |                        0 |            0 |
+| corn_fut_oi_change_7d_proxy      |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                  |   z_score |   current_mean |     ref_mean |
-|:-------------------------|----------:|---------------:|-------------:|
-| corn_fut_close_ret30d    |   2.74981 |     -0.0897832 |   0.010309   |
-| expected_policy_rate_3m  |   2.31707 |      3.64554   |   3.58147    |
-| rate_irx_close           |   2.31707 |      3.64554   |   3.58147    |
-| expected_policy_rate_6m  |   2.19481 |      3.87124   |   3.69328    |
-| log_corn_fut_close       |   2.18377 |      6.02993   |   6.09728    |
-| corn_fut_close           |   2.12055 |    415.717     | 444.858      |
-| corn_fut_roll_return_20d |   2.07334 |     -0.0598952 |   0.00669151 |
+| feature                 |   z_score |   current_mean |     ref_mean |
+|:------------------------|----------:|---------------:|-------------:|
+| corn_fut_close_ret30d   |   2.59997 |      -0.086808 |   0.00971603 |
+| rate_irx_close          |   2.33253 |       3.64637  |   3.58158    |
+| expected_policy_rate_3m |   2.33253 |       3.64637  |   3.58158    |
+| log_corn_fut_close      |   2.1658  |       6.02997  |   6.09712    |
+| expected_policy_rate_6m |   2.16261 |       3.87167  |   3.69446    |
+| corn_fut_close          |   2.10359 |     415.733    | 444.79       |
