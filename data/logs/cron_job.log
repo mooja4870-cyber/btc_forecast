@@ -8413,3 +8413,260 @@ Step RC: Reality Check sync
 
 🚀 Reality Check synced with production models successfully.
 ✅ Scheduled run completed successfully at Sun Jul  5 16:11:38 UTC 2026
+============================================================
+Starting Daily Run: Mon Jul  6 16:47:51 UTC 2026
+============================================================
+2026-07-06 16:47:52,168 - INFO - Loaded configuration from /home/runner/work/btc_forecast/btc_forecast/config/config.yaml
+2026-07-06 16:47:54,626 - INFO - Starting Pipeline Run: run_20260707_014754
+2026-07-06 16:47:54,626 - INFO - Step 0: Monitoring & Reporting
+2026-07-06 16:47:54,634 - INFO - Fetching actuals for BTC-USD from 2023-12-31
+2026-07-06 16:47:54,908 - INFO - Updated eval log. Total rows: 354, Rows with actuals: 252
+2026-07-06 16:47:55,070 - INFO - Report generated at data/reports/monitoring_report.md
+2026-07-06 16:47:55,072 - INFO - Step 1: Data Collection
+2026-07-06 16:48:08,759 - INFO - Step 2: Feature Engineering
+2026-07-06 16:48:09,954 - INFO - Step 3: Model Training (Transformer-only)
+2026-07-06 17:20:53,859 - INFO - Updated latest model pointer (relative) -> run_20260707_014754
+2026-07-06 17:20:53,859 - INFO - Step 4: Reality Check Sync
+2026-07-06 17:20:53,994 - INFO - Transformer-only policy active: legacy phase/backtest/promotion steps are skipped.
+2026-07-06 17:20:53,994 - INFO - Pipeline finished successfully. Run ID: run_20260707_014754
+============================================================
+BTC Prediction — Data Collection
+Range: 2014-01-01 to None
+============================================================
+
+[1/8] Collecting market data (yfinance)...
+  ↓ yfinance: btc (BTC-USD)
+  ↓ yfinance: gold (GC=F)
+  ↓ yfinance: oil (CL=F)
+  ↓ yfinance: sp500 (^GSPC)
+  ↓ yfinance: nasdaq (^IXIC)
+  ↓ yfinance: dxy (DX-Y.NYB)
+  ↓ yfinance: krw (KRW=X)
+
+[2/8] Collecting macroeconomic data (FRED)...
+  ↓ FRED: fed_rate (FEDFUNDS)
+  ↓ FRED: cpi (CPIAUCSL)
+  ↓ FRED: m2 (M2SL)
+  ↓ FRED: unemployment (UNRATE)
+  ↓ FRED: gdp (GDP)
+  ↓ FRED: treasury_10y (DGS10)
+
+[3/8] Collecting on-chain data...
+  ↓ Blockchain.com: hash rate
+
+[4/8] Collecting sentiment data...
+  ↓ Alternative.me: Fear & Greed Index
+
+[5/8] Collecting optional futures data...
+  ↓ Optional: futures term-structure source data
+  ↓ yfinance: oil_fut (CL=F)
+  ↓ yfinance: gold_fut (GC=F)
+  ↓ yfinance: corn_fut (ZC=F)
+  ↓ yfinance: wheat_fut (ZW=F)
+
+[6/8] Collecting optional rates expectation data...
+  ↓ Optional: rates expectation proxy data
+  ↓ yfinance: rate_irx (^IRX)
+  ↓ yfinance: rate_fvx (^FVX)
+  ↓ yfinance: rate_tnx (^TNX)
+
+[7/8] Collecting optional geopolitical proxy data...
+  ↓ Optional: geopolitical risk proxy data
+  ↓ yfinance: geo_vix (^VIX)
+  ↓ yfinance: geo_ovx (^OVX)
+
+[8/8] Creating engineered features...
+  ✓ Creating event dummy variables
+  ✓ Creating halving features
+
+Merging all datasets...
+
+✅ Final dataset: 4496 rows × 45 columns
+   Date range: 2014-01-01 — 2026-07-06
+   Columns: ['btc_close', 'btc_volume', 'gold_close', 'gold_volume', 'oil_close', 'oil_volume', 'sp500_close', 'sp500_volume', 'nasdaq_close', 'nasdaq_volume', 'dxy_close', 'dxy_volume', 'krw_close', 'fed_rate', 'cpi', 'm2', 'unemployment', 'gdp', 'treasury_10y', 'hashrate', 'fear_greed', 'oil_fut_close', 'oil_fut_volume', 'gold_fut_close', 'gold_fut_volume', 'corn_fut_close', 'corn_fut_volume', 'wheat_fut_close', 'wheat_fut_volume', 'rate_irx_close', 'rate_fvx_close', 'rate_tnx_close', 'geo_vix_close', 'geo_ovx_close', 'event_covid_crash', 'event_china_btc_ban', 'event_ukraine_war', 'event_luna_terra_crash', 'event_ftx_collapse', 'event_spot_btc_etf', 'event_us_election_2024', 'days_since_halving', 'halving_era', 'days_to_fomc', 'is_fomc_week']
+   Missing values:
+btc_close            185
+btc_volume           185
+gold_close             1
+gold_volume            1
+oil_close              1
+oil_volume             1
+sp500_close            1
+sp500_volume           1
+nasdaq_close           1
+nasdaq_volume          1
+dxy_close              1
+dxy_volume             1
+gdp                   91
+treasury_10y           1
+fear_greed          1418
+oil_fut_close          1
+oil_fut_volume         1
+gold_fut_close         1
+gold_fut_volume        1
+corn_fut_close         1
+corn_fut_volume        1
+wheat_fut_close        1
+wheat_fut_volume       1
+rate_irx_close         1
+rate_fvx_close         1
+rate_tnx_close         1
+geo_vix_close          1
+geo_ovx_close          1
+dtype: int64
+
+💾 Saved to /home/runner/work/btc_forecast/btc_forecast/data/processed/merged_dataset.csv
+Feature Engineering:
+  ✓ As-of lag policy
+  ✓ Lag features
+  ✓ Moving averages
+  ✓ Return features
+  ✓ Volatility
+  ✓ RSI
+  ✓ MACD
+  ✓ Bollinger Bands
+  ✓ Cross-asset ratios & correlations
+  ✓ Futures expiry / curve proxies
+  ✓ Rates expectation proxies
+  ✓ Geopolitical risk proxies
+  ✓ Multi-horizon targets (1d, 2d, 3d, 5d, 7d, 15d, 30d, 60d, 90d, 180d, 365d)
+
+✅ Total features: 208
+
+💾 Saved to /home/runner/work/btc_forecast/btc_forecast/data/processed/featured_dataset.csv
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+  📊 Hold-out val (2025-01-01~2026-07-05, n=551): R²=-0.738, dir=50.7%
+✅ 1d Production Model Trained (15 ep). Loss: 0.001323
+
+Training for Horizon: 2 days...
+  📊 Hold-out val (2025-01-01~2026-07-04, n=550): R²=-0.318, dir=52.1%
+✅ 2d Production Model Trained (15 ep). Loss: 0.001979
+
+Training for Horizon: 3 days...
+  📊 Hold-out val (2025-01-01~2026-07-03, n=549): R²=-0.237, dir=50.1%
+✅ 3d Production Model Trained (14 ep). Loss: 0.002632
+
+Training for Horizon: 5 days...
+  📊 Hold-out val (2025-01-01~2026-07-01, n=547): R²=-0.240, dir=51.6%
+✅ 5d Production Model Trained (15 ep). Loss: 0.003713
+
+Training for Horizon: 7 days...
+  📊 Hold-out val (2025-01-01~2026-06-29, n=545): R²=-0.263, dir=52.6%
+✅ 7d Production Model Trained (14 ep). Loss: 0.005045
+
+Training for Horizon: 15 days...
+  📊 Hold-out val (2025-01-01~2026-06-21, n=537): R²=-0.591, dir=54.9%
+✅ 15d Production Model Trained (8 ep). Loss: 0.010941
+
+Training for Horizon: 30 days...
+  📊 Hold-out val (2025-01-01~2026-06-06, n=522): R²=-0.726, dir=57.5%
+✅ 30d Production Model Trained (4 ep). Loss: 0.022349
+
+Training for Horizon: 60 days...
+  📊 Hold-out val (2025-01-01~2026-05-07, n=492): R²=-0.739, dir=61.7%
+✅ 60d Production Model Trained (2 ep). Loss: 0.047193
+
+Training for Horizon: 90 days...
+  📊 Hold-out val (2025-01-01~2026-04-07, n=462): R²=-0.806, dir=57.1%
+✅ 90d Production Model Trained (1 ep). Loss: 0.082443
+
+Training for Horizon: 180 days...
+  📊 Hold-out val (2025-01-01~2026-01-07, n=372): R²=-0.559, dir=65.1%
+✅ 180d Production Model Trained (1 ep). Loss: 0.163994
+
+Training for Horizon: 365 days...
+  📊 Hold-out val (2025-01-01~2025-07-06, n=187): R²=-10.062, dir=98.9%
+✅ 365d Production Model Trained (6 ep). Loss: 0.089629
+
+🎉 All Transformer models trained and saved.
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-07-06, Today=$63,660, Pred=$65,185
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-06-06, Today=$63,660, Pred=$58,977
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-07-05, Today=$63,660, Pred=$63,679
+
+🚀 Reality Check synced with production models successfully.
+✅ Daily run finished at Mon Jul  6 17:20:54 UTC 2026
+============================================================
+Step TF: Transformer retrain sync
+2026-07-06 17:20:56,264 - INFO - Loaded configuration from /home/runner/work/btc_forecast/btc_forecast/config/config.yaml
+============================================================
+🚀 TRAINING TRANSFORMER MODELS FOR ALL HORIZONS
+Horizons: [1, 2, 3, 5, 7, 15, 30, 60, 90, 180, 365]
+============================================================
+
+Training for Horizon: 1 days...
+  📊 Hold-out val (2025-01-01~2026-07-05, n=551): R²=-0.738, dir=50.7%
+✅ 1d Production Model Trained (15 ep). Loss: 0.001323
+
+Training for Horizon: 2 days...
+  📊 Hold-out val (2025-01-01~2026-07-04, n=550): R²=-0.318, dir=52.1%
+✅ 2d Production Model Trained (15 ep). Loss: 0.001979
+
+Training for Horizon: 3 days...
+  📊 Hold-out val (2025-01-01~2026-07-03, n=549): R²=-0.237, dir=50.1%
+✅ 3d Production Model Trained (14 ep). Loss: 0.002632
+
+Training for Horizon: 5 days...
+  📊 Hold-out val (2025-01-01~2026-07-01, n=547): R²=-0.240, dir=51.6%
+✅ 5d Production Model Trained (15 ep). Loss: 0.003713
+
+Training for Horizon: 7 days...
+  📊 Hold-out val (2025-01-01~2026-06-29, n=545): R²=-0.263, dir=52.6%
+✅ 7d Production Model Trained (14 ep). Loss: 0.005045
+
+Training for Horizon: 15 days...
+  📊 Hold-out val (2025-01-01~2026-06-21, n=537): R²=-0.591, dir=54.9%
+✅ 15d Production Model Trained (8 ep). Loss: 0.010941
+
+Training for Horizon: 30 days...
+  📊 Hold-out val (2025-01-01~2026-06-06, n=522): R²=-0.726, dir=57.5%
+✅ 30d Production Model Trained (4 ep). Loss: 0.022349
+
+Training for Horizon: 60 days...
+  📊 Hold-out val (2025-01-01~2026-05-07, n=492): R²=-0.739, dir=61.7%
+✅ 60d Production Model Trained (2 ep). Loss: 0.047193
+
+Training for Horizon: 90 days...
+  📊 Hold-out val (2025-01-01~2026-04-07, n=462): R²=-0.806, dir=57.1%
+✅ 90d Production Model Trained (1 ep). Loss: 0.082443
+
+Training for Horizon: 180 days...
+  📊 Hold-out val (2025-01-01~2026-01-07, n=372): R²=-0.559, dir=65.1%
+✅ 180d Production Model Trained (1 ep). Loss: 0.163994
+
+Training for Horizon: 365 days...
+  📊 Hold-out val (2025-01-01~2025-07-06, n=187): R²=-10.062, dir=98.9%
+✅ 365d Production Model Trained (6 ep). Loss: 0.089629
+
+🎉 All Transformer models trained and saved.
+✅ Transformer retrain completed at Mon Jul  6 17:53:49 UTC 2026
+Step RC: Reality Check sync
+2026-07-06 17:53:50,028 - INFO - Loaded configuration from /home/runner/work/btc_forecast/btc_forecast/config/config.yaml
+============================================================
+🚀 SYNCING REALITY CHECK WITH PRODUCTION MODELS: [365, 30, 1]
+============================================================
+
+--- Syncing 365-Day Horizon ---
+✅ 365d: BaseDate=2025-07-06, Today=$63,660, Pred=$65,185
+
+--- Syncing 30-Day Horizon ---
+✅ 30d: BaseDate=2026-06-06, Today=$63,660, Pred=$58,977
+
+--- Syncing 1-Day Horizon ---
+✅ 1d: BaseDate=2026-07-05, Today=$63,660, Pred=$63,679
+
+🚀 Reality Check synced with production models successfully.
+✅ Scheduled run completed successfully at Mon Jul  6 17:53:51 UTC 2026

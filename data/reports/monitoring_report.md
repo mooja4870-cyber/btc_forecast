@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-07-05 15:05:39
-**Run ID:** run_20260706_000538
+**Generated:** 2026-07-06 16:47:55
+**Run ID:** run_20260707_014754
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 6 features
+- ⚠️ Expansion feature drift detected: 5 features
 
 ## 📈 Performance Metrics
 
@@ -27,17 +27,11 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 6
+- Drifted features (30d vs prev 180d): 5
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
 |:---------------------------------|-------------------------:|-------------:|
-| curve_2y10y_spread_proxy         |                       10 |            3 |
-| expected_policy_rate_3m          |                       10 |            3 |
-| expected_policy_rate_6m          |                       10 |            3 |
-| rate_fvx_close                   |                       10 |            3 |
-| rate_irx_close                   |                       10 |            3 |
-| rate_tnx_close                   |                       10 |            3 |
 | commodity_shock_score            |                        0 |            0 |
 | corn_fut_close                   |                        0 |            0 |
 | corn_fut_close_ret1d             |                        0 |            0 |
@@ -47,13 +41,18 @@
 | corn_fut_expiry_week             |                        0 |            0 |
 | corn_fut_front_next_spread_proxy |                        0 |            0 |
 | corn_fut_oi_change_7d_proxy      |                        0 |            0 |
+| corn_fut_roll_return_20d         |                        0 |            0 |
+| corn_fut_volume                  |                        0 |            0 |
+| curve_2y10y_spread_proxy         |                        0 |            0 |
+| days_to_fomc                     |                        0 |            0 |
+| expected_policy_rate_3m          |                        0 |            0 |
+| expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                 |   z_score |   current_mean |     ref_mean |
-|:------------------------|----------:|---------------:|-------------:|
-| corn_fut_close_ret30d   |   2.59997 |      -0.086808 |   0.00971603 |
-| rate_irx_close          |   2.33253 |       3.64637  |   3.58158    |
-| expected_policy_rate_3m |   2.33253 |       3.64637  |   3.58158    |
-| log_corn_fut_close      |   2.1658  |       6.02997  |   6.09712    |
-| expected_policy_rate_6m |   2.16261 |       3.87167  |   3.69446    |
-| corn_fut_close          |   2.10359 |     415.733    | 444.79       |
+| feature                 |   z_score |   current_mean |   ref_mean |
+|:------------------------|----------:|---------------:|-----------:|
+| rate_irx_close          |   2.59669 |      3.65407   | 3.58168    |
+| expected_policy_rate_3m |   2.59669 |      3.65407   | 3.58168    |
+| corn_fut_close_ret30d   |   2.33192 |     -0.0787112 | 0.00915996 |
+| expected_policy_rate_6m |   2.21474 |      3.87863   | 3.69556    |
+| log_gold_fut_close      |   2.02844 |      8.33762   | 8.45457    |
