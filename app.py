@@ -126,7 +126,7 @@ st.set_page_config(
 )
 
 # Auto-refresh whole dashboard every 300 seconds (5 minutes) for real-time metric cards.
-st.components.v1.html(
+st.markdown(
     """
     <script>
     setTimeout(function () {
@@ -134,7 +134,7 @@ st.components.v1.html(
     }, 300000);
     </script>
     """,
-    height=0,
+    unsafe_allow_html=True,
 )
 
 # ================================================================
@@ -1331,7 +1331,7 @@ with st.sidebar:
                 pass
             st.caption(f"Reality Check 재계산 시각: {rc_recomputed_at}")
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
-        with st.popover("🔶 이 모델의 최신 학습시각", use_container_width=True):
+        with st.popover("🔶 이 모델의 최신 학습시각", width="stretch"):
             st.markdown(f"**{model_run['run_display']}**")
         stale_days = int(model_run.get("stale_days", 0) or 0)
         if stale_days >= 1:
@@ -1339,22 +1339,22 @@ with st.sidebar:
                 f"🚨 자동학습 지연 경고: 최신 학습이 {stale_days}일 전입니다. "
                 "스케줄러/실행 환경을 즉시 점검하세요."
             )
-        with st.popover("🔶 차기 자동학습 예정시각", use_container_width=True):
+        with st.popover("🔶 차기 자동학습 예정시각", width="stretch"):
             st.markdown(f"**{model_run.get('next_run_str', '매일 00:00 (KST)')}**")
             st.caption("※ GitHub Actions 스케줄러 상황에 따라 약간의 지연이 발생할 수 있습니다.")
-        with st.popover("🔶 총 데이터 포인트", use_container_width=True):
+        with st.popover("🔶 총 데이터 포인트", width="stretch"):
             st.markdown(f"**{len(df):,}일**")
-        with st.popover(f"🔶 변수 수 (원시) : {df.shape[1]}개", use_container_width=True):
+        with st.popover(f"🔶 변수 수 (원시) : {df.shape[1]}개", width="stretch"):
             st.dataframe(
                 pd.DataFrame({"원시 변수": list(df.columns)}),
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
                 height=230,
             )
-        with st.popover(f"🔶 피처 수 (엔지니어링 후) : {fdf.shape[1]}개", use_container_width=True):
+        with st.popover(f"🔶 피처 수 (엔지니어링 후) : {fdf.shape[1]}개", width="stretch"):
             render_feature_tooltip_list(list(fdf.columns), height_px=240)
 
-        with st.popover("🔶 모델 정보", use_container_width=True):
+        with st.popover("🔶 모델 정보", width="stretch"):
             lines = []
             for phase_id in PHASE_IDS:
                 phase_cfg = PHASE_CFG_BY_ID.get(phase_id, {})
@@ -1367,7 +1367,7 @@ with st.sidebar:
                     lines.append(f"- **Phase {phase_id}**: {train_txt} 학습")
             st.markdown("\n".join(lines))
 
-        with st.popover("🔶 예측 상세 정보", use_container_width=True):
+        with st.popover("🔶 예측 상세 정보", width="stretch"):
             st.markdown("""
             **참고: 예측에 사용한 정보**
             
@@ -1395,7 +1395,7 @@ with st.sidebar:
             - **불확실성**: 단일 점 추정 (구간 예측 미구현)
             """)
 
-        with st.popover("🔶 자동 갱신 파이프라인", use_container_width=True):
+        with st.popover("🔶 자동 갱신 파이프라인", width="stretch"):
             st.markdown("""
             **시스템 자동화 및 데이터 갱신 워크플로우**
             
@@ -2062,7 +2062,7 @@ try:
                 elif ticker == "KRW=X":
                     fig.update_layout(yaxis_tickformat="₩,.0f")
                 
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
                 if source_hint != "yfinance":
                     source_label = {
                         "local_processed": "내부 누적 데이터(data/processed)",
@@ -2141,7 +2141,7 @@ try:
                     x=1
                 )
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             if fallback_count > 0:
                 st.caption(f"외부 시세망 이슈로 {fallback_count}개 지표는 대체 소스로 표시했습니다.")
             st.caption("※ 2014년경을 기준 세팅점(100)으로 삼아, 각 자산의 가치가 시점별로 어떻게 변화했는지 비교할 수 있습니다.")
@@ -2152,7 +2152,7 @@ try:
             render_premium_metric("현재 BTC 가격 (KRW)", f"₩{btc_p:,.0f}", btc_c, f"업비트{'-실시간' if isinstance(btc_source, str) and '실시간' in btc_source else ''}")
         else:
             st.metric("현재 BTC 가격", "N/A")
-        if st.button("📈 2014년~ 추세보기", key="btn_btc_trend", use_container_width=True):
+        if st.button("📈 2014년~ 추세보기", key="btn_btc_trend", width="stretch"):
             show_trend_modal("비트코인 (BTC)", "BTC-USD", start_year=2014)
             
     with col2:
@@ -2168,7 +2168,7 @@ try:
             render_premium_metric("금 가격 (g당)", f"₩{gold_p:,.2f}", gold_c, src_text)
         else:
             st.metric("금 가격 (g당)", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_gold_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_gold_trend", width="stretch"):
             show_trend_modal("금 (국제 선물기준)", "GC=F")
 
     with col3:
@@ -2179,7 +2179,7 @@ try:
             render_premium_metric("은 가격 (g당)", f"₩{silver_p:,.2f}", silver_c, src_text)
         else:
             st.metric("은 가격 (g당)", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_silver_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_silver_trend", width="stretch"):
             show_trend_modal("은 (국제 선물기준)", "SI=F")
 
     with col4:
@@ -2190,7 +2190,7 @@ try:
             render_premium_metric("KOSPI 지수", f"{kospi_p:,.2f}", kospi_c, src_text)
         else:
             st.metric("KOSPI 지수", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_kospi_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_kospi_trend", width="stretch"):
             show_trend_modal("코스피 (KOSPI)", "^KS11")
 
     with col5:
@@ -2201,7 +2201,7 @@ try:
             render_premium_metric("KOSDAQ 지수", f"{kosdaq_p:,.2f}", kosdaq_c, src_text)
         else:
             st.metric("KOSDAQ 지수", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_kosdaq_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_kosdaq_trend", width="stretch"):
             show_trend_modal("코스닥 (KOSDAQ)", "^KQ11")
 
     with col6:
@@ -2212,7 +2212,7 @@ try:
             render_premium_metric("S&P 500 (현지)", f"{sp_p:,.2f}", sp_c, src_text)
         else:
             st.metric("S&P 500 (현지)", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_sp500_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_sp500_trend", width="stretch"):
             show_trend_modal("S&P 500", "^GSPC")
 
     with col7:
@@ -2223,7 +2223,7 @@ try:
             render_premium_metric("NASDAQ 지수", f"{nasdaq_p:,.2f}", nasdaq_c, src_text)
         else:
             st.metric("NASDAQ 지수", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_nasdaq_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_nasdaq_trend", width="stretch"):
             show_trend_modal("NASDAQ 지수", "^IXIC")
 
     with col8:
@@ -2244,11 +2244,11 @@ try:
                 render_premium_metric("달러 환율 (KRW/USD)", f"₩{fallback_rate:,.1f}", 0.0, "파일 캐시")
             else:
                 st.metric("달러 환율 (KRW/USD)", "N/A")
-        if st.button("📈 과거 30년 추세보기", key="btn_krw_trend", use_container_width=True):
+        if st.button("📈 과거 30년 추세보기", key="btn_krw_trend", width="stretch"):
             show_trend_modal("원/달러 환율", "KRW=X")
 
     # 6개 지표 통합 추세비교 버튼 추가 (최하단 긴 박스 형태)
-    if st.button("📈 추세비교-종합 (6개 지표 동시비교)", key="btn_combined_trend", use_container_width=True):
+    if st.button("📈 추세비교-종합 (6개 지표 동시비교)", key="btn_combined_trend", width="stretch"):
         show_combined_trend_modal()
 
 except Exception as e:
@@ -2317,7 +2317,7 @@ with tab1:
             cc_df = cc_df.sort_values("horizon")
         st.caption(f"Champion-Challenger (Phase {EVAL_PHASE_ID}) 비교")
         show_cols = [c for c in ["horizon", "current_r2", "previous_r2", "delta_r2", "current_mape", "previous_mape"] if c in cc_df.columns]
-        st.dataframe(cc_df[show_cols], use_container_width=True, hide_index=True)
+        st.dataframe(cc_df[show_cols], width="stretch", hide_index=True)
     else:
         st.caption("Champion-Challenger 리포트가 아직 없습니다.")
     
@@ -2349,7 +2349,7 @@ with tab1:
             xaxis_title="Importance",
             yaxis_title="",
         )
-        st.plotly_chart(fig_fi, use_container_width=True)
+        st.plotly_chart(fig_fi, width="stretch")
     
     # Correlation Heatmap
     corr_tooltip = (
@@ -2391,7 +2391,7 @@ with tab1:
                 **PLOTLY_LAYOUT,
                 height=500,
             )
-            st.plotly_chart(fig_corr, use_container_width=True)
+            st.plotly_chart(fig_corr, width="stretch")
     except Exception as e:
         st.warning(f"상관관계 차트 로드 실패: {e}")
 
@@ -2484,7 +2484,7 @@ with tab2:
             shapes=shapes,
             annotations=annotations,
         )
-        st.plotly_chart(fig_price, use_container_width=True)
+        st.plotly_chart(fig_price, width="stretch")
     except Exception as e:
         st.error(f"가격 차트 로드 실패: {e}")
     
@@ -2530,7 +2530,7 @@ with tab2:
         ), row=2, col=1)
         
         fig_val.update_layout(**PLOTLY_LAYOUT, height=650, showlegend=True)
-        st.plotly_chart(fig_val, use_container_width=True)
+        st.plotly_chart(fig_val, width="stretch")
         
         # Metrics display (Transformer-only)
         tf_val = load_transformer_val_metrics(phase_sel, horizon=30)
@@ -2556,7 +2556,7 @@ with tab2:
                     )
                 ),
             }]
-            st.dataframe(pd.DataFrame(metric_rows), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(metric_rows), width="stretch", hide_index=True)
             n_seeds = tf_val.get("n_seeds")
             if tf_val.get("skill_significant") is False:
                 seed_txt = f"{n_seeds}개 시드 재학습 결과 " if n_seeds else ""
@@ -2603,7 +2603,7 @@ with tab2:
             height=450,
             hovermode="x unified",
         )
-        st.plotly_chart(fig_multi, use_container_width=True)
+        st.plotly_chart(fig_multi, width="stretch")
     except Exception as e:
         st.warning(f"멀티 자산 차트 실패: {e}")
 
@@ -2668,7 +2668,7 @@ with tab3:
             fig_band.update_layout(
                 **PLOTLY_LAYOUT, height=420, title="향후 1년 BTC 시나리오 콘 (현재 변동성 반영)",
                 xaxis_title="", yaxis_title="가격 (USD)")
-            st.plotly_chart(fig_band, use_container_width=True)
+            st.plotly_chart(fig_band, width="stretch")
 
             cvol1, cvol2, cvol3 = st.columns(3)
             cvol1.metric("최근 연율 변동성", f"{_ann_recent:.0f}%")
@@ -2685,7 +2685,7 @@ with tab3:
                     "중앙(p50)": _key["p50"].map(lambda v: f"${v:,.0f}"),
                     "상단(p95)": _key["p95"].map(lambda v: f"${v:,.0f}"),
                 })
-                st.dataframe(tbl, use_container_width=True, hide_index=True)
+                st.dataframe(tbl, width="stretch", hide_index=True)
             st.caption(
                 "※ " + band_coverage_note() +
                 " 중앙선은 예측이 아니라 역사적 중앙 경로이며, 밴드 폭은 현재 변동성으로 조정했습니다."
@@ -2798,7 +2798,7 @@ with tab3:
         table_height = int(header_px + len(display_df) * row_px + 6)
         st.dataframe(
             display_styler,
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
             height=table_height,
         )
@@ -2886,7 +2886,7 @@ with tab3:
         valid_y_vals = [y for y in y_vals_horizon if pd.notnull(y)]
         dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
         apply_yaxis_floor_40k(fig_horizon, y_vals_horizon, floor=dynamic_floor)
-        st.plotly_chart(fig_horizon, use_container_width=True)
+        st.plotly_chart(fig_horizon, width="stretch")
         
         # Return bar chart
         fig_ret = go.Figure()
@@ -2904,7 +2904,7 @@ with tab3:
             yaxis_title="수익률 (%)",
             height=350,
         )
-        st.plotly_chart(fig_ret, use_container_width=True)
+        st.plotly_chart(fig_ret, width="stretch")
         
     except Exception as e:
         st.error(f"예측 실패: {e}")
@@ -2939,7 +2939,7 @@ with tab4:
                 help="예측할 최대 기간"
             )
         
-        if st.button("🚀 예측 실행", key="pred_target", use_container_width=True):
+        if st.button("🚀 예측 실행", key="pred_target", width="stretch"):
             with st.spinner("모델 예측 중..."):
                 try:
                     result = estimate_target_return_date(
@@ -3068,7 +3068,7 @@ with tab4:
                     valid_y_vals = [y for y in y_vals_mode1 if pd.notnull(y)]
                     dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
                     apply_yaxis_floor_40k(fig_path, y_vals_mode1, floor=dynamic_floor)
-                    st.plotly_chart(fig_path, use_container_width=True)
+                    st.plotly_chart(fig_path, width="stretch")
                     
                 except Exception as e:
                     st.error(f"예측 실패: {e}")
@@ -3094,7 +3094,7 @@ with tab4:
             </div>
             """, unsafe_allow_html=True)
         
-        if st.button("🚀 예측 실행", key="pred_hold", use_container_width=True):
+        if st.button("🚀 예측 실행", key="pred_hold", width="stretch"):
             with st.spinner("모델 예측 중..."):
                 try:
                     result = estimate_return_at_date(
@@ -3237,7 +3237,7 @@ with tab4:
                     valid_y_vals = [y for y in y_vals_mode2 if pd.notnull(y)]
                     dynamic_floor = min(valid_y_vals) * 0.9 if valid_y_vals else 90_000_000.0
                     apply_yaxis_floor_40k(fig_path, y_vals_mode2, floor=dynamic_floor)
-                    st.plotly_chart(fig_path, use_container_width=True)
+                    st.plotly_chart(fig_path, width="stretch")
                     
                 except Exception as e:
                     st.error(f"예측 실패: {e}")
@@ -3263,7 +3263,7 @@ with tab4:
         "평균 예측/실제": ["1.005", "0.865", "0.808", "0.992", "1.142", "1.212"],
         "중간값 예측/실제": ["0.991", "0.852", "0.818", "0.986", "1.080", "0.992"],
     }
-    st.dataframe(pd.DataFrame(backtest_data), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(backtest_data), width="stretch", hide_index=True)
     
     st.markdown("""
     <div class='glass-card' style='border-color: rgba(16,185,129,0.3);'>
