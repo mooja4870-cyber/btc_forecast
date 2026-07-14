@@ -14,7 +14,6 @@
     "krw_close",
     "fed_rate",
     "cpi",
-    "m2",
     "unemployment",
     "gdp",
     "treasury_10y",
@@ -175,7 +174,7 @@
   "seq_len": 90,
   "horizon": 15,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-06-28",
+  "last_train_date": "2026-06-29",
   "arch": {
     "d_model": 32,
     "nhead": 4,
