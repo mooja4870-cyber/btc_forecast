@@ -175,7 +175,7 @@
   "seq_len": 90,
   "horizon": 3,
   "model_type": "TimeSformer",
-  "last_train_date": "2026-07-12",
+  "last_train_date": "2026-07-13",
   "arch": {
     "d_model": 32,
     "nhead": 4,
