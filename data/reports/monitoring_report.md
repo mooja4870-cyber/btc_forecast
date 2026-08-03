@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-08-02 14:54:34
-**Run ID:** run_20260802_235433
+**Generated:** 2026-08-03 16:14:20
+**Run ID:** run_20260804_011419
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -51,8 +51,8 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                     |   z_score |   current_mean |   ref_mean |
 |:----------------------------|----------:|---------------:|-----------:|
-| gold_fut_oi_change_7d_proxy |  13.8265  |      600.599   |    9.96228 |
-| rate_irx_close              |   3.52311 |        3.71593 |    3.59721 |
-| expected_policy_rate_3m     |   3.52311 |        3.71593 |    3.59721 |
-| expected_policy_rate_6m     |   2.32832 |        3.95913 |    3.73471 |
-| log_gold_fut_close          |   2.03476 |        8.31133 |    8.44832 |
+| gold_fut_oi_change_7d_proxy | 124.882   |     5344.98    |    9.95046 |
+| rate_irx_close              |   3.50792 |        3.7164  |    3.59796 |
+| expected_policy_rate_3m     |   3.50792 |        3.7164  |    3.59796 |
+| expected_policy_rate_6m     |   2.33979 |        3.96248 |    3.73625 |
+| log_gold_fut_close          |   2.00536 |        8.31223 |    8.44805 |
