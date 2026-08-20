@@ -1,11 +1,11 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-08-19 14:21:31
-**Run ID:** run_20260819_232130
+**Generated:** 2026-08-20 14:24:13
+**Run ID:** run_20260820_232412
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
 - ⚠️ Recent MAPE (34.4%) exceeds threshold (15.0%)
-- ⚠️ Expansion features quality issue count: 4
+- ⚠️ Expansion features quality issue count: 6
 - ⚠️ Expansion feature drift detected: 1 features
 
 ## 📈 Performance Metrics
@@ -34,23 +34,23 @@
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                  |   missing_pct_recent_30d |   stale_days |
 |:-------------------------|-------------------------:|-------------:|
+| rate_fvx_close_ret30d    |                   100    |   1000000000 |
 | rate_irx_close_ret30d    |                   100    |   1000000000 |
 | rate_tnx_close_ret30d    |                   100    |   1000000000 |
-| rate_irx_close_ret7d     |                    36.67 |            0 |
-| rate_tnx_close_ret7d     |                    36.67 |            0 |
-| rate_irx_close_ret1d     |                    16.67 |            0 |
-| rate_tnx_close_ret1d     |                    16.67 |            0 |
-| curve_2y10y_spread_proxy |                    13.33 |            0 |
-| expected_policy_rate_3m  |                    13.33 |            0 |
-| expected_policy_rate_6m  |                    13.33 |            0 |
-| rate_irx_close           |                    13.33 |            0 |
-| rate_tnx_close           |                    13.33 |            0 |
-| commodity_shock_score    |                     0    |            0 |
-| corn_fut_close           |                     0    |            0 |
-| corn_fut_close_ret1d     |                     0    |            0 |
-| corn_fut_close_ret30d    |                     0    |            0 |
+| rate_fvx_close_ret7d     |                    33.33 |            0 |
+| rate_irx_close_ret7d     |                    33.33 |            0 |
+| rate_tnx_close_ret7d     |                    33.33 |            0 |
+| rate_fvx_close_ret1d     |                    13.33 |            0 |
+| rate_irx_close_ret1d     |                    13.33 |            0 |
+| rate_tnx_close_ret1d     |                    13.33 |            0 |
+| curve_2y10y_spread_proxy |                    10    |            0 |
+| expected_policy_rate_3m  |                    10    |            0 |
+| expected_policy_rate_6m  |                    10    |            0 |
+| rate_fvx_close           |                    10    |            0 |
+| rate_irx_close           |                    10    |            0 |
+| rate_tnx_close           |                    10    |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
 | feature                     |   z_score |   current_mean |   ref_mean |
 |:----------------------------|----------:|---------------:|-----------:|
-| gold_fut_oi_change_7d_proxy |   2.14571 |        102.454 |    10.4018 |
+| gold_fut_oi_change_7d_proxy |    2.0402 |        97.9242 |    10.3964 |
