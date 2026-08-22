@@ -1,11 +1,11 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-08-21 14:23:09
-**Run ID:** run_20260821_232309
+**Generated:** 2026-08-22 14:09:55
+**Run ID:** run_20260822_230955
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
 - ⚠️ Recent MAPE (34.4%) exceeds threshold (15.0%)
-- ⚠️ Expansion features quality issue count: 6
+- ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
@@ -28,23 +28,31 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 0
+- Drifted features (30d vs prev 180d): 4
 
 ### Quality Snapshot (Top 15 by missing/staleness)
-| feature                  |   missing_pct_recent_30d |   stale_days |
-|:-------------------------|-------------------------:|-------------:|
-| rate_fvx_close_ret30d    |                   100    |   1000000000 |
-| rate_irx_close_ret30d    |                   100    |   1000000000 |
-| rate_tnx_close_ret30d    |                   100    |   1000000000 |
-| rate_fvx_close_ret7d     |                    30    |            0 |
-| rate_irx_close_ret7d     |                    30    |            0 |
-| rate_tnx_close_ret7d     |                    30    |            0 |
-| rate_fvx_close_ret1d     |                    10    |            0 |
-| rate_irx_close_ret1d     |                    10    |            0 |
-| rate_tnx_close_ret1d     |                    10    |            0 |
-| curve_2y10y_spread_proxy |                     6.67 |            0 |
-| expected_policy_rate_3m  |                     6.67 |            0 |
-| expected_policy_rate_6m  |                     6.67 |            0 |
-| rate_fvx_close           |                     6.67 |            0 |
-| rate_irx_close           |                     6.67 |            0 |
-| rate_tnx_close           |                     6.67 |            0 |
+| feature                          |   missing_pct_recent_30d |   stale_days |
+|:---------------------------------|-------------------------:|-------------:|
+| commodity_shock_score            |                        0 |            0 |
+| corn_fut_close                   |                        0 |            0 |
+| corn_fut_close_ret1d             |                        0 |            0 |
+| corn_fut_close_ret30d            |                        0 |            0 |
+| corn_fut_close_ret7d             |                        0 |            0 |
+| corn_fut_days_to_expiry          |                        0 |            0 |
+| corn_fut_expiry_week             |                        0 |            0 |
+| corn_fut_front_next_spread_proxy |                        0 |            0 |
+| corn_fut_oi_change_7d_proxy      |                        0 |            0 |
+| corn_fut_roll_return_20d         |                        0 |            0 |
+| corn_fut_volume                  |                        0 |            0 |
+| curve_2y10y_spread_proxy         |                        0 |            0 |
+| days_to_fomc                     |                        0 |            0 |
+| expected_policy_rate_3m          |                        0 |            0 |
+| expected_policy_rate_6m          |                        0 |            0 |
+
+### Drift Snapshot (Top 15 by z-score)
+| feature                     |   z_score |   current_mean |   ref_mean |
+|:----------------------------|----------:|---------------:|-----------:|
+| rate_irx_close              |   2.70566 |        3.7225  |    3.61438 |
+| expected_policy_rate_3m     |   2.70566 |        3.7225  |    3.61438 |
+| expected_policy_rate_6m     |   2.06925 |        3.98803 |    3.76764 |
+| gold_fut_oi_change_7d_proxy |   2.01869 |       97.0006  |   10.3945  |
