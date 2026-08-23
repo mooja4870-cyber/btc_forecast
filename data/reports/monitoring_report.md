@@ -1,11 +1,11 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-08-22 14:09:55
-**Run ID:** run_20260822_230955
+**Generated:** 2026-08-23 14:12:27
+**Run ID:** run_20260823_231226
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
 - ⚠️ Recent MAPE (34.4%) exceeds threshold (15.0%)
-- ⚠️ Expansion feature drift detected: 4 features
+- ⚠️ Expansion feature drift detected: 3 features
 
 ## 📈 Performance Metrics
 
@@ -28,7 +28,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 4
+- Drifted features (30d vs prev 180d): 3
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -50,9 +50,8 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                     |   z_score |   current_mean |   ref_mean |
-|:----------------------------|----------:|---------------:|-----------:|
-| rate_irx_close              |   2.70566 |        3.7225  |    3.61438 |
-| expected_policy_rate_3m     |   2.70566 |        3.7225  |    3.61438 |
-| expected_policy_rate_6m     |   2.06925 |        3.98803 |    3.76764 |
-| gold_fut_oi_change_7d_proxy |   2.01869 |       97.0006  |   10.3945  |
+| feature                 |   z_score |   current_mean |   ref_mean |
+|:------------------------|----------:|---------------:|-----------:|
+| rate_irx_close          |   2.58309 |        3.72133 |    3.61528 |
+| expected_policy_rate_3m |   2.58309 |        3.72133 |    3.61528 |
+| expected_policy_rate_6m |   2.02252 |        3.98756 |    3.76944 |
