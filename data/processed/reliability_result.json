@@ -1,12 +1,12 @@
 {
   "365": {
-    "cutoff_date": "2025-08-30",
-    "target_date": "2026-08-30",
-    "price_at_cutoff": 108808.0703125,
-    "actual_price_today": 79015.9375,
-    "predicted_price_today": 73225.22981155543,
-    "error_pct": 7.328531270599139,
-    "multiplier": 0.9267146872940086,
+    "cutoff_date": "2025-08-31",
+    "target_date": "2026-08-31",
+    "price_at_cutoff": 108236.7109375,
+    "actual_price_today": 78988.859375,
+    "predicted_price_today": 64013.51558281326,
+    "error_pct": 18.958804963990197,
+    "multiplier": 0.810411950360098,
     "passed": true,
     "model_horizon_used": 365,
     "model_phase_used": 6,
@@ -18,13 +18,13 @@
     "calibration_bias_used": null
   },
   "30": {
-    "cutoff_date": "2026-07-31",
-    "target_date": "2026-08-30",
-    "price_at_cutoff": 62813.74609375,
-    "actual_price_today": 79015.9375,
-    "predicted_price_today": 63990.93539424888,
-    "error_pct": 19.015153880508116,
-    "multiplier": 0.8098484611949188,
+    "cutoff_date": "2026-08-01",
+    "target_date": "2026-08-31",
+    "price_at_cutoff": 62763.3203125,
+    "actual_price_today": 78988.859375,
+    "predicted_price_today": 61577.13882255733,
+    "error_pct": 22.043261151272535,
+    "multiplier": 0.7795673884872747,
     "passed": true,
     "model_horizon_used": 30,
     "model_phase_used": 6,
@@ -37,12 +37,12 @@
   },
   "1": {
     "cutoff_date": "2026-08-30",
-    "target_date": "2026-08-30",
-    "price_at_cutoff": 79015.9375,
-    "actual_price_today": 79015.9375,
-    "predicted_price_today": 79934.48913319355,
-    "error_pct": 1.1624890651883368,
-    "multiplier": 1.0116248906518834,
+    "target_date": "2026-08-31",
+    "price_at_cutoff": 77667.5703125,
+    "actual_price_today": 78988.859375,
+    "predicted_price_today": 77253.14171450271,
+    "error_pct": 2.1974208441939433,
+    "multiplier": 0.9780257915580606,
     "passed": true,
     "model_horizon_used": 1,
     "model_phase_used": 6,
@@ -54,8 +54,8 @@
     "calibration_bias_used": null
   },
   "_meta": {
-    "recomputed_at": "2026-08-31T03:49:58.619069",
-    "data_last_timestamp": "2026-08-30T00:00:00",
+    "recomputed_at": "2026-09-01T05:44:26.727290",
+    "data_last_timestamp": "2026-08-31T00:00:00",
     "production_phase": 6
   }
 }
