@@ -1,11 +1,11 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-04 17:14:13
-**Run ID:** run_20260905_021412
+**Generated:** 2026-09-05 16:20:43
+**Run ID:** run_20260906_012042
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
 - ⚠️ Recent MAPE (34.4%) exceeds threshold (15.0%)
-- ⚠️ Expansion feature drift detected: 2 features
+- ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
@@ -28,7 +28,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 2
+- Drifted features (30d vs prev 180d): 4
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -52,5 +52,7 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature             |   z_score |   current_mean |   ref_mean |
 |:--------------------|----------:|---------------:|-----------:|
-| wheat_fut_close     |   2.35501 |      690.167   |  606.208   |
-| log_wheat_fut_close |   2.21183 |        6.53474 |    6.40552 |
+| wheat_fut_close     |   2.43902 |      692.9     |  606.833   |
+| log_wheat_fut_close |   2.28935 |        6.53876 |    6.40659 |
+| corn_fut_close      |   2.14532 |      480.142   |  443.256   |
+| log_corn_fut_close  |   2.01239 |        6.17202 |    6.09339 |
