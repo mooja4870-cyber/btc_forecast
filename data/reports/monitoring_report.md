@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-09 17:24:01
-**Run ID:** run_20260910_022400
+**Generated:** 2026-09-10 17:22:09
+**Run ID:** run_20260911_022208
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -52,7 +52,7 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature             |   z_score |   current_mean |   ref_mean |
 |:--------------------|----------:|---------------:|-----------:|
-| wheat_fut_close     |   2.80905 |      703.5     |  609.244   |
-| corn_fut_close      |   2.70727 |      489.708   |  443.467   |
-| log_wheat_fut_close |   2.63861 |        6.55442 |    6.41073 |
-| log_corn_fut_close  |   2.53328 |        6.19222 |    6.09388 |
+| wheat_fut_close     |   2.90331 |      706.2     |  609.818   |
+| corn_fut_close      |   2.84906 |      492.083   |  443.526   |
+| log_wheat_fut_close |   2.72718 |        6.5584  |    6.41171 |
+| log_corn_fut_close  |   2.66496 |        6.19724 |    6.09402 |
