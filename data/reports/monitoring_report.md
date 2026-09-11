@@ -1,20 +1,20 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-10 17:22:09
-**Run ID:** run_20260911_022208
+**Generated:** 2026-09-11 17:23:45
+**Run ID:** run_20260912_022344
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Recent MAPE (35.4%) exceeds threshold (15.0%)
-- ⚠️ Expansion feature drift detected: 4 features
+- ⚠️ Recent MAPE (38.5%) exceeds threshold (15.0%)
+- ⚠️ Expansion feature drift detected: 5 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $7403.20 | $22591.77 |
-| **RMSE** | $12689.72 | $29243.91 |
-| **MAPE** | 10.8% | 35.4% |
-| **Count** | 303 | 47 |
+| **MAE** | $7403.20 | $24627.13 |
+| **RMSE** | $12689.72 | $31800.06 |
+| **MAPE** | 10.8% | 38.5% |
+| **Count** | 303 | 38 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
@@ -28,7 +28,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 4
+- Drifted features (30d vs prev 180d): 5
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -50,9 +50,10 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature             |   z_score |   current_mean |   ref_mean |
-|:--------------------|----------:|---------------:|-----------:|
-| wheat_fut_close     |   2.90331 |      706.2     |  609.818   |
-| corn_fut_close      |   2.84906 |      492.083   |  443.526   |
-| log_wheat_fut_close |   2.72718 |        6.5584  |    6.41171 |
-| log_corn_fut_close  |   2.66496 |        6.19724 |    6.09402 |
+| feature                     |   z_score |   current_mean |   ref_mean |
+|:----------------------------|----------:|---------------:|-----------:|
+| gold_fut_oi_change_7d_proxy |   3.13906 |      340.524   |   24.2864  |
+| wheat_fut_close             |   2.99803 |      709.042   |  610.25    |
+| corn_fut_close              |   2.99111 |      494.483   |  443.557   |
+| log_wheat_fut_close         |   2.81495 |        6.56262 |    6.41244 |
+| log_corn_fut_close          |   2.79716 |        6.20233 |    6.09409 |
