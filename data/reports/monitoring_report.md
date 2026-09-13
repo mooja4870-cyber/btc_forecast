@@ -1,20 +1,20 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-12 16:37:06
-**Run ID:** run_20260913_013705
+**Generated:** 2026-09-13 17:08:04
+**Run ID:** run_20260914_020803
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Recent MAPE (42.8%) exceeds threshold (15.0%)
+- ⚠️ Recent MAPE (49.8%) exceeds threshold (15.0%)
 - ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
 | Metric | Overall (All Time) | Last 30 Days |
 | :--- | :--- | :--- |
-| **MAE** | $7403.20 | $27403.91 |
-| **RMSE** | $12689.72 | $35028.47 |
-| **MAPE** | 10.8% | 42.8% |
-| **Count** | 303 | 30 |
+| **MAE** | $7403.20 | $31985.33 |
+| **RMSE** | $12689.72 | $39916.94 |
+| **MAPE** | 10.8% | 49.8% |
+| **Count** | 303 | 22 |
 
 ## 📉 Recent Error Trend
 *(Last 5 predictions)*
@@ -52,7 +52,7 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature             |   z_score |   current_mean |   ref_mean |
 |:--------------------|----------:|---------------:|-----------:|
-| corn_fut_close      |   3.08746 |      496.283   |  443.697   |
-| wheat_fut_close     |   3.05266 |      710.892   |  610.828   |
-| log_corn_fut_close  |   2.88414 |        6.20606 |    6.0944  |
-| log_wheat_fut_close |   2.86622 |        6.56535 |    6.41341 |
+| corn_fut_close      |   3.17163 |      497.742   |  443.788   |
+| wheat_fut_close     |   3.09285 |      712.217   |  611.406   |
+| log_corn_fut_close  |   2.96354 |        6.20921 |    6.09461 |
+| log_wheat_fut_close |   2.90505 |        6.56734 |    6.41437 |
