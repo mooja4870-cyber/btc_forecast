@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-18 17:21:45
-**Run ID:** run_20260919_022144
+**Generated:** 2026-09-19 16:52:24
+**Run ID:** run_20260920_015224
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 9 features
+- ⚠️ Expansion feature drift detected: 10 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 9
+- Drifted features (30d vs prev 180d): 10
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,14 +49,15 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                 |   z_score |   current_mean |     ref_mean |
-|:------------------------|----------:|---------------:|-------------:|
-| corn_fut_close          |   3.73933 |     508.408    | 444.692      |
-| log_corn_fut_close      |   3.46453 |       6.23084  |   6.09664    |
-| wheat_fut_close         |   3.26054 |     720.183    | 614.86       |
-| log_wheat_fut_close     |   3.06803 |       6.57876  |   6.42005    |
-| rate_irx_close          |   2.5111  |       3.7759   |   3.63514    |
-| expected_policy_rate_3m |   2.5111  |       3.7759   |   3.63514    |
-| expected_policy_rate_6m |   2.23359 |       4.08489  |   3.81837    |
-| rate_tnx_close          |   2.04321 |       4.79437  |   4.42218    |
-| corn_fut_close_ret30d   |   2.01653 |       0.129025 |   0.00994239 |
+| feature                 |   z_score |   current_mean |    ref_mean |
+|:------------------------|----------:|---------------:|------------:|
+| corn_fut_close          |   3.80717 |     510.125    | 444.944     |
+| log_corn_fut_close      |   3.52365 |       6.23428  |   6.0972    |
+| wheat_fut_close         |   3.25067 |     721.158    | 615.453     |
+| log_wheat_fut_close     |   3.05885 |       6.58017  |   6.421     |
+| rate_irx_close          |   2.64729 |       3.78457  |   3.63576   |
+| expected_policy_rate_3m |   2.64729 |       3.78457  |   3.63576   |
+| expected_policy_rate_6m |   2.31775 |       4.09587  |   3.82034   |
+| rate_tnx_close          |   2.07545 |       4.8024   |   4.42569   |
+| corn_fut_close_ret30d   |   2.04189 |       0.130908 |   0.0101571 |
+| rate_fvx_close          |   2.00266 |       4.56283  |   4.09722   |
