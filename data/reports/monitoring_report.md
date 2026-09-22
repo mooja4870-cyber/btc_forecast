@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-21 18:58:45
-**Run ID:** run_20260922_035844
+**Generated:** 2026-09-22 17:48:34
+**Run ID:** run_20260923_024833
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -51,13 +51,13 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                 |   z_score |   current_mean |    ref_mean |
 |:------------------------|----------:|---------------:|------------:|
-| corn_fut_close          |   3.88096 |     513.225    | 445.542     |
-| log_corn_fut_close      |   3.58752 |       6.24043  |   6.09852   |
-| wheat_fut_close         |   3.23856 |     723.383    | 616.66      |
-| log_wheat_fut_close     |   3.04719 |       6.58335  |   6.42293   |
-| rate_irx_close          |   2.94099 |       3.803    |   3.63694   |
-| expected_policy_rate_3m |   2.94099 |       3.803    |   3.63694   |
-| expected_policy_rate_6m |   2.50741 |       4.11989  |   3.82425   |
-| rate_tnx_close          |   2.17936 |       4.82397  |   4.43223   |
-| rate_fvx_close          |   2.13675 |       4.59523  |   4.10522   |
-| corn_fut_close_ret30d   |   2.07688 |       0.133869 |   0.0107305 |
+| corn_fut_close          |   3.93612 |     515.2      | 445.854     |
+| log_corn_fut_close      |   3.63415 |       6.24428  |   6.09921   |
+| wheat_fut_close         |   3.24876 |     724.867    | 617.282     |
+| rate_irx_close          |   3.07845 |       3.81193  |   3.63758   |
+| expected_policy_rate_3m |   3.07845 |       3.81193  |   3.63758   |
+| log_wheat_fut_close     |   3.05604 |       6.58546  |   6.42392   |
+| expected_policy_rate_6m |   2.59139 |       4.13101  |   3.82635   |
+| rate_tnx_close          |   2.21293 |       4.83263  |   4.43585   |
+| rate_fvx_close          |   2.19352 |       4.60963  |   4.10952   |
+| corn_fut_close_ret30d   |   2.11602 |       0.136533 |   0.0110057 |
