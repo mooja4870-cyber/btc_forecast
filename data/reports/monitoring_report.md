@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-09-26 17:27:28
-**Run ID:** run_20260927_022727
+**Generated:** 2026-09-27 17:59:58
+**Run ID:** run_20260928_025958
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 11 features
+- ⚠️ Expansion feature drift detected: 10 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 11
+- Drifted features (30d vs prev 180d): 10
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,14 +51,13 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                 |   z_score |   current_mean |     ref_mean |
 |:------------------------|----------:|---------------:|-------------:|
-| corn_fut_close          |   3.77671 |    519.575     | 447.296      |
-| expected_policy_rate_3m |   3.74366 |      3.85377   |   3.64022    |
-| rate_irx_close          |   3.74366 |      3.85377   |   3.64022    |
-| log_corn_fut_close      |   3.50499 |      6.25283   |   6.10231    |
-| wheat_fut_close         |   3.09752 |    726.783     | 619.965      |
-| expected_policy_rate_6m |   3.05152 |      4.18399   |   3.83511    |
-| log_wheat_fut_close     |   2.92642 |      6.58824   |   6.42816    |
-| rate_irx_close_ret30d   |   2.80033 |      0.0392792 |   0.00553906 |
-| rate_fvx_close          |   2.52752 |      4.67933   |   4.12743    |
-| rate_tnx_close          |   2.47471 |      4.8789    |   4.45081    |
-| corn_fut_close_ret30d   |   2.02502 |      0.134865  |   0.0125698  |
+| expected_policy_rate_3m |   3.95979 |      3.86643   |   3.64084    |
+| rate_irx_close          |   3.95979 |      3.86643   |   3.64084    |
+| corn_fut_close          |   3.68131 |    520.192     | 447.693      |
+| log_corn_fut_close      |   3.42543 |      6.25402   |   6.10314    |
+| expected_policy_rate_6m |   3.21519 |      4.19994   |   3.83741    |
+| rate_irx_close_ret30d   |   3.11118 |      0.0436513 |   0.00538871 |
+| wheat_fut_close         |   2.93899 |    725.467     | 620.807      |
+| log_wheat_fut_close     |   2.79083 |      6.58642   |   6.42943    |
+| rate_fvx_close          |   2.65093 |      4.7002    |   4.13226    |
+| rate_tnx_close          |   2.60044 |      4.89623   |   4.45471    |
