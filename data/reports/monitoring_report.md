@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-10-02 18:47:38
-**Run ID:** run_20261003_034738
+**Generated:** 2026-10-03 17:41:20
+**Run ID:** run_20261004_024119
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 11 features
+- ⚠️ Expansion feature drift detected: 9 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 11
+- Drifted features (30d vs prev 180d): 9
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,14 +51,12 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                 |   z_score |   current_mean |     ref_mean |
 |:------------------------|----------:|---------------:|-------------:|
-| rate_irx_close          |   4.81751 |      3.92283   |   3.64453    |
-| expected_policy_rate_3m |   4.81751 |      3.92283   |   3.64453    |
-| rate_irx_close_ret30d   |   4.14371 |      0.0575048 |   0.00551152 |
-| expected_policy_rate_6m |   3.90076 |      4.27229   |   3.84941    |
-| rate_tnx_close          |   3.20464 |      4.98177   |   4.47405    |
-| rate_fvx_close          |   3.19306 |      4.79647   |   4.15672    |
-| corn_fut_close          |   3.13778 |    520.308     | 449.876      |
-| log_corn_fut_close      |   2.96054 |      6.25421   |   6.10775    |
-| rate_irx_close_ret7d    |   2.21645 |      0.0212048 |   0.00139964 |
-| wheat_fut_close         |   2.06841 |    712.825     | 625.996      |
-| log_wheat_fut_close     |   2.03715 |      6.56899   |   6.43721    |
+| rate_irx_close          |   4.86885 |      3.92983   |   3.64556    |
+| expected_policy_rate_3m |   4.86885 |      3.92983   |   3.64556    |
+| rate_irx_close_ret30d   |   4.19201 |      0.0585458 |   0.00565041 |
+| expected_policy_rate_6m |   3.95802 |      4.28246   |   3.85183    |
+| rate_tnx_close          |   3.27694 |      4.99647   |   4.47766    |
+| rate_fvx_close          |   3.24833 |      4.8114    |   4.16124    |
+| corn_fut_close          |   3.0109  |    519.6       | 450.275      |
+| log_corn_fut_close      |   2.84974 |      6.25281   |   6.10858    |
+| rate_irx_close_ret7d    |   2.03939 |      0.0198974 |   0.00150011 |
