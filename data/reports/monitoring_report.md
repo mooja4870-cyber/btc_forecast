@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-10-14 18:13:41
-**Run ID:** run_20261015_031339
+**Generated:** 2026-10-15 17:56:55
+**Run ID:** run_20261016_025655
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 9 features
+- ⚠️ Expansion feature drift detected: 8 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 9
+- Drifted features (30d vs prev 180d): 8
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,14 +49,13 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                  |   z_score |   current_mean |     ref_mean |
-|:-------------------------|----------:|---------------:|-------------:|
-| rate_irx_close           |   5.17916 |      4.01463   |   3.65819    |
-| expected_policy_rate_3m  |   5.17916 |      4.01463   |   3.65819    |
-| rate_irx_close_ret30d    |   4.75833 |      0.0727298 |   0.00700757 |
-| expected_policy_rate_6m  |   4.36185 |      4.39454   |   3.87958    |
-| rate_tnx_close           |   3.86362 |      5.1518    |   4.51657    |
-| rate_fvx_close           |   3.6744  |      4.9644    |   4.21166    |
-| curve_2y10y_spread_proxy |   2.33823 |      1.13717   |   0.858383   |
-| corn_fut_close           |   2.13346 |    512.325     | 454.169      |
-| log_corn_fut_close       |   2.05307 |      6.23823   |   6.11671    |
+| feature                  |   z_score |   current_mean |    ref_mean |
+|:-------------------------|----------:|---------------:|------------:|
+| rate_irx_close           |   5.0441  |       4.01943  |   3.6599    |
+| expected_policy_rate_3m  |   5.0441  |       4.01943  |   3.6599    |
+| rate_irx_close_ret30d    |   4.51441 |       0.072009 |   0.0073136 |
+| expected_policy_rate_6m  |   4.29349 |       4.4003   |   3.88284   |
+| rate_tnx_close           |   3.84395 |       5.15987  |   4.52087   |
+| rate_fvx_close           |   3.64635 |       4.9716   |   4.21724   |
+| curve_2y10y_spread_proxy |   2.357   |       1.14043  |   0.860967  |
+| corn_fut_close           |   2.0603  |     511.283    | 454.44      |
