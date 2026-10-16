@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-10-15 17:56:55
-**Run ID:** run_20261016_025655
+**Generated:** 2026-10-16 17:44:46
+**Run ID:** run_20261017_024445
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 8 features
+- ⚠️ Expansion feature drift detected: 7 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 8
+- Drifted features (30d vs prev 180d): 7
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -49,13 +49,12 @@
 | expected_policy_rate_6m          |                        0 |            0 |
 
 ### Drift Snapshot (Top 15 by z-score)
-| feature                  |   z_score |   current_mean |    ref_mean |
-|:-------------------------|----------:|---------------:|------------:|
-| rate_irx_close           |   5.0441  |       4.01943  |   3.6599    |
-| expected_policy_rate_3m  |   5.0441  |       4.01943  |   3.6599    |
-| rate_irx_close_ret30d    |   4.51441 |       0.072009 |   0.0073136 |
-| expected_policy_rate_6m  |   4.29349 |       4.4003   |   3.88284   |
-| rate_tnx_close           |   3.84395 |       5.15987  |   4.52087   |
-| rate_fvx_close           |   3.64635 |       4.9716   |   4.21724   |
-| curve_2y10y_spread_proxy |   2.357   |       1.14043  |   0.860967  |
-| corn_fut_close           |   2.0603  |     511.283    | 454.44      |
+| feature                  |   z_score |   current_mean |   ref_mean |
+|:-------------------------|----------:|---------------:|-----------:|
+| rate_irx_close           |   4.89718 |      4.02443   | 3.66171    |
+| expected_policy_rate_3m  |   4.89718 |      4.02443   | 3.66171    |
+| rate_irx_close_ret30d    |   4.24756 |      0.0711338 | 0.00764496 |
+| expected_policy_rate_6m  |   4.21529 |      4.40599   | 3.88598    |
+| rate_tnx_close           |   3.81944 |      5.1675    | 4.52477    |
+| rate_fvx_close           |   3.60787 |      4.97833   | 4.2224     |
+| curve_2y10y_spread_proxy |   2.37026 |      1.14307   | 0.863061   |
