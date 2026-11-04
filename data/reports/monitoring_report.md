@@ -1,10 +1,10 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-11-03 20:20:18
-**Run ID:** run_20261104_052018
+**Generated:** 2026-11-04 20:36:18
+**Run ID:** run_20261105_053617
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
-- ⚠️ Expansion feature drift detected: 5 features
+- ⚠️ Expansion feature drift detected: 4 features
 
 ## 📈 Performance Metrics
 
@@ -27,7 +27,7 @@
 
 ## 🧩 Expansion Feature Health
 - Tracked features: 72
-- Drifted features (30d vs prev 180d): 5
+- Drifted features (30d vs prev 180d): 4
 
 ### Quality Snapshot (Top 15 by missing/staleness)
 | feature                          |   missing_pct_recent_30d |   stale_days |
@@ -51,8 +51,7 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                 |   z_score |   current_mean |   ref_mean |
 |:------------------------|----------:|---------------:|-----------:|
-| rate_irx_close          |   2.62583 |        4.0365  |    3.70203 |
-| expected_policy_rate_3m |   2.62583 |        4.0365  |    3.70203 |
-| expected_policy_rate_6m |   2.33383 |        4.38738 |    3.94834 |
-| rate_tnx_close          |   2.19236 |        5.11733 |    4.59997 |
-| rate_fvx_close          |   2.0681  |        4.9137  |    4.3178  |
+| rate_irx_close          |   2.57265 |        4.03613 |    3.70409 |
+| expected_policy_rate_3m |   2.57265 |        4.03613 |    3.70409 |
+| expected_policy_rate_6m |   2.25509 |        4.38233 |    3.95196 |
+| rate_tnx_close          |   2.07655 |        5.10457 |    4.6052  |
