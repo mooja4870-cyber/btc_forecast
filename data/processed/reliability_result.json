@@ -1,12 +1,12 @@
 {
   "365": {
-    "cutoff_date": "2025-11-09",
-    "target_date": "2026-11-09",
-    "price_at_cutoff": 104719.640625,
-    "actual_price_today": 75058.1875,
-    "predicted_price_today": 52232.81078379992,
-    "error_pct": 30.410242341916504,
-    "multiplier": 0.695897576580835,
+    "cutoff_date": "2025-11-10",
+    "target_date": "2026-11-10",
+    "price_at_cutoff": 105996.59375,
+    "actual_price_today": 73564.3984375,
+    "predicted_price_today": 64701.10681627133,
+    "error_pct": 12.048343776995454,
+    "multiplier": 0.8795165622300455,
     "passed": true,
     "model_horizon_used": 365,
     "model_phase_used": 6,
@@ -18,13 +18,13 @@
     "calibration_bias_used": null
   },
   "30": {
-    "cutoff_date": "2026-10-10",
-    "target_date": "2026-11-09",
-    "price_at_cutoff": 82912.2265625,
-    "actual_price_today": 75058.1875,
-    "predicted_price_today": 83055.08518615561,
-    "error_pct": 10.654264314809915,
-    "multiplier": 1.1065426431480991,
+    "cutoff_date": "2026-10-11",
+    "target_date": "2026-11-10",
+    "price_at_cutoff": 83679.46875,
+    "actual_price_today": 73564.3984375,
+    "predicted_price_today": 81813.90058020125,
+    "error_pct": 11.21398708875462,
+    "multiplier": 1.1121398708875463,
     "passed": true,
     "model_horizon_used": 30,
     "model_phase_used": 6,
@@ -36,13 +36,13 @@
     "calibration_bias_used": null
   },
   "1": {
-    "cutoff_date": "2026-11-08",
-    "target_date": "2026-11-09",
-    "price_at_cutoff": 74584.6484375,
-    "actual_price_today": 75058.1875,
-    "predicted_price_today": 74402.50003245824,
-    "error_pct": 0.873572210282541,
-    "multiplier": 0.9912642778971746,
+    "cutoff_date": "2026-11-09",
+    "target_date": "2026-11-10",
+    "price_at_cutoff": 75223.1484375,
+    "actual_price_today": 73564.3984375,
+    "predicted_price_today": 75287.22569085339,
+    "error_pct": 2.34193073000807,
+    "multiplier": 1.0234193073000808,
     "passed": true,
     "model_horizon_used": 1,
     "model_phase_used": 6,
@@ -54,8 +54,8 @@
     "calibration_bias_used": null
   },
   "_meta": {
-    "recomputed_at": "2026-11-10T09:14:25.231499",
-    "data_last_timestamp": "2026-11-09T00:00:00",
+    "recomputed_at": "2026-11-11T06:32:18.347718",
+    "data_last_timestamp": "2026-11-10T00:00:00",
     "production_phase": 6
   }
 }
