@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-11-12 21:11:35
-**Run ID:** run_20261113_061135
+**Generated:** 2026-11-13 20:42:21
+**Run ID:** run_20261114_054221
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -51,8 +51,8 @@
 ### Drift Snapshot (Top 15 by z-score)
 | feature                 |   z_score |   current_mean |   ref_mean |
 |:------------------------|----------:|---------------:|-----------:|
-| rate_irx_close          |   2.17621 |       4.03047  |  3.72107   |
-| expected_policy_rate_3m |   2.17621 |       4.03047  |  3.72107   |
-| geo_vix_close_ret30d    |   2.15312 |       0.252945 | -0.0620301 |
-| geo_risk_index          |   2.01746 |       1.18958  | -0.640716  |
-| war_intensity_score     |   2.01746 |       0.885174 | -0.213001  |
+| geo_vix_close_ret30d    |   2.29381 |       0.27175  | -0.0595357 |
+| rate_irx_close          |   2.11489 |       4.03457  |  3.72598   |
+| expected_policy_rate_3m |   2.11489 |       4.03457  |  3.72598   |
+| geo_risk_index          |   2.03271 |       1.20652  | -0.638146  |
+| war_intensity_score     |   2.03271 |       0.895343 | -0.211459  |
