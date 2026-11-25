@@ -1,6 +1,6 @@
 # 📊 BTC Model Monitoring Report
-**Generated:** 2026-11-24 23:19:23
-**Run ID:** run_20261125_081922
+**Generated:** 2026-11-25 22:52:19
+**Run ID:** run_20261126_075218
 
 ## 🚨 Status Dashboard
 ❌ Alerts Active
@@ -53,6 +53,6 @@
 |:----------------------|----------:|---------------:|-------------:|
 | geo_vix_close         |   3.6152  |     22.685     |   16.6401    |
 | geo_vix_close_ret30d  |   2.80735 |      0.37424   |   -0.0277361 |
-| log_gold_fut_close    |   2.14455 |      8.26684   |    8.37178   |
-| gold_fut_close        |   2.03178 |   3896.9       | 4328.49      |
+| log_gold_fut_close    |   2.16449 |      8.26586   |    8.37178   |
+| gold_fut_close        |   2.04835 |   3893.38      | 4328.49      |
 | rate_tnx_close_ret30d |   2.01925 |     -0.0396644 |    0.0320597 |
